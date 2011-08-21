@@ -119,6 +119,11 @@ new Handle:gH_Cvar_LR_NoScope_Delay = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_ChickenFight_Rebel = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_HotPotato_Rebel = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_KnifeFight_Rebel = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_Rebel_MaxTs = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_Rebel_MinCTs = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_M4M_MagCapacity = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_KnifeFight_LowGrav = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_KnifeFight_HiSpeed = INVALID_HANDLE;
 
 new gShadow_LR_KnifeFight_On = -1;
 new gShadow_LR_Shot4Shot_On = -1;
@@ -180,6 +185,11 @@ new gShadow_LR_NoScope_Delay = -1;
 new gShadow_LR_ChickenFight_Rebel = -1;
 new gShadow_LR_HotPotato_Rebel = -1;
 new gShadow_LR_KnifeFight_Rebel = -1;
+new gShadow_LR_Rebel_MaxTs = -1;
+new gShadow_LR_Rebel_MinCTs = -1;
+new gShadow_LR_M4M_MagCapacity = -1;
+new Float:gShadow_LR_KnifeFight_LowGrav = -1.0;
+new Float:gShadow_LR_KnifeFight_HiSpeed = -1.0;
 
 // Custom types local to the plugin
 enum NoScopeWeapon
@@ -223,9 +233,6 @@ new String:g_sLastRequestPhrase[LastRequest][MAX_DISPLAYNAME_SIZE];
 
 LastRequest_OnPluginStart()
 {
-	// Load translations
-	//LoadTranslations("lastrequest.phrases");
-	
 	// Populate translation entries
 	Format(g_sLastRequestPhrase[LR_KnifeFight], MAX_DISPLAYNAME_SIZE, "%T", "Knife Fight", LANG_SERVER);
 	Format(g_sLastRequestPhrase[LR_Shot4Shot], MAX_DISPLAYNAME_SIZE, "%T", "Shot4Shot", LANG_SERVER);
@@ -332,23 +339,37 @@ LastRequest_OnPluginStart()
 	// Create forwards for custom LR plugins
 	gH_Frwd_LR_CleanUp = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	gH_Frwd_LR_Start = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
-	gH_Frwd_LR_Process = CreateForward(ET_Event, Param_Any, Param_Any, Param_Any, Param_Any, Param_Any, Param_Any, Param_Any, Param_Any, Param_Any, Param_Any);
+	gH_Frwd_LR_Process = CreateForward(ET_Event, Param_Cell, Param_Cell);
 	
 	// Register cvars
 	gH_Cvar_LR_Enable = CreateConVar("sm_hosties_lr", "1", "Enable or disable Last Requests (the !lr command): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);	
+	gShadow_LR_Enable = true;
 	gH_Cvar_LR_KnifeFight_On = CreateConVar("sm_hosties_lr_kf_enable", "1", "Enable LR Knife Fight: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_KnifeFight_On = true;
 	gH_Cvar_LR_Shot4Shot_On = CreateConVar("sm_hosties_lr_s4s_enable", "1", "Enable LR Shot4Shot: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_Shot4Shot_On = true;
 	gH_Cvar_LR_GunToss_On = CreateConVar("sm_hosties_lr_gt_enable", "1", "Enable LR Gun Toss: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_GunToss_On = true;
 	gH_Cvar_LR_ChickenFight_On = CreateConVar("sm_hosties_lr_cf_enable", "1", "Enable LR Chicken Fight: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_ChickenFight_On = true;
 	gH_Cvar_LR_HotPotato_On = CreateConVar("sm_hosties_lr_hp_enable", "1", "Enable LR Hot Potato: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_HotPotato_On = true;
 	gH_Cvar_LR_Dodgeball_On = CreateConVar("sm_hosties_lr_db_enable", "1", "Enable LR Dodgeball: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_Dodgeball_On = true;
 	gH_Cvar_LR_NoScope_On = CreateConVar("sm_hosties_lr_ns_enable", "1", "Enable LR No Scope Battle: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_NoScope_On = true;
 	gH_Cvar_LR_RockPaperScissors_On = CreateConVar("sm_hosties_lr_rps_enable", "1", "Enable LR Rock Paper Scissors: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gH_Cvar_LR_Rebel_On = CreateConVar("sm_hosties_lr_rebel_on", "1", "Enables the LR", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gH_Cvar_LR_Mag4Mag_On = CreateConVar("sm_hosties_lr_mag4mag_on", "1", "Enables the LR", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gH_Cvar_LR_Race_On = CreateConVar("sm_hosties_lr_race_on", "1", "Enables the LR", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gH_Cvar_LR_RussianRoulette_On = CreateConVar("sm_hosties_lr_russianroulette_on", "1", "Enables the LR", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gH_Cvar_LR_JumpContest_On = CreateConVar("sm_hosties_lr_jumpcontest_on", "1", "Enables the LR", FCVAR_PLUGIN, true, 0.0, true, 1.0);	
+	gShadow_LR_RockPaperScissors_On = true;
+	gH_Cvar_LR_Rebel_On = CreateConVar("sm_hosties_lr_rebel_on", "1", "Enables the LR Rebel: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_Rebel_On = true;
+	gH_Cvar_LR_Mag4Mag_On = CreateConVar("sm_hosties_lr_mag4mag_on", "1", "Enables the LR Magazine4Magazine: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_Mag4Mag_On = true;
+	gH_Cvar_LR_Race_On = CreateConVar("sm_hosties_lr_race_on", "1", "Enables the LR Race: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_Race_On = true;
+	gH_Cvar_LR_RussianRoulette_On = CreateConVar("sm_hosties_lr_russianroulette_on", "1", "Enables the LR Russian Roulette: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_RussianRoulette_On = true;
+	gH_Cvar_LR_JumpContest_On = CreateConVar("sm_hosties_lr_jumpcontest_on", "1", "Enables the LR Jumping Contest: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);	
+	gShadow_LR_JumpContest_On = true;
 
 	gH_Cvar_LR_HotPotato_Mode = CreateConVar("sm_hosties_lr_hp_teleport", "1", "Teleport CT to T on hot potato contest start: 0 - disable, 1 - enable, 2 - enable and freeze", FCVAR_PLUGIN, true, 0.0, true, 2.0);
 	gShadow_LR_HotPotato_Mode = 1;
@@ -424,6 +445,16 @@ LastRequest_OnPluginStart()
 	gShadow_LR_Race_AirPoints = false;
 	gH_Cvar_LR_Race_NotifyCTs = CreateConVar("sm_hosties_lr_race_tell_cts", "1", "Tells all CTs when a T has selected the race option from the LR menu", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_LR_Race_NotifyCTs = false;
+	gH_Cvar_LR_Rebel_MaxTs = CreateConVar("sm_hosties_lr_rebel_ts", "1", "If the Rebel LR option is enabled, specifies the maximum number of alive terrorists needed for the option to appear in the LR menu.", FCVAR_PLUGIN, true, 1.0);
+	gShadow_LR_Rebel_MaxTs = 1;
+	gH_Cvar_LR_Rebel_MinCTs = CreateConVar("sm_hosties_lr_rebel_cts", "1", "If the Rebel LR option is enabled, specifies how minimum number of alive counter-terrorists needed for the option to appear in the LR menu.", FCVAR_PLUGIN, true, 1.0);
+	gShadow_LR_Rebel_MinCTs = 1;
+	gH_Cvar_LR_M4M_MagCapacity = CreateConVar("sm_hosties_lr_m4m_capacity", "7", "The number of bullets in each magazine given to Mag4Mag LR contestants", FCVAR_PLUGIN, true, 2.0);
+	gShadow_LR_M4M_MagCapacity = 7;
+	gH_Cvar_LR_KnifeFight_LowGrav = CreateConVar("sm_hosties_lr_kf_gravity", "0.6", "The multiplier used for the low-gravity knife fight.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_KnifeFight_LowGrav = 0.6;
+	gH_Cvar_LR_KnifeFight_HiSpeed = CreateConVar("sm_hosties_lr_kf_speed", "2.2", "The multiplier used for the high-speed knife fight.", FCVAR_PLUGIN, true, 1.1);
+	gShadow_LR_KnifeFight_HiSpeed = 2.2;
 	gH_Cvar_Announce_CT_FreeHit = CreateConVar("sm_hosties_announce_attack", "1", "Enable or disable announcements when a CT attacks a non-rebelling T: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_Announce_CT_FreeHit = true;
 	gH_Cvar_Announce_LR = CreateConVar("sm_hosties_announce_lr", "1", "Enable or disable chat announcements when Last Requests starts to be available: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
@@ -494,6 +525,11 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_LR_HotPotato_Rebel, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_Race_AirPoints, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_Race_NotifyCTs, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_Rebel_MinCTs, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_Rebel_MaxTs, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_M4M_MagCapacity, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_KnifeFight_LowGrav, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_KnifeFight_HiSpeed, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_Announce_CT_FreeHit, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_Announce_LR, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_Announce_Rebel, ConVarChanged_Setting);
@@ -635,6 +671,8 @@ Local_IsClientInLR(client)
 
 public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
+	g_bAnnouncedThisRound = false;
+	
 	// roundstart done, enable LR if there should be no LR delay (credits to Caza for this :p)
 	if (gShadow_LR_Delay_Enable_Time > 0.0)
 	{
@@ -682,7 +720,6 @@ public LastRequest_RoundEnd(Handle:event, const String:name[], bool:dontBroadcas
 {
 	// Block LRs and reset
 	g_bIsLRAvailable = false;
-	g_bAnnouncedThisRound = false;
 	
 	// Remove all the LR data
 	ClearArray(gH_DArray_LR_Partners);
@@ -747,6 +784,7 @@ public LastRequest_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 		else
 		{
 			PrintToChat(attacker, CHAT_BANNER, "Rebel Kill", attacker, victim);
+			PrintToChat(victim, CHAT_BANNER, "Rebel Kill", attacker, victim);
 		}
 	}
 	
@@ -802,6 +840,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 						else
 						{
 							PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
+							PrintToChat(target, CHAT_BANNER, "New Rebel", attacker);
 						}
 					}
 				}
@@ -823,36 +862,23 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 				
 				switch (type)
 				{
-					case LR_KnifeFight:
+					case LR_KnifeFight, LR_ChickenFight:
 					{
 						if (!bIsItAKnife)
 						{							
-							// decide if slay or abort
-							// take rebel action
 							DecideRebelsFate(attacker, idx, target);
 						}
-					}
-					case LR_ChickenFight:
-					{
-						if (!bIsItAKnife)
-						{							
-							// decide if slay or abort
-							// take rebel action							
-							DecideRebelsFate(attacker, idx, target);
-						}					
-					}
-					case LR_HotPotato:
-					{
-						// decide if abort or slay
-						DecideRebelsFate(attacker, idx, target);
 					}
 					case LR_NoScope:
 					{
 						if (bIsItAKnife)
 						{
-							// decide if abort or slay
 							DecideRebelsFate(attacker, idx, target);
 						}
+					}
+					case LR_HotPotato:
+					{
+						DecideRebelsFate(attacker, idx, target);
 					}
 				}		
 			}
@@ -872,6 +898,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 			else
 			{
 				PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
+				PrintToChat(target, CHAT_BANNER, "New Rebel", attacker);
 			}
 			if (gShadow_ColorRebels)
 			{
@@ -1257,7 +1284,7 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 							SetArrayCell(gH_DArray_LR_Partners, idx, currentAmmo, _:Block_Global3);
 							SetArrayCell(gH_DArray_LR_Partners, idx, ++M4M_RoundsFired, _:Block_Global2);
 							
-							if (M4M_RoundsFired >= 7)
+							if (M4M_RoundsFired >= gShadow_LR_M4M_MagCapacity)
 							{
 								M4M_RoundsFired = 0;
 								SetArrayCell(gH_DArray_LR_Partners, idx, M4M_RoundsFired, _:Block_Global2);
@@ -1277,12 +1304,12 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 								// send it to the next player
 								if (LR_Player_Prisoner == client)
 								{
-									SetEntData(M4M_Guard_Weapon, g_Offset_Clip1, 7);
+									SetEntData(M4M_Guard_Weapon, g_Offset_Clip1, gShadow_LR_M4M_MagCapacity);
 									SetArrayCell(gH_DArray_LR_Partners, idx, LR_Player_Guard, _:Block_Global1);
 								}
 								else if (LR_Player_Guard == client)
 								{
-									SetEntData(M4M_Prisoner_Weapon, g_Offset_Clip1, 7);
+									SetEntData(M4M_Prisoner_Weapon, g_Offset_Clip1, gShadow_LR_M4M_MagCapacity);
 									SetArrayCell(gH_DArray_LR_Partners, idx, LR_Player_Prisoner, _:Block_Global1);
 								}
 							}
@@ -1431,7 +1458,15 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 						}
 						default:
 						{
-							PrintToChatAll(CHAT_BANNER, "Russian Roulette - Miss");
+							if (gShadow_SendGlobalMsgs)
+							{						
+								PrintToChatAll(CHAT_BANNER, "Russian Roulette - Miss");
+							}
+							else
+							{
+								PrintToChat(LR_Player_Prisoner, CHAT_BANNER, "Russian Roulette - Miss");
+								PrintToChat(LR_Player_Guard, CHAT_BANNER, "Russian Roulette - Miss");
+							}
 						}
 					}
 
@@ -1806,6 +1841,11 @@ LastRequest_OnConfigsExecuted()
 	gShadow_LR_KnifeFight_Rebel = GetConVarInt(gH_Cvar_LR_KnifeFight_Rebel);
 	gShadow_LR_ChickenFight_Rebel = GetConVarInt(gH_Cvar_LR_ChickenFight_Rebel);
 	gShadow_LR_HotPotato_Rebel = GetConVarInt(gH_Cvar_LR_HotPotato_Rebel);	
+	gShadow_LR_Rebel_MaxTs = GetConVarInt(gH_Cvar_LR_Rebel_MaxTs);
+	gShadow_LR_Rebel_MinCTs = GetConVarInt(gH_Cvar_LR_Rebel_MinCTs);
+	gShadow_LR_M4M_MagCapacity = GetConVarInt(gH_Cvar_LR_M4M_MagCapacity);
+	gShadow_LR_KnifeFight_LowGrav = GetConVarFloat(gH_Cvar_LR_KnifeFight_LowGrav);
+	gShadow_LR_KnifeFight_HiSpeed = GetConVarFloat(gH_Cvar_LR_KnifeFight_HiSpeed);
 }
 
 public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:newValue[])
@@ -1994,6 +2034,26 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	{
 		gShadow_LR_HotPotato_Rebel = StringToInt(newValue);
 	}
+	else if (cvar == gH_Cvar_LR_Rebel_MaxTs)
+	{
+		gShadow_LR_Rebel_MaxTs = StringToInt(newValue);
+	}
+	else if (cvar == gH_Cvar_LR_Rebel_MinCTs)
+	{
+		gShadow_LR_Rebel_MinCTs = StringToInt(newValue);
+	}
+	else if (cvar == gH_Cvar_LR_M4M_MagCapacity)
+	{
+		gShadow_LR_M4M_MagCapacity = StringToInt(newValue);
+	}
+	else if (cvar == gH_Cvar_LR_KnifeFight_LowGrav)
+	{
+		gShadow_LR_KnifeFight_LowGrav = StringToFloat(newValue);
+	}
+	else if (cvar == gH_Cvar_LR_KnifeFight_HiSpeed)
+	{
+		gShadow_LR_KnifeFight_HiSpeed = StringToFloat(newValue);
+	}
 }
 
 public ConVarChanged_LastRequest(Handle:cvar, const String:oldValue[], const String:newValue[])
@@ -2135,7 +2195,7 @@ public Action:Command_LastRequest(client, args)
 										entry = GetArrayCell(gH_DArray_LastRequests, iLR_Index);
 										if (entry < LastRequest)
 										{
-											if (LastRequest:entry != LR_Rebel || (LastRequest:entry == LR_Rebel && Ts == 1))
+											if (LastRequest:entry != LR_Rebel || (LastRequest:entry == LR_Rebel && Ts <= gShadow_LR_Rebel_MaxTs) && CTs >= gShadow_LR_Rebel_MinCTs)
 											{
 												Format(sDataField, sizeof(sDataField), "%d", entry);
 												Format(sTitleField, sizeof(sTitleField), "%T", g_sLastRequestPhrase[entry], client);
@@ -2886,13 +2946,13 @@ InitializeGame(iPartnersIndex)
 				}
 				case Knife_LowGrav:
 				{
-					SetEntityGravity(LR_Player_Prisoner, 0.6);
-					SetEntityGravity(LR_Player_Guard, 0.6);
+					SetEntityGravity(LR_Player_Prisoner, gShadow_LR_KnifeFight_LowGrav);
+					SetEntityGravity(LR_Player_Guard, gShadow_LR_KnifeFight_LowGrav);
 				}
 				case Knife_HiSpeed:
 				{
-					SetEntPropFloat(LR_Player_Prisoner, Prop_Data, "m_flLaggedMovementValue", 2.2);
-					SetEntPropFloat(LR_Player_Guard, Prop_Data, "m_flLaggedMovementValue", 2.2);
+					SetEntPropFloat(LR_Player_Prisoner, Prop_Data, "m_flLaggedMovementValue", gShadow_LR_KnifeFight_HiSpeed);
+					SetEntPropFloat(LR_Player_Guard, Prop_Data, "m_flLaggedMovementValue", gShadow_LR_KnifeFight_HiSpeed);
 				}
 				case Knife_ThirdPerson:
 				{
@@ -3117,8 +3177,7 @@ InitializeGame(iPartnersIndex)
 			GetClientAbsOrigin(LR_Player_Prisoner, p1pos);
 			
 			decl Float:f_PrisonerAngles[3], Float:f_SubtractFromPrisoner[3];
-			GetClientEyeAngles(LR_Player_Prisoner, f_PrisonerAngles);
-			//PrintToServer("0: %f, 1: %f, 2: %f", f_PrisonerAngles[0], f_PrisonerAngles[1], f_PrisonerAngles[2]);
+			GetClientEyeAngles(LR_Player_Prisoner, f_PrisonerAngles);			
 			// zero out pitch/yaw
 			f_PrisonerAngles[0] = 0.0;			
 			GetAngleVectors(f_PrisonerAngles, f_SubtractFromPrisoner, NULL_VECTOR, NULL_VECTOR);
@@ -3140,8 +3199,7 @@ InitializeGame(iPartnersIndex)
 				SetEntityMoveType(LR_Player_Prisoner, MOVETYPE_NONE);
 				SetEntityMoveType(LR_Player_Guard, MOVETYPE_NONE);			
 				//TeleportEntity(LR_Player_Prisoner, NULL_VECTOR, Float:{0.0, -90.0, 0.0}, NULL_VECTOR);
-				ScaleVector(f_GuardDirection, -1.0);
-				//PrintToServer("0: %f, 1: %f, 2: %f", f_GuardDirection[0], f_GuardDirection[1], f_GuardDirection[2]);
+				ScaleVector(f_GuardDirection, -1.0);				
 				TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, NULL_VECTOR);
 			}
 			else
@@ -3447,7 +3505,7 @@ InitializeGame(iPartnersIndex)
 			if (m4mPlayerFirst == 0)
 			{
 				SetEntData(Pistol_Prisoner, g_Offset_Clip1, 0);
-				SetEntData(Pistol_Guard, g_Offset_Clip1, 7);
+				SetEntData(Pistol_Guard, g_Offset_Clip1, gShadow_LR_M4M_MagCapacity);
 				if (gShadow_SendGlobalMsgs)
 				{
 					PrintToChatAll(CHAT_BANNER, "Randomly Chose First Player", LR_Player_Guard);
@@ -3461,7 +3519,7 @@ InitializeGame(iPartnersIndex)
 			}
 			else
 			{
-				SetEntData(Pistol_Prisoner, g_Offset_Clip1, 7);
+				SetEntData(Pistol_Prisoner, g_Offset_Clip1, gShadow_LR_M4M_MagCapacity);
 				SetEntData(Pistol_Guard, g_Offset_Clip1, 0);			
 				if (gShadow_SendGlobalMsgs)
 				{
@@ -3542,8 +3600,7 @@ InitializeGame(iPartnersIndex)
 
 			SetEntityMoveType(LR_Player_Prisoner, MOVETYPE_NONE);
 			SetEntityMoveType(LR_Player_Guard, MOVETYPE_NONE);			
-			ScaleVector(f_GuardDirection, -1.0);
-			//PrintToServer("0: %f, 1: %f, 2: %f", f_GuardDirection[0], f_GuardDirection[1], f_GuardDirection[2]);
+			ScaleVector(f_GuardDirection, -1.0);			
 			TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, NULL_VECTOR);
 
 			new Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_deagle");
