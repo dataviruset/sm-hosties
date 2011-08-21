@@ -3447,15 +3447,31 @@ InitializeGame(iPartnersIndex)
 			if (m4mPlayerFirst == 0)
 			{
 				SetEntData(Pistol_Prisoner, g_Offset_Clip1, 0);
-				SetEntData(Pistol_Guard, g_Offset_Clip1, 7);	
-				PrintToChatAll(CHAT_BANNER, "Randomly Chose First Player", LR_Player_Guard);
+				SetEntData(Pistol_Guard, g_Offset_Clip1, 7);
+				if (gShadow_SendGlobalMsgs)
+				{
+					PrintToChatAll(CHAT_BANNER, "Randomly Chose First Player", LR_Player_Guard);
+				}
+				else
+				{
+					PrintToChat(LR_Player_Prisoner, CHAT_BANNER, "Randomly Chose First Player", LR_Player_Guard);
+					PrintToChat(LR_Player_Guard, CHAT_BANNER, "Randomly Chose First Player", LR_Player_Guard);
+				}
 				SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, LR_Player_Guard, _:Block_Global1); // S4Slastshot
 			}
 			else
 			{
 				SetEntData(Pistol_Prisoner, g_Offset_Clip1, 7);
 				SetEntData(Pistol_Guard, g_Offset_Clip1, 0);			
-				PrintToChatAll(CHAT_BANNER, "Randomly Chose First Player", LR_Player_Prisoner);
+				if (gShadow_SendGlobalMsgs)
+				{
+					PrintToChatAll(CHAT_BANNER, "Randomly Chose First Player", LR_Player_Prisoner);
+				}
+				else
+				{
+					PrintToChat(LR_Player_Prisoner, CHAT_BANNER, "Randomly Chose First Player", LR_Player_Prisoner);
+					PrintToChat(LR_Player_Guard, CHAT_BANNER, "Randomly Chose First Player", LR_Player_Prisoner);
+				}
 				SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, LR_Player_Prisoner, _:Block_Global1);
 			}
 		
