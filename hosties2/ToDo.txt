@@ -1,0 +1,47 @@
+To Do List:
+
+???
+
+Possible new cvars:
+
+clip size given to players in M4M LR
+countdown time in race
+SOUND_BLIP configurability (specify new sound or turn off)
+
+
+ES Hosties Features Not Yet Implemented or Suggestions from SM_Hosties Thread:
+
+** Logging for events (LR Win, Lose)
+3. A distance counter for gun toss would be nice.
+Deagle golf - The T makes a point on the map and whoever throws their deagle closest wins.
+Support to play music on the Last Requests, sorta like in the Knife Fight plugin.
+*Headshot like shot for shot but can only die from headshots?
+*Spray Contest measures how high you get your spray on a wall loser gets auto slayed?
+Warning Weapon, allowes CTs to give warning shots to Ts
+Stop cts from lining up T's and killing them
+Control
+Anti Gun Plant
+Admin Menu
+
+    Make Rebel
+    Spawn Player to Last Location
+    Toggle Last Requests (Load/unload LRs in game)
+    Toggle Mods (Load/unload custom hosties mods in game)
+    Commands include
+        !hostiesadmin
+        !makerebel userid/name/steamid
+Player Commands include (But not limited to)
+
+    !commands - See available commands
+    !hosties - See the main hosties menu
+    !control - Become a controler
+    !checkguns - See who has guns
+
+
+I mean the last request "Freeday"
+Players choose: "Freeday"
+He is killed (auto slay)
+In the next round is distinguished (beacon, color) 
+
+1. How do I set it so lr can only be used once per player. I do not want people able to use it more than once. It is last request after all.
+
