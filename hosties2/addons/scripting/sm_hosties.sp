@@ -33,7 +33,6 @@
 #define 	CHAT_BANNER		 			"\x03[SM] \x01%t"
 #define 	MAX_DISPLAYNAME_SIZE 	32
 #define 	MAX_DATAENTRY_SIZE 		5
-#define 	SOUND_BLIP		 			"buttons/blip1.wav"
 #define 	NORMAL_VISION 				90
 #define 	SERVERTAG		 			"SM_Hosties_2"
 
