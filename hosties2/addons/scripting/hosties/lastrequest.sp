@@ -124,6 +124,7 @@ new Handle:gH_Cvar_LR_Rebel_MinCTs = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_M4M_MagCapacity = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_KnifeFight_LowGrav = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_KnifeFight_HiSpeed = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_KnifeFight_Drunk = INVALID_HANDLE;
 
 new gShadow_LR_KnifeFight_On = -1;
 new gShadow_LR_Shot4Shot_On = -1;
@@ -190,6 +191,7 @@ new gShadow_LR_Rebel_MinCTs = -1;
 new gShadow_LR_M4M_MagCapacity = -1;
 new Float:gShadow_LR_KnifeFight_LowGrav = -1.0;
 new Float:gShadow_LR_KnifeFight_HiSpeed = -1.0;
+new gShadow_LR_KnifeFight_Drunk = -1;
 
 // Custom types local to the plugin
 enum NoScopeWeapon
@@ -455,6 +457,8 @@ LastRequest_OnPluginStart()
 	gShadow_LR_KnifeFight_LowGrav = 0.6;
 	gH_Cvar_LR_KnifeFight_HiSpeed = CreateConVar("sm_hosties_lr_kf_speed", "2.2", "The multiplier used for the high-speed knife fight.", FCVAR_PLUGIN, true, 1.1);
 	gShadow_LR_KnifeFight_HiSpeed = 2.2;
+	gH_Cvar_LR_KnifeFight_Drunk = CreateConVar("sm_hosties_lr_kf_drunk", "4", "The multiplier used for how drunk the player will be during the drunken boxing knife fight.", FCVAR_PLUGIN, true, 0.0);
+	gShadow_LR_KnifeFight_Drunk = 4;
 	gH_Cvar_Announce_CT_FreeHit = CreateConVar("sm_hosties_announce_attack", "1", "Enable or disable announcements when a CT attacks a non-rebelling T: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_Announce_CT_FreeHit = true;
 	gH_Cvar_Announce_LR = CreateConVar("sm_hosties_announce_lr", "1", "Enable or disable chat announcements when Last Requests starts to be available: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
@@ -530,6 +534,7 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_LR_M4M_MagCapacity, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_KnifeFight_LowGrav, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_KnifeFight_HiSpeed, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_KnifeFight_Drunk, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_Announce_CT_FreeHit, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_Announce_LR, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_Announce_Rebel, ConVarChanged_Setting);
@@ -1337,7 +1342,7 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 							PrintToChat(LR_Player_Guard, CHAT_BANNER, "S4S Shot Taken", client);
 							PrintToChat(LR_Player_Prisoner, CHAT_BANNER, "S4S Shot Taken", client);
 						}
-					}					
+					}
 					
 					// give the opposite LR player 1 bullet in their deagle
 					if (client == LR_Player_Prisoner)
@@ -1349,8 +1354,8 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					{
 						// modify deagle 1s ammo
 						SetEntData(Prisoner_Weapon, g_Offset_Clip1, 1);
-					}		    	
-
+					}
+					
 					ChangeEdictState(Prisoner_Weapon, g_Offset_Clip1);
 					ChangeEdictState(Guard_Weapon, g_Offset_Clip1);					
 				}
@@ -1846,6 +1851,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_LR_M4M_MagCapacity = GetConVarInt(gH_Cvar_LR_M4M_MagCapacity);
 	gShadow_LR_KnifeFight_LowGrav = GetConVarFloat(gH_Cvar_LR_KnifeFight_LowGrav);
 	gShadow_LR_KnifeFight_HiSpeed = GetConVarFloat(gH_Cvar_LR_KnifeFight_HiSpeed);
+	gShadow_LR_KnifeFight_Drunk = GetConVarInt(gH_Cvar_LR_KnifeFight_Drunk);
 }
 
 public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:newValue[])
@@ -2054,6 +2060,10 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	{
 		gShadow_LR_KnifeFight_HiSpeed = StringToFloat(newValue);
 	}
+	else if (cvar == gH_Cvar_LR_KnifeFight_Drunk)
+	{
+		gShadow_LR_KnifeFight_Drunk = StringToInt(newValue);
+	}
 }
 
 public ConVarChanged_LastRequest(Handle:cvar, const String:oldValue[], const String:newValue[])
@@ -2195,7 +2205,7 @@ public Action:Command_LastRequest(client, args)
 										entry = GetArrayCell(gH_DArray_LastRequests, iLR_Index);
 										if (entry < LastRequest)
 										{
-											if (LastRequest:entry != LR_Rebel || (LastRequest:entry == LR_Rebel && Ts <= gShadow_LR_Rebel_MaxTs) && CTs >= gShadow_LR_Rebel_MinCTs)
+											if (LastRequest:entry != LR_Rebel || (LastRequest:entry == LR_Rebel && Ts <= gShadow_LR_Rebel_MaxTs && CTs >= gShadow_LR_Rebel_MinCTs))
 											{
 												Format(sDataField, sizeof(sDataField), "%d", entry);
 												Format(sTitleField, sizeof(sTitleField), "%T", g_sLastRequestPhrase[entry], client);
@@ -3198,7 +3208,6 @@ InitializeGame(iPartnersIndex)
 			{
 				SetEntityMoveType(LR_Player_Prisoner, MOVETYPE_NONE);
 				SetEntityMoveType(LR_Player_Guard, MOVETYPE_NONE);			
-				//TeleportEntity(LR_Player_Prisoner, NULL_VECTOR, Float:{0.0, -90.0, 0.0}, NULL_VECTOR);
 				ScaleVector(f_GuardDirection, -1.0);				
 				TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, NULL_VECTOR);
 			}
@@ -3717,8 +3726,8 @@ InitializeGame(iPartnersIndex)
 					StripAllWeapons(LR_Player_Prisoner);
 					StripAllWeapons(LR_Player_Guard);
 
-					SetEntData(LR_Player_Prisoner, g_Offset_Health, 105);
-					SetEntData(LR_Player_Guard, g_Offset_Health, 105);					
+					SetEntData(LR_Player_Prisoner, g_Offset_Health, 100);
+					SetEntData(LR_Player_Guard, g_Offset_Health, 100);
 					
 					if (!gShadow_NoBlock)
 					{
@@ -3759,9 +3768,6 @@ InitializeGame(iPartnersIndex)
 	{
 		AddBeacon(LR_Player_Prisoner);
 		AddBeacon(LR_Player_Guard);
-		
-		// set laser beam settings to infinite for all
-		//SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, -1, 10);
 	}
 }
 
@@ -4587,7 +4593,7 @@ public Action:Timer_ChickenFight(Handle:timer)
 						PrintToChat(LR_Player_Prisoner, "Chicken Fight Kill Loser", LR_Player_Guard);
 						
 						GivePlayerItem(LR_Player_Prisoner, "weapon_knife");
-												
+						
 						SetEntityRenderColor(LR_Player_Guard, gShadow_LR_ChickenFight_C_Red, gShadow_LR_ChickenFight_C_Green,
 							gShadow_LR_ChickenFight_C_Blue, 255);
 					}
@@ -4605,7 +4611,7 @@ public Action:Timer_ChickenFight(Handle:timer)
 						PrintToChat(LR_Player_Guard, "Chicken Fight Kill Loser", LR_Player_Prisoner);
 						
 						GivePlayerItem(LR_Player_Guard, "weapon_knife");
-												
+						
 						SetEntityRenderColor(LR_Player_Prisoner, gShadow_LR_ChickenFight_C_Red, gShadow_LR_ChickenFight_C_Green,
 							gShadow_LR_ChickenFight_C_Blue, 255);
 					}
@@ -4663,15 +4669,12 @@ public Action:Timer_GunToss(Handle:timer)
 				GTp2droppos[2] = ReadPackFloat(PositionDataPack);				
 			
 				if (GTp1dropped && !GTp1done)
-				{
-					
+				{					
 					GetEntPropVector(GTdeagle1, Prop_Data, "m_vecOrigin", GTdeagle1pos);
 					if (GetVectorDistance(GTdeagle1lastpos, GTdeagle1pos) < 3.00)
 					{
 						GTp1done = true;
 						SetArrayCell(gH_DArray_LR_Partners, idx, GTp1done, _:Block_Global3);
-						
-
 					}
 					else
 					{
@@ -4709,9 +4712,7 @@ public Action:Timer_GunToss(Handle:timer)
 					if (GetVectorDistance(GTdeagle2lastpos, GTdeagle2pos) < 3.00)
 					{
 						GTp2done = true;
-						SetArrayCell(gH_DArray_LR_Partners, idx, GTp2done, _:Block_Global4);
-						
-
+						SetArrayCell(gH_DArray_LR_Partners, idx, GTp2done, _:Block_Global4);						
 					}
 					else
 					{
@@ -4852,6 +4853,7 @@ public Action:Timer_BeerGoggles(Handle:timer)
 	}
 	
 	decl Float:vecPunch[3];
+	new Float:drunkMultiplier = float(gShadow_LR_KnifeFight_Drunk);
 	
 	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
 	if (iArraySize == 0)
@@ -4874,27 +4876,27 @@ public Action:Timer_BeerGoggles(Handle:timer)
 				{
 					case 0:
 					{
-						vecPunch[0] = 20.0;
-						vecPunch[1] = 20.0;
-						vecPunch[2] = -20.0;
+						vecPunch[0] = drunkMultiplier*5.0;
+						vecPunch[1] = drunkMultiplier*5.0;
+						vecPunch[2] = drunkMultiplier*-5.0;
 					}
 					case 1:
 					{
-						vecPunch[0] = -20.0;
-						vecPunch[1] = -20.0;
-						vecPunch[2] = 20.0;
+						vecPunch[0] = drunkMultiplier*-5.0;
+						vecPunch[1] = drunkMultiplier*-5.0;
+						vecPunch[2] = drunkMultiplier*5.0;
 					}
 					case 2:
 					{
-						vecPunch[0] = 20.0;
-						vecPunch[1] = -20.0;
-						vecPunch[2] = 20.0;
+						vecPunch[0] = drunkMultiplier*5.0;
+						vecPunch[1] = drunkMultiplier*-5.0;
+						vecPunch[2] = drunkMultiplier*5.0;
 					}
 					case 3:
 					{
-						vecPunch[0] = -20.0;
-						vecPunch[1] = 20.0;
-						vecPunch[2] = -20.0;
+						vecPunch[0] = drunkMultiplier*-5.0;
+						vecPunch[1] = drunkMultiplier*5.0;
+						vecPunch[2] = drunkMultiplier*-5.0;
 					}					
 				}
 				SetEntDataVector(LR_Player_Prisoner, g_Offset_PunchAngle, vecPunch, true);	
