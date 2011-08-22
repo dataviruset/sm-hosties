@@ -1,18 +1,18 @@
 To Do List:
 
 Change Command_CancelLR to use ShowActivity instead of PrintToChatAll
-Make ClosePotentialLRMenus only affect those who are actually inside an LR menu
 SOUND_BLIP configurability (specify new sound or turn off)
+Fix 3rd (third) person knife fight code in include file
+Remove nade after dodgeball LR
 Race beam rings won't disappear when LR is stopped and new points are selected RaceStartPointHandler (create entity for beacon code?)
 improve hot potato uniquness (GetRandomInt(1, 31337))
-starting HP for LRs
-ending HP for LRs
+cvar for starting HP for LRs
+cvar for ending HP for LRs
+Make ClosePotentialLRMenus only affect those who are actually inside an LR menu
 
 Possible new cvars:
 
 countdown time in race
-
-
 
 ES Hosties Features Not Yet Implemented or Suggestions from SM_Hosties Thread:
 
