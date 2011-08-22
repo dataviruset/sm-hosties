@@ -733,7 +733,8 @@ public Action:Command_CancelLR(client, args)
 		RemoveFromArray(gH_DArray_LR_Partners, iArraySize-1);
 		iArraySize--;
 	}
-	PrintToChatAll(CHAT_BANNER, "LR Aborted", client);
+	ShowActivity(client, "%t", "LR Aborted");
+	//PrintToChatAll(CHAT_BANNER, "LR Aborted", client);
 	return Plugin_Handled;
 }
 

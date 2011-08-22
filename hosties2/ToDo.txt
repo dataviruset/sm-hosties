@@ -1,6 +1,5 @@
 To Do List:
 
-Change Command_CancelLR to use ShowActivity instead of PrintToChatAll
 SOUND_BLIP configurability (specify new sound or turn off)
 Fix 3rd (third) person knife fight code in include file
 Remove nade after dodgeball LR

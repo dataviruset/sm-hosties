@@ -499,8 +499,7 @@
 	}
 	"LR Aborted"
 	{
-		"#format"	"{1:N}"
-		"en"		"{1} aborted all active Last Requests!"
+		"en"		"Aborted all active Last Requests!"
 	}
 	"Knife Fight Selection Menu"
 	{
