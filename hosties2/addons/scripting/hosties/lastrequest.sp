@@ -141,6 +141,7 @@ new Handle:gH_Cvar_LR_M4M_MagCapacity = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_KnifeFight_LowGrav = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_KnifeFight_HiSpeed = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_KnifeFight_Drunk = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_Beacon_Sound = INVALID_HANDLE;
 
 new gShadow_LR_KnifeFight_On = -1;
 new gShadow_LR_Shot4Shot_On = -1;
@@ -208,6 +209,7 @@ new gShadow_LR_M4M_MagCapacity = -1;
 new Float:gShadow_LR_KnifeFight_LowGrav = -1.0;
 new Float:gShadow_LR_KnifeFight_HiSpeed = -1.0;
 new gShadow_LR_KnifeFight_Drunk = -1;
+new String:gShadow_LR_Beacon_Sound[PLATFORM_MAX_PATH];
 
 // Custom types local to the plugin
 enum NoScopeWeapon
@@ -438,7 +440,9 @@ LastRequest_OnPluginStart()
 	gH_Cvar_LR_NoScope_Sound = CreateConVar("sm_hosties_noscope_sound", "sm_hosties/noscopestart1.mp3", "What sound to play when a No Scope Battle starts, relative to the sound-folder: -1 - disable, path - path to sound file", FCVAR_PLUGIN);
 	Format(gShadow_LR_NoScope_Sound, sizeof(gShadow_LR_NoScope_Sound ), "sm_hosties/noscopestart1.mp3");
 	gH_Cvar_LR_Sound = CreateConVar("sm_hosties_lr_sound", "sm_hosties/lr1.mp3", "What sound to play when LR gets available, relative to the sound-folder (also requires sm_hosties_announce_lr to be 1): -1 - disable, path - path to sound file", FCVAR_PLUGIN);
-	Format(gShadow_LR_Sound, sizeof(gShadow_LR_Sound), "sm_hosties/lr1.mp3");	
+	Format(gShadow_LR_Sound, sizeof(gShadow_LR_Sound), "sm_hosties/lr1.mp3");
+	gH_Cvar_LR_Beacon_Sound = CreateConVar("sm_hosties_beacon_sound", "buttons/blip1.wav", "What sound to play each second a beacon is 'ping'ed.", FCVAR_PLUGIN);
+	Format(gShadow_LR_Beacon_Sound, sizeof(gShadow_LR_Beacon_Sound), "buttons/blip1.wav");
 	gH_Cvar_LR_NoScope_Weapon = CreateConVar("sm_hosties_lr_ns_weapon", "2", "Weapon to use in a No Scope Battle: 0 - AWP, 1 - scout, 2 - let the terrorist choose, 3 - SG550, 4 - G3SG1", FCVAR_PLUGIN, true, 0.0, true, 2.0);
 	gShadow_LR_NoScope_Weapon = 2;
 	gH_Cvar_LR_NonContKiller_Action = CreateConVar("sm_hosties_lr_p_killed_action", "1", "What to do when a LR-player gets killed by a player not in LR during LR: 0 - just abort LR, 1 - abort LR and slay the attacker", FCVAR_PLUGIN, true, 0.0, true, 1.0);
@@ -532,6 +536,7 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_LR_HotPotato_Speed, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_NoScope_Sound, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_Sound, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_Beacon_Sound, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_NoScope_Weapon, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_NonContKiller_Action, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_S4S_DoubleShot, ConVarChanged_Setting);
@@ -1720,9 +1725,6 @@ public Action:OnWeaponDrop(client, weapon)
 
 LastRequest_OnMapStart()
 {
-	// Download any sounds configured
-	PrecacheSound(SOUND_BLIP, true);
-	
 	// Precache any materials needed
 	BeamSprite = PrecacheModel("materials/sprites/laser.vmt");
 	LaserSprite = PrecacheModel("materials/sprites/lgtning.vmt");
@@ -1815,6 +1817,11 @@ LastRequest_OnConfigsExecuted()
 	{
 		CacheTheFile(gShadow_LR_Sound, soundfile);
 	}
+	GetConVarString(gH_Cvar_LR_Beacon_Sound, gShadow_LR_Beacon_Sound, sizeof(gShadow_LR_Beacon_Sound));
+	if ((strlen(gShadow_LR_Beacon_Sound) > 0) && !StrEqual(gShadow_LR_Beacon_Sound, "-1"))
+	{
+		CacheTheFile(gShadow_LR_Beacon_Sound, soundfile);
+	}
 	
 	// update settings from configs
 	gShadow_LR_Enable = bool:GetConVarInt(gH_Cvar_LR_Enable);
@@ -1850,6 +1857,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_LR_HotPotato_Speed = GetConVarFloat(gH_Cvar_LR_HotPotato_Speed);
 	GetConVarString(gH_Cvar_LR_NoScope_Sound, gShadow_LR_NoScope_Sound, sizeof(gShadow_LR_NoScope_Sound));
 	GetConVarString(gH_Cvar_LR_Sound, gShadow_LR_Sound, sizeof(gShadow_LR_Sound));
+	GetConVarString(gH_Cvar_LR_Beacon_Sound, gShadow_LR_Beacon_Sound, sizeof(gShadow_LR_Beacon_Sound));	
 	gShadow_LR_NoScope_Weapon = GetConVarInt(gH_Cvar_LR_NoScope_Weapon);
 	gShadow_Announce_Shot4Shot = bool:GetConVarInt(gH_Cvar_Announce_Shot4Shot);
 	gShadow_LR_NonContKiller_Action = bool:GetConVarInt(gH_Cvar_LR_NonContKiller_Action);
@@ -2000,6 +2008,10 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	else if (cvar == gH_Cvar_LR_Sound)
 	{
 		Format(gShadow_LR_Sound, sizeof(gShadow_LR_Sound), newValue);
+	}
+	else if (cvar == gH_Cvar_LR_Beacon_Sound)
+	{
+		Format(gShadow_LR_Beacon_Sound, sizeof(gShadow_LR_Beacon_Sound), newValue);
 	}
 	else if (cvar == gH_Cvar_LR_NoScope_Weapon)
 	{
@@ -4061,7 +4073,7 @@ public Action:Timer_Beacon(Handle:timer)
 					TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 10, 0.6, 10.0, 0.5, yellowColor, 10, 0);
 					TE_SendToAll();
 				}
-				EmitAmbientSound(SOUND_BLIP, f_Origin, iEntityIndex, SNDLEVEL_RAIDSIREN);	
+				EmitAmbientSound(gShadow_LR_Beacon_Sound, f_Origin, iEntityIndex, SNDLEVEL_RAIDSIREN);	
 			}
 			else
 			{
