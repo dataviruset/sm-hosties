@@ -4160,7 +4160,7 @@ public Action:Timer_RemoveFlashbang(Handle:timer, any:entity)
 		new client = GetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity");
 		AcceptEntityInput(entity, "Kill");
 		
-		if (IsClientInGame(client) && IsPlayerAlive(client))
+		if (IsClientInGame(client) && IsPlayerAlive(client) && Local_IsClientInLR(client))
 		{
 			new flash = CreateEntityByName("weapon_flashbang");
 			DispatchSpawn(flash);
