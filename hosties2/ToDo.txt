@@ -1,12 +1,17 @@
 To Do List:
 
-???
+Change Command_CancelLR to use ShowActivity instead of PrintToChatAll
+Make ClosePotentialLRMenus only affect those who are actually inside an LR menu
+SOUND_BLIP configurability (specify new sound or turn off)
+Race beam rings won't disappear when LR is stopped and new points are selected RaceStartPointHandler (create entity for beacon code?)
+improve hot potato uniquness (GetRandomInt(1, 31337))
+starting HP for LRs
+ending HP for LRs
 
 Possible new cvars:
 
-clip size given to players in M4M LR
 countdown time in race
-SOUND_BLIP configurability (specify new sound or turn off)
+
 
 
 ES Hosties Features Not Yet Implemented or Suggestions from SM_Hosties Thread:
