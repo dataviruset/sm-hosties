@@ -438,7 +438,7 @@
 	}
 	"LR Aborted"
 	{
-		"sv"		"{1} avbröt alla pågående sista önskningar!"
+		"sv"		"Avbröt alla pågående sista önskningar!"
 	}
 	"Knife Fight Selection Menu"
 	{
