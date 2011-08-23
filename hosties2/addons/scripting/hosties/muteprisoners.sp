@@ -20,6 +20,7 @@
 #include <sourcemod>
 #include <cstrike>
 #include <sdkhooks>
+#include <basecomm>
 #include <hosties>
 
 new Handle:gH_Cvar_MuteStatus = INVALID_HANDLE;
@@ -32,10 +33,11 @@ new String:gShadow_MuteImmune[37];
 new Handle:gH_Cvar_MuteCT = INVALID_HANDLE;
 new bool:gShadow_MuteCT = false;
 new gAdmFlags_MuteImmunity = 0;
+new bool:g_bBaseCommNatives = false;
+new bool:g_bMuted[MAXPLAYERS+1];
 
 MutePrisoners_OnPluginStart()
 {
-
 	gH_Cvar_MuteStatus = CreateConVar("sm_hosties_mute", "1", "Setting for muting terrorists automatically: 0 - disable, 1 - terrorists are muted the first 30 seconds of a round, 2 - terrorists are muted when they die, 3 - both", FCVAR_PLUGIN, true, 0.0, true, 3.0);
 	gShadow_MuteStatus = 0;
 	
@@ -64,13 +66,133 @@ MutePrisoners_OnPluginStart()
 	HookEvent("player_death", MutePrisoners_PlayerDeath);
 }
 
+MutePrisoners_OnClientConnected(client)
+{
+	g_bMuted[client] = false;
+}
+
+MutePrisoners_AllPluginsLoaded()
+{
+	g_bBaseCommNatives = DoesContainBaseCommNatives();
+	
+	if (!g_bBaseCommNatives)
+	{
+		AddCommandListener(Listen_AdminMute, "sm_mute");
+		AddCommandListener(Listen_AdminMute, "sm_silence");
+	}
+}
+
+public Action:Listen_AdminMute(client, const String:command[], args)
+{
+	if (args < 1)
+	{
+		return Plugin_Continue;
+	}
+	
+	decl String:arg[64];
+	GetCmdArg(1, arg, sizeof(arg));
+	
+	decl String:target_name[MAX_TARGET_LENGTH];
+	decl target_list[MAXPLAYERS], target_count, bool:tn_is_ml;
+	
+	target_count = ProcessTargetString(
+		arg,
+		client, 
+		target_list, 
+		MAXPLAYERS, 
+		0,
+		target_name,
+		sizeof(target_name),
+		tn_is_ml);
+	
+	for (new i = 0; i < target_count; i++)
+	{
+		g_bMuted[target_list[i]] = true;
+	}
+	
+	return Plugin_Continue;
+}
+
 MutePrisoners_OnConfigsExecuted()
 {
 	gShadow_MuteStatus = GetConVarBool(gH_Cvar_MuteStatus);
 	gShadow_MuteLength = GetConVarFloat(gH_Cvar_MuteLength);
 	
 	GetConVarString(gH_Cvar_MuteImmune, gShadow_MuteImmune, sizeof(gShadow_MuteImmune));
-	MutePrisoners_CalcImmunity();	
+	MutePrisoners_CalcImmunity();
+}
+
+stock MuteTs()
+{
+	for(new i = 1; i <= MaxClients; i++)
+	{
+		if ( (IsClientInGame(i)) && (IsPlayerAlive(i)) ) // if player is in game and alive
+		{
+			// if player is a terrorist
+			if (GetClientTeam(i) == CS_TEAM_T)
+			{
+				MutePlayer(i);
+			}
+		}
+	}
+}
+
+stock UnmuteAlive()
+{
+	for(new i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i) && IsPlayerAlive(i)) // if player is in game and alive
+		{
+			if (g_bBaseCommNatives)
+			{
+				if (!BaseComm_IsClientMuted(i))
+				{
+					UnmutePlayer(i);
+				}
+			}
+			else
+			{
+				if (!g_bMuted[i])
+				{
+					UnmutePlayer(i);
+				}
+			}
+		}
+	}
+}
+
+stock bool:DoesContainBaseCommNatives()
+{
+	// 1.3.9 will have Native_IsClientMuted in basecomm.inc
+	if (GetFeatureStatus(FeatureType_Native, "BaseComm_IsClientMuted") == FeatureStatus_Available)
+	{
+		return true;
+	}
+	return false;
+}
+
+stock UnmuteAll()
+{
+	for(new i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i)) // if player is in game
+		{
+			if (g_bBaseCommNatives)
+			{
+				if (!BaseComm_IsClientMuted(i))
+				{
+					UnmutePlayer(i);
+				}
+			}
+			else
+			{
+				if (!g_bMuted[i])
+				{
+					UnmutePlayer(i);
+				}
+			}
+		}
+	}
 }
 
 void:MutePrisoners_CalcImmunity()
@@ -154,7 +276,6 @@ public MutePrisoners_RoundEnd(Handle:event, const String:name[], bool:dontBroadc
 		CloseHandle(gH_Timer_Unmuter);
 		gH_Timer_Unmuter = INVALID_HANDLE;
 	}
-	
 }
 
 public MutePrisoners_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)

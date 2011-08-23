@@ -119,6 +119,8 @@ public Action:Command_Rules(client, args)
 				DrawPanelText(Hosties_Rules_Panel, sPanelText);
 			}
 			
+			DrawPanelText(Hosties_Rules_Panel, "0. to Exit");
+			
 			SendPanelToClient(Hosties_Rules_Panel, client, Panel_Handler, MENU_TIME_FOREVER);
 			CloseHandle(Hosties_Rules_Panel);
 		}

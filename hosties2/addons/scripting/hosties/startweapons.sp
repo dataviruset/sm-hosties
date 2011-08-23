@@ -51,6 +51,13 @@ StartWeapons_OnPluginStart()
 	HookConVarChange(gH_Cvar_CT_Weapons, StartWeapons_CvarChanged);
 }
 
+StartWeapons_OnConfigsExecuted()
+{
+	GetConVarString(gH_Cvar_CT_Weapons, gShadow_CT_Weapons, sizeof(gShadow_CT_Weapons));
+	GetConVarString(gH_Cvar_T_Weapons, gShadow_T_Weapons, sizeof(gShadow_T_Weapons));
+	gShadow_StartWeaponsOn = GetConVarBool(gH_Cvar_StartWeaponsOn);
+}
+
 public StartWeapons_Spawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));

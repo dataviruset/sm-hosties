@@ -28,13 +28,15 @@
 #pragma semicolon 1
 
 // Constants
-#define 	PLUGIN_VERSION	 			"2.0.0b"
+#define 	PLUGIN_VERSION	 			"2.0.0"
 // Change to include your own clan tag but leave the '%t' intact
 #define 	CHAT_BANNER		 			"\x03[SM] \x01%t"
 #define 	MAX_DISPLAYNAME_SIZE 	32
 #define 	MAX_DATAENTRY_SIZE 		5
 #define 	NORMAL_VISION 				90
 #define 	SERVERTAG		 			"SM_Hosties_2"
+
+// Note: you cannot safely turn these modules on and off yet. Use cvars to disable functionality.
 
 // Add ability to disable collisions for players
 #define	MODULE_NOBLOCK				1
@@ -116,6 +118,7 @@ new gA_FreekillsOfCT[MAXPLAYERS+1];
 
 // ConVars
 new Handle:gH_Cvar_Add_ServerTag	= INVALID_HANDLE;
+new Handle:gH_Cvar_Display_Advert = INVALID_HANDLE;
 
 public Plugin:myinfo =
 {
@@ -123,7 +126,7 @@ public Plugin:myinfo =
 	author = "databomb & dataviruset",
 	description = "Hosties/jailbreak plugin for SourceMod",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "http://forums.alliedmods.net/showthread.php?t=108810"
 };
 
 public OnPluginStart()
@@ -135,7 +138,8 @@ public OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 
 	// Create ConVars
-	gH_Cvar_Add_ServerTag = CreateConVar("sm_hosties_add_servertag", "1", "Enable or disable automatic adding of SM_Hosties in sv_tags (visible from the server browser in CS:S): 0 - disable, 1 - enable");
+	gH_Cvar_Add_ServerTag = CreateConVar("sm_hosties_add_servertag", "1", "Enable or disable automatic adding of SM_Hosties in sv_tags (visible from the server browser in CS:S): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Display_Advert = CreateConVar("sm_hosties_display_advert", "1", "Enable or disable the display of the Powered by SM Hosties message at the start of each round.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	
 	CreateConVar("sm_hosties_version", PLUGIN_VERSION, "SM_Hosties plugin version (unchangeable)", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	
@@ -199,6 +203,10 @@ public OnAllPluginsLoaded()
 	{
 		g_bSBAvailable = true;
 	}
+	
+	#if (MODULE_MUTE == 1)
+	MutePrisoners_AllPluginsLoaded();
+	#endif	
 }
 
 public OnLibraryAdded(const String:name[])
@@ -217,6 +225,13 @@ public OnLibraryRemoved(const String:name[])
 	}
 }
 
+public OnClientConnected(client)
+{
+	#if (MODULE_MUTE == 1)
+	MutePrisoners_OnClientConnected(client);
+	#endif
+}
+
 public OnConfigsExecuted()
 {
 	if (GetConVarInt(gH_Cvar_Add_ServerTag) == 1)
@@ -230,6 +245,12 @@ public OnConfigsExecuted()
 	#if (MODULE_MUTE == 1)
 	MutePrisoners_OnConfigsExecuted();
 	#endif
+	#if (MODULE_CHECKPLAYERS == 1)
+	CheckPlayers_OnConfigsExecuted();
+	#endif
+	#if (MODULE_GAMEDESCRIPTION == 1)
+	GameDesc_OnConfigsExecuted();
+	#endif
 	#if (MODULE_TEAMOVERLAYS == 1)
 	TeamOverlays_OnConfigsExecuted();
 	#endif
@@ -239,10 +260,19 @@ public OnConfigsExecuted()
 	#if (MODULE_LASTREQUEST == 1)
 	LastRequest_OnConfigsExecuted();
 	#endif
+	#if (MODULE_NOBLOCK == 1)
+	NoBlock_OnConfigsExecuted();
+	#endif
+	#if (MODULE_STARTWEAPONS == 1)
+	StartWeapons_OnConfigsExecuted();
+	#endif
 }
 
 public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	// Print out a messages about SM_Hosties 
-	PrintToChatAll(CHAT_BANNER, "Powered By Hosties");
+	if (GetConVarInt(gH_Cvar_Display_Advert))
+	{
+		// Print out a messages about SM_Hosties 
+		PrintToChatAll(CHAT_BANNER, "Powered By Hosties");
+	}
 }
