@@ -171,7 +171,7 @@ public OnPluginStart()
 	Freekillers_OnPluginStart();
 	#endif
 	
-	AutoExecConfig(true, "sm_hosties");
+	AutoExecConfig(true, "sm_hosties_2");
 }
 
 public OnMapStart()
