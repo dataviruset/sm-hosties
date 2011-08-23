@@ -70,13 +70,13 @@ Run plugin for the first time and configure all settings in cfg/sourcemod/sm_hos
 
 Upgrade Instructions:
 
-Rename your original sm_hosties.cfg in cfg/sourcemod/ to sm_hosties.backup.cfg
+Rename your original sm_hosties2.cfg in cfg/sourcemod/ to sm_hosties2.backup.cfg
 Let the new version of the plugin start for the first time and create the new cfg file.
-Look at the sm_hosties.backup.cfg and merge your original settings with the new one.
+Look at the sm_hosties2.backup.cfg and merge your original settings with the new one.
 
 Changes to Existing Cvars:
 
-A few of the existing cvar settings in SM_Hosties v1.x have changed slighlty in v2.
+A few of the existing cvar settings in SM_Hosties v1.x have changed slighlty in v2. The v2 config file has been given a new name intentionally.
 Really, you should consider to redo all configuration if you're upgrading from 1.x.
 
 sm_hosties_lr_ts_max: This now controls the number of Ts allowed to have LRs going at the same time.
@@ -104,7 +104,7 @@ Silence, XenoGamers
 
 Help The Cause:
 
-Hosties v2 is over 5,500 lines of code and growing. There are a variety of ways you could help the project.
+SM_Hosties v2 is over 5,500 lines of code and growing. There are a variety of ways you could help the project.
 Firstly, we have a healthy list of new features that could be added if you have any experience with SourceMod and plugin development and would like to lend a hand. Also, with the addition of the Hosties API, we could make a custom LR game for your server in exchange for a small fee. AlliedMods is gracious enough to host all of this so, if you haven't already, make them a donation to support the hosting costs. Lastly, consider making a donation to us to help offset the cost of development and hosting. The barrage of DDoS attacks drives up the cost of hosting and without active servers, our interest in development would wither. Donations to Vintage Jailbreak or '][' E H \/\/ARRiORS will be split amongst databomb and dataviruset, just be sure to reference this is for the Hosties project.
 
 [[donate button]]
