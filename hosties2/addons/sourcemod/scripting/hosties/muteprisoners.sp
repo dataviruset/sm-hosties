@@ -20,7 +20,9 @@
 #include <sourcemod>
 #include <cstrike>
 #include <sdkhooks>
+#undef REQUIRE_PLUGIN
 #include <basecomm>
+#define REQUIRE_PLUGIN
 #include <hosties>
 
 new Handle:gH_Cvar_MuteStatus = INVALID_HANDLE;
