@@ -3,12 +3,13 @@ by: databomb & dataviruset
 
 Description:
 
-This is a re-write of SM_Hosties v1.x from dataviruset.  This allows support for multiple LRs occuring simultaneously as well as a plethora of additional last request games and new cvars for the most customizable Hosties yet.   It opens up a new API for plugin developers to ask questions like if a player is a rebel as well as the ability to add third party last request games for each server independent of the Hosties plugin.
+This is a re-write of SM_Hosties v1.x from dataviruset. This allows support for multiple LRs occuring simultaneously as well as a plethora of additional last request games and new cvars for the most customizable Hosties yet.
+It opens up a new API for plugin developers to ask questions like if a player is a rebel as well as the ability to add third party last request games for each server independent of the Hosties plugin.
 
 Features:
 
 34 Last Request Games
-	Shotgun Wars
+	Shotgun Wars (optional, needs lastrequest_shotgunwars plugin)
 	Drunken Boxing
 	Most Jumps
 	Farthest Jump
@@ -42,6 +43,7 @@ Hosties API (For developers):
 
 For integration there are two natives provided: IsClientRebel and IsClientInLastRequest.
 For adding custom LRs there are three natives provided: AddLastRequestToList, RemoveLastRequestFromList, and ProcessAllLastRequests.
+Feel free to have a look at lastrequest_shotgunwars.sp as it can be used as a reference to last request scripting.
 
 General Chat Commands:
 !rules
@@ -52,28 +54,30 @@ Admin Commands:
 !stoplr (also: !abortlr and !cancellr): Requires slay admin flag and will abort any and all active last requests.
 
 Requirements:
-SDKHooks v2
+SDK Hooks 2.0+
 
 Fresh Install Instructions:
 
-NOTE: Do not compile any individual file such as lastrequest.sp in the hosties/ directory, compiling sm_hosties.sp will include these files.  If you'd like only lastrequest.sp then that is a separate discussion.
+NOTE: Do not compile any individual file such as lastrequest.sp in the hosties/ directory, compiling sm_hosties.sp will include these files.
+If you'd like only lastrequest.sp then that is a separate discussion.
 
-Copy all files in the hosties\ directory to addons/sourcemod/scripting/hosties/
-Copy the translation file to addons/sourcemod/translations/
+Copy all files in the hosties/ directory to addons/sourcemod/scripting/hosties/
+Copy all files in the translation/ directory to addons/sourcemod/translations/
 Copy the hosties.inc and lastrequest.inc files to addons/sourcemod/scripting/include/
-Copy sample-LR.sp and sm_hosties.sp to addons/sourcemod/scripting/
-Compile sm_hosties and sample-LR and move SMX files to addons/sourcemod/plugins/
-Run plugin for the first time and configure all settings in /cfg/sourcemod/sm_hosties.cfg
+Copy lastrequest_shotgunwars.sp and sm_hosties.sp to addons/sourcemod/scripting/
+Compile sm_hosties and lastrequest_shotgunwars and move SMX files to addons/sourcemod/plugins/
+Run plugin for the first time and configure all settings in cfg/sourcemod/sm_hosties.cfg
 
 Upgrade Instructions:
 
-Rename your original sm_hosties.cfg in cfg/sourcemod/ to sm_hosties.backup
-Let the Hosties 2 plugin start for the first time and create the new cfg file.
-Look at the sm_hosties.backup and merge your original settings with the new one.
+Rename your original sm_hosties.cfg in cfg/sourcemod/ to sm_hosties.backup.cfg
+Let the new version of the plugin start for the first time and create the new cfg file.
+Look at the sm_hosties.backup.cfg and merge your original settings with the new one.
 
 Changes to Existing Cvars:
 
 A few of the existing cvar settings in SM_Hosties v1.x have changed slighlty in v2.
+Really, you should consider to redo all configuration if you're upgrading from 1.x.
 
 sm_hosties_lr_ts_max: This now controls the number of Ts allowed to have LRs going at the same time.
 sm_hosties_mute_immune: This now uses flag CHARACTERS instead of names. (E.g. use "z" instead of "root".)
@@ -89,7 +93,7 @@ Special Thanks for Version 2:
 
 psychonic - Answering any question I've had with SourceMod plugin coding
 johan123jo - The blocking LR damage code and various bug fixes
-MomemtumMori - Hosting the SVN for Hosties v2 while under development
+MomemtumMori - Hosting the SVN for SM_Hosties v2 while under development
 Berni - For helping with hull traces
 dvander - Pointing out some architectural flaws with the Hosties API
 Crosshair - 'Inspiration'
@@ -100,13 +104,14 @@ Silence, XenoGamers
 
 Help The Cause:
 
-Hosties v2 is over 5,500 lines of code and growing.  There are a variety of ways you could help the project.  First, we have a healthy list of new features that could be added if you have any experience with SourceMod and plugin development and would like to lend a hand.  Also, with the addition of the Hosties API, we could make a custom LR game for your server in exchange for a small fee.  AlliedMods is gracious enough to host all of this so, if you haven't already, make them a donation to support the hosting costs.  Lastly, consider making a donation to us to help offset the cost of development and hosting.  The barrage of DDoS attacks drives up the cost of hosting and without active servers, our interest in development would wither.  Donations to Vintage Jailbreak or The Warriors will be split amongst dataviruset and databomb, just be sure to reference this is for the Hosties project.
+Hosties v2 is over 5,500 lines of code and growing. There are a variety of ways you could help the project.
+Firstly, we have a healthy list of new features that could be added if you have any experience with SourceMod and plugin development and would like to lend a hand. Also, with the addition of the Hosties API, we could make a custom LR game for your server in exchange for a small fee. AlliedMods is gracious enough to host all of this so, if you haven't already, make them a donation to support the hosting costs. Lastly, consider making a donation to us to help offset the cost of development and hosting. The barrage of DDoS attacks drives up the cost of hosting and without active servers, our interest in development would wither. Donations to Vintage Jailbreak or '][' E H \/\/ARRiORS will be split amongst databomb and dataviruset, just be sure to reference this is for the Hosties project.
 
 [[donate button]]
 
 Translations:
 
-The translations file has been heavily updated and we are in need of translators!  If you have a language to add, reply to this topic or get in touch with one of us.
+The translations file has been heavily updated and we are in need of translators! If you have a language to add, reply to this topic or get in touch with one of us.
 
 Plugin Settings (Cvars):
 
