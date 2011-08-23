@@ -1,4 +1,4 @@
-[CS:S] SM Hosties (version 2)
+[CS:S] SM Hosties v2
 by: databomb & dataviruset
 
 Description:
@@ -29,7 +29,14 @@ Features:
 	Shot4Shot with any pistol (6 choices)
 	Mag4Mag with any pistol (6 choices)
 	Gun Toss
-
+Check Players Command
+Freekill Detection & Prevention
+Game Description Override
+Mute System with BaseComm Integration
+No Block
+Rules Command
+Starting Weapons Payloads for CT & T
+Round End Team Overlays
 
 Hosties API (For developers):
 
