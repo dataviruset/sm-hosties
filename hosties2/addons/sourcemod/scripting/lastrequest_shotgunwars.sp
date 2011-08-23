@@ -46,7 +46,7 @@ enum theColors
 
 public Plugin:myinfo =
 {
-	name = "Sample Last Request - Shotgun Wars",
+	name = "Last Request: Shotgun Wars (sample)",
 	author = "databomb",
 	description = "An example of how to add LRs",
 	version = PLUGIN_VERSION,
