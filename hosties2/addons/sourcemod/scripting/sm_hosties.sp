@@ -34,7 +34,7 @@
 #define 	MAX_DISPLAYNAME_SIZE 	32
 #define 	MAX_DATAENTRY_SIZE 		5
 #define 	NORMAL_VISION 				90
-#define 	SERVERTAG		 			"SM_Hosties_2"
+#define 	SERVERTAG		 			"SM_Hosties v2"
 
 // Note: you cannot safely turn these modules on and off yet. Use cvars to disable functionality.
 
@@ -122,7 +122,7 @@ new Handle:gH_Cvar_Display_Advert = INVALID_HANDLE;
 
 public Plugin:myinfo =
 {
-	name = "SM Hosties v2",
+	name = "SM_Hosties v2",
 	author = "databomb & dataviruset",
 	description = "Hosties/jailbreak plugin for SourceMod",
 	version = PLUGIN_VERSION,
@@ -171,7 +171,7 @@ public OnPluginStart()
 	Freekillers_OnPluginStart();
 	#endif
 	
-	AutoExecConfig(true, "sm_hosties_2");
+	AutoExecConfig(true, "sm_hosties2");
 }
 
 public OnMapStart()
