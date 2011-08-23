@@ -105,43 +105,6 @@ stock UnmutePlayer(client)
 	SetClientListeningFlags(client, VOICE_NORMAL);
 }
 
-stock MuteTs()
-{
-	for(new i = 1; i <= MaxClients; i++)
-	{
-		if ( (IsClientInGame(i)) && (IsPlayerAlive(i)) ) // if player is in game and alive
-		{
-			// if player is a terrorist
-			if (GetClientTeam(i) == CS_TEAM_T)
-			{
-				MutePlayer(i);
-			}
-		}
-	}
-}
-
-stock UnmuteAlive()
-{
-	for(new i = 1; i <= MaxClients; i++)
-	{
-		if ( (IsClientInGame(i)) && (IsPlayerAlive(i)) ) // if player is in game and alive
-		{
-			UnmutePlayer(i);
-		}
-	}
-}
-
-stock UnmuteAll()
-{
-	for(new i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientInGame(i)) // if player is in game
-		{
-			UnmutePlayer(i);
-		}
-	}
-}
-
 stock CacheTheFile(const String:path[], MediaType:filetype)
 {
 	decl String:sDownloadPath[PLATFORM_MAX_PATH];

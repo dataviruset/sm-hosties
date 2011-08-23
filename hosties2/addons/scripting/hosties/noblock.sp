@@ -42,6 +42,11 @@ NoBlock_OnPluginStart()
 	HookEvent("player_spawn", NoBlock_PlayerSpawn);
 }
 
+NoBlock_OnConfigsExecuted()
+{
+	gShadow_NoBlock = GetConVarBool(gH_Cvar_NoBlock);
+}
+
 public NoBlock_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
 {
 	if (cvar == gH_Cvar_NoBlock)

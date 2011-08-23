@@ -34,6 +34,11 @@ CheckPlayers_OnPluginStart()
 	HookConVarChange(gH_Cvar_CheckPlayersOn, CheckPlayers_CvarChanged);
 }
 
+CheckPlayers_OnConfigsExecuted()
+{
+	gShadow_CheckPlayersOn = GetConVarBool(gH_Cvar_CheckPlayersOn);
+}
+
 public CheckPlayers_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
 {
 	if (cvar == gH_Cvar_CheckPlayersOn)
@@ -84,7 +89,7 @@ public Action:Command_CheckPlayers(client, args)
 	}
 	else
 	{
-		PrintToChat(client, CHAT_BANNER, "CheckPlayers CMD Disabled");
+		ReplyToCommand(client, CHAT_BANNER, "CheckPlayers CMD Disabled");
 	}
 
 	return Plugin_Handled;
@@ -93,5 +98,7 @@ public Action:Command_CheckPlayers(client, args)
 public Handler_DoNothing(Handle:menu, MenuAction:action, param1, param2)
 {
 	if (action == MenuAction_End)
+	{
 		CloseHandle(menu);
+	}
 }
