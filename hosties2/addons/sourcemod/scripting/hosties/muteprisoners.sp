@@ -40,7 +40,7 @@ new bool:g_bMuted[MAXPLAYERS+1];
 
 MutePrisoners_OnPluginStart()
 {
-	gH_Cvar_MuteStatus = CreateConVar("sm_hosties_mute", "1", "Setting for muting terrorists automatically: 0 - disable, 1 - terrorists are muted the first 30 seconds of a round, 2 - terrorists are muted when they die, 3 - both", FCVAR_PLUGIN, true, 0.0, true, 3.0);
+	gH_Cvar_MuteStatus = CreateConVar("sm_hosties_mute", "1", "Setting for muting terrorists automatically: 0 - disable, 1 - terrorists are muted the first few seconds of a round, 2 - terrorists are muted when they die, 3 - both", FCVAR_PLUGIN, true, 0.0, true, 3.0);
 	gShadow_MuteStatus = 0;
 	
 	gH_Cvar_MuteLength = CreateConVar("sm_hosties_roundstart_mute", "30.0", "The length of time the Terrorist team is muted for after the round begins", FCVAR_PLUGIN, true, 3.0, true, 90.0);
@@ -66,6 +66,7 @@ MutePrisoners_OnPluginStart()
 	HookEvent("round_start", MutePrisoners_RoundStart);
 	HookEvent("round_end", MutePrisoners_RoundEnd);
 	HookEvent("player_death", MutePrisoners_PlayerDeath);
+	HookEvent("player_spawn", MutePrisoners_PlayerSpawn);
 }
 
 MutePrisoners_OnClientConnected(client)
@@ -234,6 +235,38 @@ public MutePrisoners_CvarChanged(Handle:cvar, const String:oldValue[], const Str
 	{
 		gShadow_MuteCT = bool:StringToInt(newValue);
 	}
+}
+
+public MutePrisoners_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	if (gShadow_MuteStatus == 1 || gShadow_MuteStatus == 3)
+	{
+		// if the timer is anything but invalid, we should mute these new spawners
+		if (gH_Timer_Unmuter != INVALID_HANDLE)
+		{
+			new client = GetClientOfUserId(GetEventInt(event, "userid"));
+			if (GetClientTeam(client) == CS_TEAM_T)
+			{
+				if (gAdmFlags_MuteImmunity == 0)
+				{
+					CreateTimer(0.1, Timer_Mute, client, TIMER_FLAG_NO_MAPCHANGE);
+				}
+				else
+				{
+					if (!(GetUserFlagBits(client) & gAdmFlags_MuteImmunity))
+					{
+						CreateTimer(0.1, Timer_Mute, client, TIMER_FLAG_NO_MAPCHANGE);
+					}
+				}
+			}
+		}
+	}
+}
+
+public Action:Timer_Mute(Handle:timer, any:client)
+{
+	MutePlayer(client);
+	PrintToChat(client, CHAT_BANNER, "Now Muted");
 }
 
 public MutePrisoners_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
