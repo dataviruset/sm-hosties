@@ -82,7 +82,40 @@ MutePrisoners_AllPluginsLoaded()
 	{
 		AddCommandListener(Listen_AdminMute, "sm_mute");
 		AddCommandListener(Listen_AdminMute, "sm_silence");
+		AddCommandListener(Listen_AdminUnmute, "sm_unmute");
+		AddCommandListener(Listen_AdminUnmute, "sm_unsilence");
 	}
+}
+
+public Action:Listen_AdminUnmute(client, const String:command[], args)
+{
+	if (args < 1)
+	{
+		return Plugin_Continue;
+	}
+	
+	decl String:arg[64];
+	GetCmdArg(1, arg, sizeof(arg));
+	
+	decl String:target_name[MAX_TARGET_LENGTH];
+	decl target_list[MAXPLAYERS], target_count, bool:tn_is_ml;
+	
+	target_count = ProcessTargetString(
+		arg,
+		client, 
+		target_list, 
+		MAXPLAYERS, 
+		0,
+		target_name,
+		sizeof(target_name),
+		tn_is_ml);
+	
+	for (new i = 0; i < target_count; i++)
+	{
+		g_bMuted[target_list[i]] = false;
+	}
+	
+	return Plugin_Continue;
 }
 
 public Action:Listen_AdminMute(client, const String:command[], args)
