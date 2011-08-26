@@ -1401,6 +1401,8 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					// check if we have the same weapon
 					decl String:LR_WeaponName[32];
 					GetEdictClassname(iClientWeapon, LR_WeaponName, sizeof(LR_WeaponName));
+					ReplaceString(LR_WeaponName, sizeof(LR_WeaponName), "weapon_", "");
+					
 					if (StrEqual(LR_WeaponName, FiredWeapon))
 					{
 						// update who took the last shot
