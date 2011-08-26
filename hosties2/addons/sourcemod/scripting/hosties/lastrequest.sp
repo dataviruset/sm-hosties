@@ -1290,7 +1290,7 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					new M4M_Guard_Weapon = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData);
 					new M4M_RoundsFired = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global2);
 					new M4M_Ammo = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global3);
-								
+					
 					decl String:FiredWeapon[32];
 					GetEventString(event, "weapon", FiredWeapon, sizeof(FiredWeapon));
 					new iClientWeapon = GetEntDataEnt2(client, g_Offset_ActiveWeapon);	
@@ -1388,65 +1388,75 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
 				if ((client == LR_Player_Prisoner) || (client == LR_Player_Guard))
 				{
-					new S4Sdeagle1 = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData);
-					new S4Sdeagle2 = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData);
+					new Prisoner_S4S_Pistol = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData);
+					new Guard_S4S_Pistol = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData);
 					new S4Slastshot = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
-					// update who took the last shot
-					SetArrayCell(gH_DArray_LR_Partners, idx, client, _:Block_Global1);
+					
 					decl String:FiredWeapon[32];
 					GetEventString(event, "weapon", FiredWeapon, sizeof(FiredWeapon));
 					
-					// get the entity index of the active weapon
-					new iClientWeapon = GetEntDataEnt2(client, g_Offset_ActiveWeapon);
+					// get the entity index of the pistol
+					new iClientWeapon = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
 					
-					if (iClientWeapon != S4Sdeagle1 && iClientWeapon != S4Sdeagle2 && !StrEqual(FiredWeapon, "knife"))		    	
-			    	{
-						DecideRebelsFate(client, idx, -1);
-			    	}
-			    	// firing weapon IS correct
-					else if (!StrEqual(FiredWeapon, "knife"))
-			    	{		    	
-			    		// check for double shot situation (if they picked up another deagle with more ammo between shots)
-			    		if (gShadow_LR_S4S_DoubleShot && (S4Slastshot == client))
-			    		{
-			    			// check if entity index is for either deagle spawned for S4S
-			    			if ((iClientWeapon != S4Sdeagle1) && (iClientWeapon != S4Sdeagle2))
-			    			{
-			    				DecideRebelsFate(client, idx, -1);
-			    			}
-			    		}
-			    		else // if we didn't repeat
-			    		{		
-							if (gShadow_Announce_Shot4Shot)
+					// check if we have the same weapon
+					decl String:LR_WeaponName[32];
+					GetEdictClassname(iClientWeapon, LR_WeaponName, sizeof(LR_WeaponName));
+					if (StrEqual(LR_WeaponName, FiredWeapon))
+					{
+						// update who took the last shot
+						SetArrayCell(gH_DArray_LR_Partners, idx, client, _:Block_Global1);
+						
+						// they picked up an identical gun and are using it instead
+						if (iClientWeapon != Prisoner_S4S_Pistol && iClientWeapon != Guard_S4S_Pistol)		    	
+						{
+							DecideRebelsFate(client, idx, -1);
+						}
+						// firing weapon IS correct
+						else
+						{		    	
+							// check for double shot situation (if they picked up another deagle with more ammo between shots)
+							if (gShadow_LR_S4S_DoubleShot && (S4Slastshot == client))
 							{
-								if (gShadow_SendGlobalMsgs)
-								{
-									PrintToChatAll(CHAT_BANNER, "S4S Shot Taken", client);
-								}
-								else
-								{
-									PrintToChat(LR_Player_Guard, CHAT_BANNER, "S4S Shot Taken", client);
-									PrintToChat(LR_Player_Prisoner, CHAT_BANNER, "S4S Shot Taken", client);
-								}
+								// this should no longer be possible to do without extra manipulation								
+								DecideRebelsFate(client, idx, -1);								
 							}
-							
-							// give the opposite LR player 1 bullet in their deagle
-							if (client == LR_Player_Prisoner)
-							{
-								// modify deagle 2s ammo
-								SetEntData(S4Sdeagle2, g_Offset_Clip1, 1);
-							}
-							else if (client == LR_Player_Guard)
-							{
-								// modify deagle 1s ammo
-								SetEntData(S4Sdeagle1, g_Offset_Clip1, 1);
-							}		    	
+							else // if we didn't repeat
+							{		
+								if (gShadow_Announce_Shot4Shot)
+								{
+									if (gShadow_SendGlobalMsgs)
+									{
+										PrintToChatAll(CHAT_BANNER, "S4S Shot Taken", client);
+									}
+									else
+									{
+										PrintToChat(LR_Player_Guard, CHAT_BANNER, "S4S Shot Taken", client);
+										PrintToChat(LR_Player_Prisoner, CHAT_BANNER, "S4S Shot Taken", client);
+									}
+								}
+								
+								// give the opposite LR player 1 bullet in their deagle
+								if (client == LR_Player_Prisoner)
+								{
+									// modify deagle 2s ammo
+									SetEntData(Guard_S4S_Pistol, g_Offset_Clip1, 1);
+								}
+								else if (client == LR_Player_Guard)
+								{
+									// modify deagle 1s ammo
+									SetEntData(Prisoner_S4S_Pistol, g_Offset_Clip1, 1);
+								}		    	
 
-							// propogate the ammo immediately! (thanks psychonic)
-							ChangeEdictState(S4Sdeagle1, g_Offset_Clip1);
-							ChangeEdictState(S4Sdeagle2, g_Offset_Clip1);
-			    		}
-			    	}		    	
+								// propogate the ammo immediately! (thanks psychonic)
+								ChangeEdictState(Prisoner_S4S_Pistol, g_Offset_Clip1);
+								ChangeEdictState(Guard_S4S_Pistol, g_Offset_Clip1);
+							}
+						}		    							
+					}
+					else if (!StrEqual(FiredWeapon, "knife"))
+					{
+						DecideRebelsFate(client, idx, -1);
+					}
 				}	
 			}
 		}
