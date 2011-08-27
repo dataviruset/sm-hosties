@@ -242,7 +242,7 @@ void:MutePrisoners_CalcImmunity()
 		if(StrEqual(gShadow_MuteImmune, "1"))
 		{
 			// include everything but 'a': reservation slot
-			Format(gShadow_MuteImmune, sizeof(gShadow_MuteImmune), "bcdefghijklmnopqrst");	
+			Format(gShadow_MuteImmune, sizeof(gShadow_MuteImmune), "bcdefghijklmnopqrstz");
 		}
 		
 		gAdmFlags_MuteImmunity = ReadFlagString(gShadow_MuteImmune);
