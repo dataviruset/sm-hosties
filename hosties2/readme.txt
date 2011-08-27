@@ -112,6 +112,3 @@ https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VintageJailbreak%4
 Translations:
 
 The translations file has been heavily updated and we are in need of translators! If you have a language to add, reply to this topic or get in touch with one of us.
-
-Plugin Settings (Cvars):
-
