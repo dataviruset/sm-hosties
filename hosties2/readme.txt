@@ -96,7 +96,7 @@ johan123jo - The blocking LR damage code and various bug fixes
 MomemtumMori - Hosting the SVN for SM_Hosties v2 while under development
 Berni - For helping with hull traces
 dvander - Pointing out some architectural flaws with the Hosties API
-Crosshair - 'Inspiration'
+Crosshair - Inspiration
 
 Thanks to the servers willing to run beta versions of this (for all the problems you never had to deal with, thank them):
 Groger, OnlyFriends
@@ -107,7 +107,7 @@ Help The Cause:
 SM_Hosties v2 is over 5,500 lines of code and growing. There are a variety of ways you could help the project.
 Firstly, we have a healthy list of new features that could be added if you have any experience with SourceMod and plugin development and would like to lend a hand. Also, with the addition of the Hosties API, we could make a custom LR game for your server in exchange for a small fee. AlliedMods is gracious enough to host all of this so, if you haven't already, make them a donation to support the hosting costs. Lastly, consider making a donation to us to help offset the cost of development and hosting. The barrage of DDoS attacks drives up the cost of hosting and without active servers, our interest in development would wither. Donations to Vintage Jailbreak or '][' E H \/\/ARRiORS will be split amongst databomb and dataviruset, just be sure to reference this is for the Hosties project.
 
-[[donate button]]
+https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VintageJailbreak%40gmail%2ecom&lc=US&item_name=Hosties%20Development%20Fund&item_number=hosties&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHostedGuest
 
 Translations:
 
