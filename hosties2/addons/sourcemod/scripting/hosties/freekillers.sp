@@ -27,8 +27,8 @@ Freekillers_OnPluginStart()
 {
 	gH_Cvar_Freekill_Sound = CreateConVar("sm_hosties_freekill_sound", "sm_hosties/freekill1.mp3", "What sound to play if a non-rebelling T gets 'freekilled', relative to the sound-folder: -1 - disable, path - path to sound file", FCVAR_PLUGIN);
 	Format(gShadow_Freekill_Sound, PLATFORM_MAX_PATH, "sm_hosties/freekill1.mp3");
-	gH_Cvar_Freekill_Threshold = CreateConVar("sm_hosties_freekill_treshold", "5", "The amount of non-rebelling terrorists a CT is allowed to kill before action is taken: 0 - disabled, >0 - amount of Ts", FCVAR_PLUGIN, true, 0.0, true, 64.0);
-	gShadow_Freekill_Threshold = 5;
+	gH_Cvar_Freekill_Threshold = CreateConVar("sm_hosties_freekill_treshold", "0", "The amount of non-rebelling terrorists a CT is allowed to kill before action is taken: 0 - disabled, >0 - amount of Ts", FCVAR_PLUGIN, true, 0.0, true, 64.0);
+	gShadow_Freekill_Threshold = 0;
 	gH_Cvar_Freekill_Notify = CreateConVar("sm_hosties_freekill_notify", "0", "Whether to notify CTs who kills a non-rebelling T about how many 'freekills' they have, or not: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_Freekill_Notify = false;
 	gH_Cvar_Freekill_BanLength = CreateConVar("sm_hosties_freekill_ban_length", "60", "The length of an automated freekill ban (if sm_hosties_freekill_punishment is 2): x - ban length in minutes", _, true, 0.0);
