@@ -28,7 +28,7 @@
 #pragma semicolon 1
 
 // Constants
-#define 	PLUGIN_VERSION	 			"2.0.0"
+#define 	PLUGIN_VERSION	 			"2.0.1b"
 // Change to include your own clan tag but leave the '%t' intact
 #define 	CHAT_BANNER		 			"\x03[SM] \x01%t"
 #define 	MAX_DISPLAYNAME_SIZE 	32
