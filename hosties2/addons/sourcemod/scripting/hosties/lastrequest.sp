@@ -395,7 +395,7 @@ LastRequest_OnPluginStart()
 	gShadow_LR_HotPotato_Mode = 2;
 	gH_Cvar_SendGlobalMsgs = CreateConVar("sm_hosties_lr_send_global_msgs", "0", "Specifies if non-death related LR messages are sent to everyone or just the active participants in that LR. 0: participants, 1: everyone", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_SendGlobalMsgs = 0;
-	gH_Cvar_MaxPrisonersToLR = CreateConVar("sm_hosties_lr_ts_max", "1", "The maximum number of terrorists left to enable LR: 0 - LR is always enabled, >0 - maximum number of Ts", FCVAR_PLUGIN, true, 0.0, true, 63.0);
+	gH_Cvar_MaxPrisonersToLR = CreateConVar("sm_hosties_lr_ts_max", "2", "The maximum number of terrorists left to enable LR: 0 - LR is always enabled, >0 - maximum number of Ts", FCVAR_PLUGIN, true, 0.0, true, 63.0);
 	gShadow_MaxPrisonersToLR = 1;
 	gH_Cvar_RebelAction = CreateConVar("sm_hosties_lr_rebel_action", "2", "Decides what to do with those who rebel/interfere during an LR. 1 - Abort, 2 - Slay.", FCVAR_PLUGIN, true, 1.0, true, 2.0);
 	gShadow_RebelAction = 2;
