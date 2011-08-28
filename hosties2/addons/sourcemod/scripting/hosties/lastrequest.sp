@@ -834,9 +834,8 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 {
 	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
 	new target = GetClientOfUserId(GetEventInt(event, "userid"));
-
-	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
-	if (iArraySize > 0)
+	
+	if (Local_IsClientInLR(attacker) || Local_IsClientInLR(target))	
 	{
 		for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
 		{
