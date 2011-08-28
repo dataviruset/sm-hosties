@@ -817,7 +817,7 @@ public LastRequest_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 	
 	if (gShadow_Announce_LR && !g_bAnnouncedThisRound && gShadow_LR_Enable)
 	{
-		if ((Ts == gShadow_MaxPrisonersToLR) && (NumCTsAvailable > 0))
+		if ((Ts == gShadow_MaxPrisonersToLR) && (NumCTsAvailable > 0) && (Ts > 0))
 		{
 			g_bAnnouncedThisRound = true;
 			PrintToChatAll(CHAT_BANNER, "LR Available");
@@ -935,26 +935,31 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 		}
 	}
 	else if (attacker && target && (GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(target) == CS_TEAM_T) \
-		&& !g_bIsARebel[attacker] && gShadow_Announce_CT_FreeHit)
+		&& !g_bIsARebel[target])
 	{
-		new bool:bPrisonerHasGun = PlayerHasGun(target);		
+		new bool:bPrisonerHasGun = PlayerHasGun(target);
 		
-		if (gShadow_Announce_Weapon_Attack && bPrisonerHasGun)
+		if (gShadow_Announce_CT_FreeHit)
 		{
-			if (IsClientInGame(target) && IsPlayerAlive(target))
+			
+			if (gShadow_Announce_Weapon_Attack && bPrisonerHasGun)
 			{
-				PrintToChatAll(CHAT_BANNER, "CT Attack T Gun", attacker, target);
+				if (IsClientInGame(target) && IsPlayerAlive(target))
+				{
+					PrintToChatAll(CHAT_BANNER, "CT Attack T Gun", attacker, target);
+				}
+			}
+			else
+			{
+				PrintToChatAll(CHAT_BANNER, "Freeattack", attacker, target);
 			}
 		}
 		
-		if (!bPrisonerHasGun && !g_bIsARebel[target])
+		// "freeattack" sound
+		if ((gShadow_Freekill_Sound_Mode == 0) && (strlen(gShadow_Freekill_Sound) > 0) \
+			&& !StrEqual(gShadow_Freekill_Sound, "-1") && (!bPrisonerHasGun))
 		{
-			PrintToChatAll(CHAT_BANNER, "Freeattack", attacker, target);
-			
-			if ((gShadow_Freekill_Sound_Mode == 0) && (strlen(gShadow_Freekill_Sound) > 0) && !StrEqual(gShadow_Freekill_Sound, "-1"))
-			{
-				EmitSoundToAll(gShadow_Freekill_Sound);
-			}
+			EmitSoundToAll(gShadow_Freekill_Sound);
 		}
 	}
 }
@@ -2225,7 +2230,7 @@ public Action:Command_LastRequest(client, args)
 						new Ts, CTs, NumCTsAvailable;
 						UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);
 
-						if (Ts <= gShadow_MaxPrisonersToLR)
+						if (Ts <= gShadow_MaxPrisonersToLR || gShadow_MaxPrisonersToLR == 0)
 						{
 							if (CTs > 0)
 							{
@@ -2757,7 +2762,7 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 							new Ts, CTs, iNumCTsAvailable;
 							UpdatePlayerCounts(Ts, CTs, iNumCTsAvailable);
 	
-							if (Ts <= gShadow_MaxPrisonersToLR)
+							if (Ts <= gShadow_MaxPrisonersToLR || gShadow_MaxPrisonersToLR == 0)
 							{
 								if (CTs > 0)
 								{
