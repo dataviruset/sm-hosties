@@ -917,14 +917,17 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 		g_bIsARebel[attacker] = true;
 		if (IsClientInGame(attacker))
 		{
-			if (gShadow_SendGlobalMsgs)
+			if (gShadow_Announce_Rebel)
 			{
-				PrintToChatAll(CHAT_BANNER, "New Rebel", attacker);
-			}
-			else
-			{
-				PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
-				PrintToChat(target, CHAT_BANNER, "New Rebel", attacker);
+				if (gShadow_SendGlobalMsgs)
+				{
+					PrintToChatAll(CHAT_BANNER, "New Rebel", attacker);
+				}
+				else
+				{
+					PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
+					PrintToChat(target, CHAT_BANNER, "New Rebel", attacker);
+				}
 			}
 			if (gShadow_ColorRebels)
 			{
