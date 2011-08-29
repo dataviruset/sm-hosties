@@ -317,16 +317,14 @@ public MutePrisoners_PlayerDeath(Handle:event, const String:name[], bool:dontBro
 		{
 			if (!(GetUserFlagBits(victim) & gAdmFlags_MuteImmunity))
 			{
-				MutePlayer(victim);
-				PrintToChat(victim, CHAT_BANNER, "Now Muted");
+				CreateTimer(0.1, Timer_Mute, victim, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
 		case CS_TEAM_CT:
 		{
 			if (gShadow_MuteCT && !(GetUserFlagBits(victim) & gAdmFlags_MuteImmunity))
 			{			
-				MutePlayer(victim);
-				PrintToChat(victim, CHAT_BANNER, "Now Muted");
+				CreateTimer(0.1, Timer_Mute, victim, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
 	}
