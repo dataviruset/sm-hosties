@@ -1406,9 +1406,12 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					new iClientWeapon = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
 					
 					// check if we have the same weapon
-					decl String:LR_WeaponName[32];
-					GetEdictClassname(iClientWeapon, LR_WeaponName, sizeof(LR_WeaponName));
-					ReplaceString(LR_WeaponName, sizeof(LR_WeaponName), "weapon_", "");
+					new String:LR_WeaponName[32];
+					if (iClientWeapon != -1)
+					{
+						GetEdictClassname(iClientWeapon, LR_WeaponName, sizeof(LR_WeaponName));
+						ReplaceString(LR_WeaponName, sizeof(LR_WeaponName), "weapon_", "");
+					}
 					
 					if (StrEqual(LR_WeaponName, FiredWeapon))
 					{
@@ -1748,7 +1751,13 @@ LastRequest_OnMapStart()
 	BeamSprite = PrecacheModel("materials/sprites/laser.vmt");
 	LaserSprite = PrecacheModel("materials/sprites/lgtning.vmt");
 	LaserHalo = PrecacheModel("materials/sprites/plasmahalo.vmt");
-	HaloSprite = PrecacheModel("materials/sprites/halo01.vmt");	
+	HaloSprite = PrecacheModel("materials/sprites/halo01.vmt");
+	
+	// Potential fix for problems with g_BeaconTimer not being set to INVALID_HANDLE on timer terminating (TIMER_FLAG_NO_MAPCHANGE)
+	if (g_BeaconTimer != INVALID_HANDLE)
+	{
+		g_BeaconTimer = INVALID_HANDLE;
+	}
 }
 
 LastRequest_OnConfigsExecuted()
@@ -4009,7 +4018,7 @@ public Action:Timer_Beacon(Handle:timer)
 	new iNumOfBeacons = GetArraySize(gH_DArray_Beacons);
 	if (iNumOfBeacons <= 0)
 	{
-		g_BeaconTimer = INVALID_HANDLE;
+		g_BeaconTimer = INVALID_HANDLE; // TODO: Remove this because it doesn't make sense?
 		return Plugin_Stop;
 	}
 	static iTimerCount = 1;
