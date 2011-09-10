@@ -41,8 +41,7 @@ StartWeapons_OnPluginStart()
 	Format(gShadow_T_Weapons, sizeof(gShadow_T_Weapons), "weapon_knife");
 	gH_Cvar_CT_Weapons = CreateConVar("sm_hosties_ct_start", "weapon_knife,weapon_m4a1,weapon_usp", "Comma delimitted list of items to give to CTs at spawn", FCVAR_PLUGIN);
 	Format(gShadow_CT_Weapons, sizeof(gShadow_CT_Weapons), "weapon_knife,weapon_m4a1,weapon_usp");
-	
-	UpdateStartWeapons();
+	UpdateStartWeapons();	
 	
 	HookEvent("player_spawn", StartWeapons_Spawn);
 	
@@ -55,7 +54,8 @@ StartWeapons_OnConfigsExecuted()
 {
 	GetConVarString(gH_Cvar_CT_Weapons, gShadow_CT_Weapons, sizeof(gShadow_CT_Weapons));
 	GetConVarString(gH_Cvar_T_Weapons, gShadow_T_Weapons, sizeof(gShadow_T_Weapons));
-	gShadow_StartWeaponsOn = GetConVarBool(gH_Cvar_StartWeaponsOn);
+	gShadow_StartWeaponsOn = GetConVarBool(gH_Cvar_StartWeaponsOn);.
+	UpdateStartWeapons();
 }
 
 public StartWeapons_Spawn(Handle:event, const String:name[], bool:dontBroadcast)
