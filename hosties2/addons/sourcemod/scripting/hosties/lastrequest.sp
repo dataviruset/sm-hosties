@@ -103,6 +103,7 @@ new Handle:gH_Cvar_ColorRebels_Green = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Beacons = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_HelpBeams = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Beacon_Interval = INVALID_HANDLE;
+new Handle:gH_Cvar_RebelOnImpact = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_ChickenFight_Slay = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_ChickenFight_C_Blue = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_ChickenFight_C_Red = INVALID_HANDLE;
@@ -164,6 +165,7 @@ new gShadow_LR_ChickenFight_C_Green = -1;
 new bool:gShadow_LR_Dodgeball_CheatCheck = false;
 new Float:gShadow_LR_Dodgeball_SpawnTime = -1.0;
 new Float:gShadow_LR_Dodgeball_Gravity = -1.0;
+new gShadow_RebelOnImpact = -1;
 new gShadow_ColorRebels_Red = -1;
 new gShadow_ColorRebels_Blue = -1;
 new gShadow_ColorRebels_Green = -1;
@@ -334,6 +336,7 @@ LastRequest_OnPluginStart()
 	HookEvent("round_end", LastRequest_RoundEnd);
 	HookEvent("player_hurt", LastRequest_PlayerHurt);
 	HookEvent("player_death", LastRequest_PlayerDeath);
+	HookEvent("bullet_impact", LastRequest_BulletImpact);
 	HookEvent("player_disconnect", LastRequest_PlayerDisconnect);
 	HookEvent("weapon_zoom", LastRequest_WeaponZoom, EventHookMode_Pre);
 	HookEvent("weapon_fire", LastRequest_WeaponFire);
@@ -401,6 +404,8 @@ LastRequest_OnPluginStart()
 	gShadow_RebelAction = 2;
 	gH_Cvar_RebelHandling = CreateConVar("sm_hosties_lr_rebel_mode", "1", "LR-mode for rebelling terrorists: 0 - Rebelling Ts can never have a LR, 1 - Rebelling Ts must let the CT decide if a LR is OK, 2 - Rebelling Ts can have a LR just like other Ts", FCVAR_PLUGIN, true, 0.0);
 	gShadow_RebelHandling = 1;
+	gH_Cvar_RebelOnImpact = CreateConVar("sm_hosties_lr_rebel_impact", "0", "Sets terrorists to rebels for firing a bullet. 0 - Disabled, 1 - Enabled.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_RebelOnImpact = 0;
 	gH_Cvar_ColorRebels = CreateConVar("sm_hosties_rebel_color", "0", "Turns on coloring rebels", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_ColorRebels = 0;
 	gH_Cvar_ColorRebels_Red = CreateConVar("sm_hosties_rebel_red", "255", "What color to turn a rebel into (set R, G and B values to 255 to disable) (Rgb): x - red value", FCVAR_PLUGIN, true, 0.0, true, 255.0);
@@ -521,6 +526,7 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_LR_Beacons, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_HelpBeams, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_Beacon_Interval, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_RebelOnImpact, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_ColorRebels_Blue, ConVarChanged_Setting);	
 	HookConVarChange(gH_Cvar_ColorRebels_Green, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_ColorRebels_Red, ConVarChanged_Setting);
@@ -1186,6 +1192,32 @@ CleanupLastRequest(loser, arrayIndex)
 			Call_Finish(_:ignore);
 		}
 	}	
+}
+
+public LastRequest_BulletImpact(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+	if (!g_bIsARebel[attacker] && gShadow_RebelOnImpact && (GetClientTeam(attacker) == CS_TEAM_T))
+	{
+		g_bIsARebel[attacker] = true;
+		
+		if (gShadow_ColorRebels)
+		{
+			SetEntityRenderColor(attacker, gShadow_ColorRebels_Red, gShadow_ColorRebels_Green, gShadow_ColorRebels_Blue, 255);
+		}
+		
+		if (gShadow_Announce_Rebel && IsClientInGame(attacker))
+		{
+			if (gShadow_SendGlobalMsgs)
+			{
+			  PrintToChatAll(CHAT_BANNER, "New Rebel", attacker);
+			}
+			else
+			{
+			  PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
+			}
+		}
+	}
 }
 
 public Action:LastRequest_WeaponZoom(Handle:event, const String:name[], bool:dontBroadcast)
@@ -1871,6 +1903,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_LR_Beacons = bool:GetConVarInt(gH_Cvar_LR_Beacons);
 	gShadow_LR_HelpBeams = bool:GetConVarInt(gH_Cvar_LR_HelpBeams);
 	gShadow_LR_Beacon_Interval = GetConVarFloat(gH_Cvar_LR_Beacon_Interval);
+	gShadow_RebelOnImpact = bool:GetConVarInt(gH_Cvar_RebelOnImpact);
 	gShadow_ColorRebels_Blue = GetConVarInt(gH_Cvar_ColorRebels_Blue);
 	gShadow_ColorRebels_Green = GetConVarInt(gH_Cvar_ColorRebels_Green);
 	gShadow_ColorRebels_Red = GetConVarInt(gH_Cvar_ColorRebels_Red);
@@ -1977,6 +2010,10 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	else if (cvar == gH_Cvar_LR_Beacon_Interval)
 	{
 		gShadow_LR_Beacon_Interval = StringToFloat(newValue);
+	}
+	else if (cvar == gH_Cvar_RebelOnImpact)
+	{
+		gShadow_RebelOnImpact = bool:StringToInt(newValue);
 	}
 	else if (cvar == gH_Cvar_ColorRebels_Blue)
 	{
