@@ -151,7 +151,7 @@ public Action:Listen_AdminMute(client, const String:command[], args)
 
 MutePrisoners_OnConfigsExecuted()
 {
-	gShadow_MuteStatus = GetConVarBool(gH_Cvar_MuteStatus);
+	gShadow_MuteStatus = GetConVarInt(gH_Cvar_MuteStatus);
 	gShadow_MuteLength = GetConVarFloat(gH_Cvar_MuteLength);
 	
 	GetConVarString(gH_Cvar_MuteImmune, gShadow_MuteImmune, sizeof(gShadow_MuteImmune));
