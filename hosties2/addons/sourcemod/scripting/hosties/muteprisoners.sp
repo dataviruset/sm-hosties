@@ -298,8 +298,13 @@ public MutePrisoners_PlayerSpawn(Handle:event, const String:name[], bool:dontBro
 
 public Action:Timer_Mute(Handle:timer, any:client)
 {
-	MutePlayer(client);
-	PrintToChat(client, CHAT_BANNER, "Now Muted");
+	if (IsClientInGame(client))
+	{
+		MutePlayer(client);
+		PrintToChat(client, CHAT_BANNER, "Now Muted");
+	}
+	
+	return Plugin_Stop;
 }
 
 public MutePrisoners_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
