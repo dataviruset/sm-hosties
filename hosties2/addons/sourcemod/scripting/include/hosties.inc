@@ -23,6 +23,9 @@
 #endif
 #define _Hosties_Included_
 
+// Change to include your own clan tag but leave the '%t' intact
+#define CHAT_BANNER			"\x03[SM] \x01%t"
+
 enum MediaType
 {
 	type_Generic = 0,

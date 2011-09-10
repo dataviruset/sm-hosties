@@ -1,0 +1,13 @@
+"Phrases"
+{
+	"LR SGW Start"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} chose to have a Shotgun War with {2}."
+	}
+	"SGW Win"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} won the Shotgun War."
+	}
+}
