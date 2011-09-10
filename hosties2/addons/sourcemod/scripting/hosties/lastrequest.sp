@@ -1197,7 +1197,7 @@ CleanupLastRequest(loser, arrayIndex)
 public LastRequest_BulletImpact(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
-	if (!g_bIsARebel[attacker] && gShadow_RebelOnImpact && (GetClientTeam(attacker) == CS_TEAM_T))
+	if (!g_bIsARebel[attacker] && gShadow_RebelOnImpact && (GetClientTeam(attacker) == CS_TEAM_T) && !Local_IsClientInLR(attacker))
 	{
 		g_bIsARebel[attacker] = true;
 		
