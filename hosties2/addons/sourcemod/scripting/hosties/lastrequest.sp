@@ -1196,7 +1196,7 @@ CleanupLastRequest(loser, arrayIndex)
 
 public LastRequest_BulletImpact(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+	new attacker = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (!g_bIsARebel[attacker] && gShadow_RebelOnImpact && (GetClientTeam(attacker) == CS_TEAM_T) && !Local_IsClientInLR(attacker))
 	{
 		g_bIsARebel[attacker] = true;
@@ -1210,11 +1210,11 @@ public LastRequest_BulletImpact(Handle:event, const String:name[], bool:dontBroa
 		{
 			if (gShadow_SendGlobalMsgs)
 			{
-			  PrintToChatAll(CHAT_BANNER, "New Rebel", attacker);
+				PrintToChatAll(CHAT_BANNER, "New Rebel", attacker);
 			}
 			else
 			{
-			  PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
+				PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
 			}
 		}
 	}
