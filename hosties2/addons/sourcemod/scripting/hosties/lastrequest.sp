@@ -789,7 +789,8 @@ public LastRequest_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 					else
 					{
 						// follow rebel action
-						DecideRebelsFate(attacker, idx);					
+						DecideRebelsFate(attacker, idx);
+						return;
 					}
 				}
             
