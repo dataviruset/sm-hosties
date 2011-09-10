@@ -337,7 +337,7 @@ public MutePrisoners_PlayerDeath(Handle:event, const String:name[], bool:dontBro
 
 public MutePrisoners_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	if (gShadow_MuteStatus && (gH_Timer_Unmuter != INVALID_HANDLE))
+	if (gShadow_MuteStatus)
 	{
 		UnmuteAll();
 	}
