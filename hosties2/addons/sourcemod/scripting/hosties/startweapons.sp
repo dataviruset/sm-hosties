@@ -54,7 +54,7 @@ StartWeapons_OnConfigsExecuted()
 {
 	GetConVarString(gH_Cvar_CT_Weapons, gShadow_CT_Weapons, sizeof(gShadow_CT_Weapons));
 	GetConVarString(gH_Cvar_T_Weapons, gShadow_T_Weapons, sizeof(gShadow_T_Weapons));
-	gShadow_StartWeaponsOn = GetConVarBool(gH_Cvar_StartWeaponsOn);.
+	gShadow_StartWeaponsOn = GetConVarBool(gH_Cvar_StartWeaponsOn);
 	UpdateStartWeapons();
 }
 
