@@ -55,6 +55,9 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
+	// Load translations
+	LoadTranslations("shotgunwars.phrases");
+	
 	// Create any cvars you need here
 	
 }
@@ -107,7 +110,7 @@ public ShotgunWars_Start(Handle:LR_Array, iIndexInArray)
 			gH_Timer_Countdown = CreateTimer(1.0, Timer_Countdown, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		}
 		
-		PrintToChatAll("%N chose to have a Shotgun War with %N!", LR_Player_Prisoner, LR_Player_Guard);
+		PrintToChatAll(CHAT_BANNER, "LR SGW Start", LR_Player_Prisoner, LR_Player_Guard);
 	}
 }
 
@@ -122,7 +125,7 @@ public ShotgunWars_Stop(This_LR_Type, LR_Player_Prisoner, LR_Player_Guard)
 			{
 				SetEntityHealth(LR_Player_Prisoner, 100);
 				GivePlayerItem(LR_Player_Prisoner, "weapon_knife");
-				PrintToChatAll("%N won the Shotgun War.", LR_Player_Prisoner);
+				PrintToChatAll(CHAT_BANNER, "SGW Win", LR_Player_Prisoner);
 			}
 		}
 		if (IsClientInGame(LR_Player_Guard))
@@ -132,7 +135,7 @@ public ShotgunWars_Stop(This_LR_Type, LR_Player_Prisoner, LR_Player_Guard)
 			{
 				SetEntityHealth(LR_Player_Guard, 100);
 				GivePlayerItem(LR_Player_Guard, "weapon_knife");
-				PrintToChatAll("%N won the Shotgun War.", LR_Player_Guard);
+				PrintToChatAll(CHAT_BANNER, "SGW Win", LR_Player_Guard);
 			}
 		}
 	}

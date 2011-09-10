@@ -29,8 +29,6 @@
 
 // Constants
 #define 	PLUGIN_VERSION	 			"2.0.2b"
-// Change to include your own clan tag but leave the '%t' intact
-#define 	CHAT_BANNER		 			"\x03[SM] \x01%t"
 #define 	MAX_DISPLAYNAME_SIZE 	32
 #define 	MAX_DATAENTRY_SIZE 		5
 #define 	NORMAL_VISION 				90
