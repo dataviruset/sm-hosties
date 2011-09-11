@@ -339,7 +339,6 @@ public MutePrisoners_RoundEnd(Handle:event, const String:name[], bool:dontBroadc
 {
 	if (gShadow_MuteStatus)
 	{
-		// Unmute Timer
 		CreateTimer(0.2, Timer_UnmuteAll, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 	
@@ -348,6 +347,12 @@ public MutePrisoners_RoundEnd(Handle:event, const String:name[], bool:dontBroadc
 		CloseHandle(gH_Timer_Unmuter);
 		gH_Timer_Unmuter = INVALID_HANDLE;
 	}
+}
+
+public Action:Timer_UnmuteAll(Handle:timer)
+{
+	UnmuteAll();
+	return Plugin_Stop;
 }
 
 public MutePrisoners_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
@@ -383,13 +388,4 @@ public Action:Timer_UnmutePrisoners(Handle:timer)
 	UnmuteAlive();
 	PrintToChatAll(CHAT_BANNER, "Ts Can Speak Again");
 	gH_Timer_Unmuter = INVALID_HANDLE;
-	
-	return Plugin_Stop;
-}
-
-public Action:Timer_UnmuteAll(Handle:timer)
-{
-	UnmuteAlive();
-	
-	return Plugin_Stop;
 }
