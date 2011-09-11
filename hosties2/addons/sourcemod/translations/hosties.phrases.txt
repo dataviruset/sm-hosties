@@ -63,7 +63,7 @@
 	}
 	"Powered By Hosties"
 	{
-		"en"		"This server is powered by SM_Hosties 2.0, enjoy!"
+		"en"		"This server is powered by SM_Hosties v2, enjoy!"
 	}
 	"Please Follow Rules"
 	{
