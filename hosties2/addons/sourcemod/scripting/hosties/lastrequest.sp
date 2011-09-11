@@ -3021,6 +3021,18 @@ InitializeGame(iPartnersIndex)
 	new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, _:Block_Prisoner);
 	new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, _:Block_Guard);
 	
+	// log the event for stats engines
+	if (selection < LastRequest)
+	{
+		LogAction(LR_Player_Prisoner, LR_Player_Guard, "\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, g_sLastRequestPhrase[selection], LR_Player_Guard);
+	}
+	else
+	{
+		decl String:LR_Name[MAX_DISPLAYNAME_SIZE];
+		GetArrayString(gH_DArray_LR_CustomNames, _:(selection - LastRequest), LR_Name, MAX_DISPLAYNAME_SIZE);
+		LogAction(LR_Player_Prisoner, LR_Player_Guard, "\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, LR_Name, LR_Player_Guard);
+	}
+	
 	switch (selection)
 	{
 		case LR_KnifeFight:
