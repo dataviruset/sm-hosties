@@ -62,7 +62,7 @@
 	}
 	"Powered By Hosties"
 	{
-		"sv"		"Denna servern kränger falukorv tack vare SM_Hosties 2.0, njut!"
+		"sv"		"Denna servern kränger falukorv tack vare SM_Hosties v2, njut!"
 	}
 	"Please Follow Rules"
 	{
