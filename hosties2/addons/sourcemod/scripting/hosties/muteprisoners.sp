@@ -315,21 +315,22 @@ public MutePrisoners_PlayerDeath(Handle:event, const String:name[], bool:dontBro
 	}
 	
 	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
-	new team = GetClientTeam(victim);
-	switch (team)
+	
+	if (gAdmFlags_MuteImmunity == 0 || !(GetUserFlagBits(victim) & gAdmFlags_MuteImmunity))
 	{
-		case CS_TEAM_T:
+		new team = GetClientTeam(victim);
+		switch (team)
 		{
-			if (!(GetUserFlagBits(victim) & gAdmFlags_MuteImmunity))
+			case CS_TEAM_T:
 			{
 				CreateTimer(0.1, Timer_Mute, victim, TIMER_FLAG_NO_MAPCHANGE);
 			}
-		}
-		case CS_TEAM_CT:
-		{
-			if (gShadow_MuteCT && !(GetUserFlagBits(victim) & gAdmFlags_MuteImmunity))
-			{			
-				CreateTimer(0.1, Timer_Mute, victim, TIMER_FLAG_NO_MAPCHANGE);
+			case CS_TEAM_CT:
+			{
+				if (gShadow_MuteCT)
+				{			
+					CreateTimer(0.1, Timer_Mute, victim, TIMER_FLAG_NO_MAPCHANGE);
+				}
 			}
 		}
 	}
@@ -389,7 +390,7 @@ public Action:Timer_UnmutePrisoners(Handle:timer)
 
 public Action:Timer_UnmuteAll(Handle:timer)
 {
-	UnmuteAlive();
+	UnmuteAll();
 	
 	return Plugin_Stop;
 }
