@@ -1,3 +1,2 @@
 Known Bugs:
 
-Beacons for LRs occasionally stop working randomly after a long period of time. Needs to be confirmed in v2.0.1.
