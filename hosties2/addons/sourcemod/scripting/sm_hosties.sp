@@ -28,7 +28,7 @@
 #pragma semicolon 1
 
 // Constants
-#define 	PLUGIN_VERSION	 			"2.0.2b"
+#define 	PLUGIN_VERSION	 			"2.0.2"
 #define 	MAX_DISPLAYNAME_SIZE 	32
 #define 	MAX_DATAENTRY_SIZE 		5
 #define 	NORMAL_VISION 				90
