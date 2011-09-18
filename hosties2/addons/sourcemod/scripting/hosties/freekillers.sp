@@ -23,6 +23,11 @@
 #include <hosties>
 #include <lastrequest>
 
+new Handle:gH_Cvar_Advanced_FK_Prevention = INVALID_HANDLE;
+new bool:gShadow_Advanced_FK_Prevention = false;
+new g_iLastKillTime[MAXPLAYERS+1];
+new g_iConsecutiveKills[MAXPLAYERS+1];
+
 Freekillers_OnPluginStart()
 {
 	gH_Cvar_Freekill_Sound = CreateConVar("sm_hosties_freekill_sound", "sm_hosties/freekill1.mp3", "What sound to play if a non-rebelling T gets 'freekilled', relative to the sound-folder: -1 - disable, path - path to sound file", FCVAR_PLUGIN);
@@ -40,6 +45,9 @@ Freekillers_OnPluginStart()
 	gH_Cvar_Freekill_Sound_Mode = CreateConVar("sm_hosties_freekill_sound_mode", "1", "When to play the 'freekill sound': 0 - on freeATTACK, 1 - on freeKILL", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_Freekill_Sound_Mode = 1;
 	
+	gH_Cvar_Advanced_FK_Prevention = CreateConVar("sm_hosties_freekill_adv_prot", "1", "Turns on or off the advanced freekill protection system.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_Advanced_FK_Prevention = true;
+	
 	HookEvent("player_death", Freekillers_PlayerDeath, EventHookMode_Pre);
 	HookEvent("round_end", Freekillers_RoundEnd);
 	
@@ -50,14 +58,25 @@ Freekillers_OnPluginStart()
 	HookConVarChange(gH_Cvar_Freekill_Punishment, Freekillers_CvarChanged);
 	HookConVarChange(gH_Cvar_Freekill_Reset, Freekillers_CvarChanged);
 	HookConVarChange(gH_Cvar_Freekill_Sound_Mode, Freekillers_CvarChanged);
+	HookConVarChange(gH_Cvar_Advanced_FK_Prevention, Freekillers_CvarChanged);
 	
 	ResetNumFreekills();
+	
+	for (new kidx = 1; kidx < MaxClients; kidx++)
+	{	
+		if (IsClientInGame(kidx))
+		{
+			SDKHook(kidx, SDKHook_OnTakeDamage, Freekill_Damage_Adjustment);
+		}
+	}
 }
 
 ResetNumFreekills()
 {
 	for (new fidx = 1; fidx < MaxClients; fidx++)
 	{
+		g_iLastKillTime[fidx] = 0;
+		g_iConsecutiveKills[fidx] = 0;
 		gA_FreekillsOfCT[fidx] = 0;
 	}
 }
@@ -68,6 +87,27 @@ Freekillers_OnMapEnd()
 	{
 		ResetNumFreekills();
 	}
+}
+
+public Action:Freekill_Damage_Adjustment(victim, &attacker, &inflictor, &Float:damage, &damagetype, &weapon, Float:damageForce[3], Float:damagePosition[3])
+{
+	if (gShadow_Advanced_FK_Prevention && (g_iConsecutiveKills[attacker] > 0))
+	{
+		new Float:f_percentChange = 0.01*(100.0 - float(g_iConsecutiveKills[attacker]^3));
+		if (f_percentChange < 0.0)
+		{
+			f_percentChange = 0.0;
+		}
+		damage = f_percentChange * damage;
+		return Plugin_Changed;
+	}
+	
+	return Plugin_Continue;
+}
+
+Freekillers_ClientPutInServer(client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, Freekill_Damage_Adjustment); 
 }
 
 Freekillers_OnConfigsExecuted()
@@ -86,6 +126,7 @@ Freekillers_OnConfigsExecuted()
 	gShadow_Freekill_Punishment = FreekillPunishment:GetConVarInt(gH_Cvar_Freekill_Punishment);
 	gShadow_Freekill_Reset = GetConVarInt(gH_Cvar_Freekill_Reset);
 	gShadow_Freekill_Sound_Mode = GetConVarInt(gH_Cvar_Freekill_Sound_Mode);
+	gShadow_Advanced_FK_Prevention = GetConVarBool(gH_Cvar_Advanced_FK_Prevention);
 }
 
 public Freekillers_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
@@ -118,6 +159,10 @@ public Freekillers_CvarChanged(Handle:cvar, const String:oldValue[], const Strin
 	{
 		gShadow_Freekill_Sound_Mode = StringToInt(newValue);
 	}
+	else if (cvar == gH_Cvar_Advanced_FK_Prevention)
+	{
+		gShadow_Advanced_FK_Prevention = bool:StringToInt(newValue);
+	}
 }
 
 public Freekillers_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
@@ -135,25 +180,40 @@ public Freekillers_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 	
 	// if attacker was a counter-terrorist and target was a terrorist
 	if (attacker && victim && (GetClientTeam(attacker) == CS_TEAM_CT) && \
-		(GetClientTeam(victim) == CS_TEAM_T) && !g_bIsARebel[victim])
+		(GetClientTeam(victim) == CS_TEAM_T))
 	{
-		new iArraySize = GetArraySize(gH_DArray_LR_Partners);
-		if (iArraySize == 0)
+		// advanced freekill tracking
+		new iTime = GetTime();
+		new iTimeSinceKill = iTime - g_iLastKillTime[attacker];
+		if (iTimeSinceKill < 4)
 		{
-			TakeActionOnFreekiller(attacker);
+			g_iConsecutiveKills[attacker]++;
 		}
 		else
 		{
-			// check if victim was in an LR and not the attacker pair
-			for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
+			g_iConsecutiveKills[attacker] = 0;
+		}
+		
+		if (!g_bIsARebel[victim])
+		{
+			new iArraySize = GetArraySize(gH_DArray_LR_Partners);
+			if (iArraySize == 0)
 			{
-				new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
-				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
-				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
-				
-				if (type != LR_Rebel && (victim == LR_Player_Prisoner) && (attacker != LR_Player_Guard))
+				TakeActionOnFreekiller(attacker);
+			}
+			else
+			{
+				// check if victim was in an LR and not the attacker pair
+				for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
 				{
-					TakeActionOnFreekiller(attacker);
+					new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
+					new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+					new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+					
+					if (type != LR_Rebel && (victim == LR_Player_Prisoner) && (attacker != LR_Player_Guard))
+					{
+						TakeActionOnFreekiller(attacker);
+					}
 				}
 			}
 		}

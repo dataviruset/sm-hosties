@@ -2251,7 +2251,7 @@ UpdateLastRequestArray(LastRequest:entry)
 	}
 }
 
-public OnClientPutInServer(client)
+LastRequest_ClientPutInServer(client)
 {
 	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDrop);
 	SDKHook(client, SDKHook_WeaponEquip, OnWeaponEquip);
