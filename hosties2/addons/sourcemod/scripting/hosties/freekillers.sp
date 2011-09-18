@@ -94,15 +94,18 @@ Freekillers_OnMapEnd()
 
 public Action:Freekill_Damage_Adjustment(victim, &attacker, &inflictor, &Float:damage, &damagetype, &weapon, Float:damageForce[3], Float:damagePosition[3])
 {
-	if (gShadow_Advanced_FK_Prevention && (g_iConsecutiveKills[attacker] > 0))
+	if ((victim != attacker) && (victim > 0) && (victim <= MaxClients) && (attacker > 0) && (attacker <= MaxClients))
 	{
-		new Float:f_percentChange = 0.01*(100.0 - float(g_iConsecutiveKills[attacker]^3));
-		if (f_percentChange < 0.0)
+		if (gShadow_Advanced_FK_Prevention && (g_iConsecutiveKills[attacker] > 0))
 		{
-			f_percentChange = 0.01;
+			new Float:f_percentChange = 0.01*(100.0 - 20.0*float(g_iConsecutiveKills[attacker]));			
+			if (f_percentChange < 0.01)
+			{
+				f_percentChange = 0.01;
+			}
+			damage = f_percentChange * damage;
+			return Plugin_Changed;
 		}
-		damage = f_percentChange * damage;
-		return Plugin_Changed;
 	}
 	
 	return Plugin_Continue;
@@ -188,7 +191,9 @@ public Freekillers_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 		// advanced freekill tracking
 		new iTime = GetTime();
 		new iTimeSinceKill = iTime - g_iLastKillTime[attacker];
-		if (iTimeSinceKill < 4)
+		g_iLastKillTime[attacker] = iTime;
+		
+		if ((iTimeSinceKill <= 4) || g_iConsecutiveKills[attacker] == 0)
 		{
 			g_iConsecutiveKills[attacker]++;
 			
