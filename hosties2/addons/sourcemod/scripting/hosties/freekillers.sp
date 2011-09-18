@@ -25,8 +25,10 @@
 
 new Handle:gH_Cvar_Advanced_FK_Prevention = INVALID_HANDLE;
 new bool:gShadow_Advanced_FK_Prevention = false;
+
 new g_iLastKillTime[MAXPLAYERS+1];
 new g_iConsecutiveKills[MAXPLAYERS+1];
+new Handle:gH_Reset_Kill_Counter[MAXPLAYERS+1];
 
 Freekillers_OnPluginStart()
 {
@@ -75,6 +77,7 @@ ResetNumFreekills()
 {
 	for (new fidx = 1; fidx < MaxClients; fidx++)
 	{
+		gH_Reset_Kill_Counter[fidx] = INVALID_HANDLE;
 		g_iLastKillTime[fidx] = 0;
 		g_iConsecutiveKills[fidx] = 0;
 		gA_FreekillsOfCT[fidx] = 0;
@@ -96,7 +99,7 @@ public Action:Freekill_Damage_Adjustment(victim, &attacker, &inflictor, &Float:d
 		new Float:f_percentChange = 0.01*(100.0 - float(g_iConsecutiveKills[attacker]^3));
 		if (f_percentChange < 0.0)
 		{
-			f_percentChange = 0.0;
+			f_percentChange = 0.01;
 		}
 		damage = f_percentChange * damage;
 		return Plugin_Changed;
@@ -188,10 +191,13 @@ public Freekillers_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 		if (iTimeSinceKill < 4)
 		{
 			g_iConsecutiveKills[attacker]++;
-		}
-		else
-		{
-			g_iConsecutiveKills[attacker] = 0;
+			
+			if (gH_Reset_Kill_Counter[attacker] != INVALID_HANDLE)
+			{
+				CloseHandle(gH_Reset_Kill_Counter[attacker]);				
+			}
+			
+			gH_Reset_Kill_Counter[attacker] = CreateTimer(4.0, Timer_ResetKills, attacker, TIMER_FLAG_NO_MAPCHANGE);
 		}
 		
 		if (!g_bIsARebel[victim])
@@ -218,6 +224,13 @@ public Freekillers_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 			}
 		}
 	}
+}
+
+public Action:Timer_ResetKills(Handle:timer, any:client)
+{
+	g_iConsecutiveKills[client] = 0;
+	gH_Reset_Kill_Counter[client] = INVALID_HANDLE;
+	return Plugin_Stop;
 }
 
 TakeActionOnFreekiller(attacker)
