@@ -28,7 +28,7 @@
 #pragma semicolon 1
 
 // Constants
-#define 	PLUGIN_VERSION	 			"2.0.2"
+#define 	PLUGIN_VERSION	 			"2.0.3b"
 #define 	MAX_DISPLAYNAME_SIZE 	32
 #define 	MAX_DATAENTRY_SIZE 		5
 #define 	NORMAL_VISION 				90
@@ -264,6 +264,12 @@ public OnConfigsExecuted()
 	#if (MODULE_STARTWEAPONS == 1)
 	StartWeapons_OnConfigsExecuted();
 	#endif
+}
+
+public OnClientPutInServer(client)
+{
+	LastRequest_ClientPutInServer(client);
+	Freekillers_ClientPutInServer(client);
 }
 
 public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
