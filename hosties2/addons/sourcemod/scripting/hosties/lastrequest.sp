@@ -1390,8 +1390,8 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
 				if ((client == LR_Player_Prisoner) || (client == LR_Player_Guard))
 				{							
-					new Prisoner_Weapon = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData);
-					new Guard_Weapon = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData);
+					new Prisoner_Weapon = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData));
+					new Guard_Weapon = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData));
 
 					if (gShadow_Announce_Shot4Shot)
 					{
@@ -1525,6 +1525,15 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 				if ((Type == LR_RussianRoulette) && (attacker == LR_Player_Guard || attacker == LR_Player_Prisoner) && \
 					(victim == LR_Player_Guard || victim == LR_Player_Prisoner))
 				{
+					// determine if LR weapon is being used
+					new Pistol_Prisoner = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData));
+					new Guard_Prisoner = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData));
+					
+					if (inflictor != Pistol_Prisoner && inflictor != Guard_Prisoner)
+					{
+						DecideRebelsFate(attacker, idx, victim);
+					}
+					
 					// null any damage
 					damage = 0.0;
 					
@@ -1702,7 +1711,17 @@ public Action:OnWeaponDrop(client, weapon)
 		for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
 		{	
 			new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
-			if (type == LR_GunToss)
+			if (type == LR_RussianRoulette)
+			{
+				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+				
+				if (client == LR_Player_Prisoner || client == LR_Player_Guard)
+				{
+					return Plugin_Handled;
+				}
+			}
+			else if (type == LR_GunToss)
 			{
 				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
 				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
@@ -3720,9 +3739,11 @@ InitializeGame(iPartnersIndex)
 			TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, NULL_VECTOR);
 
 			new Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_deagle");
-			new Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_deagle");			
-			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, Pistol_Prisoner, _:Block_PrisonerData);
-			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, Pistol_Guard, _:Block_GuardData);		
+			new Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_deagle");
+			new Pistol_PrisonerEntRef = EntIndexToEntRef(Pistol_Prisoner);
+			new Pistol_GuardEntRef = EntIndexToEntRef(Pistol_Guard);
+			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, Pistol_PrisonerEntRef, _:Block_PrisonerData);
+			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, Pistol_GuardEntRef, _:Block_GuardData);		
 			
 			PrintToChatAll(CHAT_BANNER, "LR RR Start", LR_Player_Prisoner, LR_Player_Guard);
 			
