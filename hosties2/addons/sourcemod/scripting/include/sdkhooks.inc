@@ -83,7 +83,9 @@ enum SDKHookType
 	SDKHook_WeaponEquipPost,
 	SDKHook_WeaponSwitchPost,
 	SDKHook_Use,
-	SDKHook_UsePost
+	SDKHook_UsePost,
+	SDKHook_Reload,
+	SDKHook_ReloadPost,
 };
 
 /*
@@ -104,6 +106,9 @@ enum SDKHookType
 	
 	SDKHook_PostThink,
 	SDKHook_PostThinkPost,
+	
+	SDKHook_Reload,
+	SDKHook_ReloadPost,
 	
 	SDKHook_SetTransmit,
 	
@@ -160,8 +165,11 @@ funcenum SDKHookCB
 	// PostThink/Post
 	public(client),
 	
+	// Spawn
+	Action:public(entity),
+	
 	// GroundEntChanged
-	// Spawn/Post
+	// SpawnPost
 	// Think/Post
 	// VPhysicsUpdate/Post
 	public(entity),
@@ -195,8 +203,14 @@ funcenum SDKHookCB
 	
 	// OnTakeDamage
 	// Note: Force application is dependent on game and damage type(s)
+	// SDKHooks 1.0+
 	Action:public(victim, &attacker, &inflictor, &Float:damage, &damagetype),
+	// SDKHooks 2.0+
 	Action:public(victim, &attacker, &inflictor, &Float:damage, &damagetype, &weapon, Float:damageForce[3], Float:damagePosition[3]),
+	// SDKHooks 2.1+  (can check for support at runtime using GetFeatureStatus on SDKHook_DmgCustomInOTD capability.
+	// DON'T attempt to access 'damagecustom' var if feature status != available
+	Action:public(victim, &attacker, &inflictor, &Float:damage, &damagetype, &weapon,
+		Float:damageForce[3], Float:damagePosition[3], damagecustom),
 	
 	// OnTakeDamagePost
 	public(victim, attacker, inflictor, Float:damage, damagetype),
@@ -218,7 +232,13 @@ funcenum SDKHookCB
 	Action:public(entity, activator, caller, UseType:type, Float:value),
 	
 	// UsePost
-	public(entity, activator, caller, UseType:type, Float:value)
+	public(entity, activator, caller, UseType:type, Float:value),
+	
+	// Reload
+	Action:public(weapon),
+	
+	// Reload post
+	public(weapon, bool:bSuccessful)
 };
 
 
