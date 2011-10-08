@@ -1805,10 +1805,15 @@ LastRequest_OnMapStart()
 	LaserHalo = PrecacheModel("materials/sprites/plasmahalo.vmt");
 	HaloSprite = PrecacheModel("materials/sprites/halo01.vmt");
 	
-	// Potential fix for problems with g_BeaconTimer not being set to INVALID_HANDLE on timer terminating (TIMER_FLAG_NO_MAPCHANGE)
+	// Fix for problems with g_BeaconTimer not being set to INVALID_HANDLE on timer terminating (TIMER_FLAG_NO_MAPCHANGE)
 	if (g_BeaconTimer != INVALID_HANDLE)
 	{
 		g_BeaconTimer = INVALID_HANDLE;
+	}
+	// Fix for the same problem with g_CountdownTimer
+	if (g_CountdownTimer != INVALID_HANDLE)
+	{
+		g_CountdownTimer = INVALID_HANDLE;
 	}
 }
 
@@ -4193,7 +4198,6 @@ AddBeacon(entityIndex)
 	if (g_BeaconTimer == INVALID_HANDLE)
 	{
 		g_BeaconTimer = CreateTimer(0.1, Timer_Beacon, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-		
 	}
 }
 
@@ -4273,7 +4277,7 @@ public Action:Timer_Countdown(Handle:timer)
 	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
 	if (iArraySize == 0)
 	{
-		g_CountdownTimer = INVALID_HANDLE;
+		g_CountdownTimer = INVALID_HANDLE; // TODO: Remove this because it doesn't make sense?
 		return Plugin_Stop;
 	}
 	
