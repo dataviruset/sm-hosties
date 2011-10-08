@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"LR SGW Start"
+	{
+		"en"		"{1} valgte at have shotgun krig med {2}."
+	}
+	"SGW Win"
+	{
+		"en"		"{1} vandt shotgun krigen."
+	}
+}
