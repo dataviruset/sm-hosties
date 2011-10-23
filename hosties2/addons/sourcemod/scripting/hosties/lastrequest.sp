@@ -1736,12 +1736,15 @@ public Action:OnWeaponDrop(client, weapon)
 					if (((client == LR_Player_Prisoner && GTp1dropped) || 
 						(client == LR_Player_Guard && GTp2dropped)) && (gShadow_LR_GunToss_StartMode == 1))
 					{
-						decl String:weapon_name[32];
-						GetEdictClassname(weapon, weapon_name, sizeof(weapon_name));
-						if (StrEqual(weapon_name, "weapon_deagle"))
+						if (IsValidEntity(weapon))
 						{
-							PrintToChat(client, CHAT_BANNER, "Already Dropped Deagle");
-							return Plugin_Handled;
+							decl String:weapon_name[32];
+							GetEdictClassname(weapon, weapon_name, sizeof(weapon_name));
+							if (StrEqual(weapon_name, "weapon_deagle"))
+							{
+								PrintToChat(client, CHAT_BANNER, "Already Dropped Deagle");
+								return Plugin_Handled;
+							}
 						}
 					}
 					else
