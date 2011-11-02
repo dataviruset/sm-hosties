@@ -35,8 +35,6 @@ new String:gShadow_MuteImmune[37];
 new Handle:gH_Cvar_MuteCT = INVALID_HANDLE;
 new bool:gShadow_MuteCT = false;
 new gAdmFlags_MuteImmunity = 0;
-new bool:g_bBaseCommNatives = false;
-new bool:g_bMuted[MAXPLAYERS+1];
 
 MutePrisoners_OnPluginStart()
 {
@@ -85,76 +83,6 @@ MutePrisoners_AllPluginsLoaded()
 		PrintToServer("Hosties Mute System Disabled. Upgrade to SM >= 1.4.0");
 		LogMessage("Hosties Mute System Disabled. Upgrade to SM >= 1.4.0");
 	}
-	
-	if (!g_bBaseCommNatives)
-	{
-		AddCommandListener(Listen_AdminMute, "sm_mute");
-		AddCommandListener(Listen_AdminMute, "sm_silence");
-		AddCommandListener(Listen_AdminUnmute, "sm_unmute");
-		AddCommandListener(Listen_AdminUnmute, "sm_unsilence");
-	}
-}
-
-public Action:Listen_AdminUnmute(client, const String:command[], args)
-{
-	if (args < 1)
-	{
-		return Plugin_Continue;
-	}
-	
-	decl String:arg[64];
-	GetCmdArg(1, arg, sizeof(arg));
-	
-	decl String:target_name[MAX_TARGET_LENGTH];
-	decl target_list[MAXPLAYERS], target_count, bool:tn_is_ml;
-	
-	target_count = ProcessTargetString(
-		arg,
-		client, 
-		target_list, 
-		MAXPLAYERS, 
-		0,
-		target_name,
-		sizeof(target_name),
-		tn_is_ml);
-	
-	for (new i = 0; i < target_count; i++)
-	{
-		g_bMuted[target_list[i]] = false;
-	}
-	
-	return Plugin_Continue;
-}
-
-public Action:Listen_AdminMute(client, const String:command[], args)
-{
-	if (args < 1)
-	{
-		return Plugin_Continue;
-	}
-	
-	decl String:arg[64];
-	GetCmdArg(1, arg, sizeof(arg));
-	
-	decl String:target_name[MAX_TARGET_LENGTH];
-	decl target_list[MAXPLAYERS], target_count, bool:tn_is_ml;
-	
-	target_count = ProcessTargetString(
-		arg,
-		client, 
-		target_list, 
-		MAXPLAYERS, 
-		0,
-		target_name,
-		sizeof(target_name),
-		tn_is_ml);
-	
-	for (new i = 0; i < target_count; i++)
-	{
-		g_bMuted[target_list[i]] = true;
-	}
-	
-	return Plugin_Continue;
 }
 
 MutePrisoners_OnConfigsExecuted()
@@ -187,19 +115,9 @@ stock UnmuteAlive()
 	{
 		if (IsClientInGame(i) && IsPlayerAlive(i)) // if player is in game and alive
 		{
-			if (g_bBaseCommNatives)
+			if (!BaseComm_IsClientMuted(i))
 			{
-				if (!BaseComm_IsClientMuted(i))
-				{
-					UnmutePlayer(i);
-				}
-			}
-			else
-			{
-				if (!g_bMuted[i])
-				{
-					UnmutePlayer(i);
-				}
+				UnmutePlayer(i);
 			}
 		}
 	}
@@ -221,19 +139,9 @@ stock UnmuteAll()
 	{
 		if (IsClientInGame(i)) // if player is in game
 		{
-			if (g_bBaseCommNatives)
+			if (!BaseComm_IsClientMuted(i))
 			{
-				if (!BaseComm_IsClientMuted(i))
-				{
-					UnmutePlayer(i);
-				}
-			}
-			else
-			{
-				if (!g_bMuted[i])
-				{
-					UnmutePlayer(i);
-				}
+				UnmutePlayer(i);
 			}
 		}
 	}
