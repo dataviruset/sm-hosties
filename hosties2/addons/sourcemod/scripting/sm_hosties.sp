@@ -225,9 +225,7 @@ public OnLibraryRemoved(const String:name[])
 
 public OnClientConnected(client)
 {
-	#if (MODULE_MUTE == 1)
-	MutePrisoners_OnClientConnected(client);
-	#endif
+	
 }
 
 public OnConfigsExecuted()
