@@ -1503,6 +1503,15 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 						DecideRebelsFate(client, idx, -1);
 					}
 				}	
+			}			
+			else if (type == LR_NoScope)
+			{
+				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+				if (client == LR_Player_Prisoner || client == LR_Player_Guard)
+				{
+					SetEntData(client, g_Offset_FOV, 0, 4, true);
+				}
 			}
 		}
 	}
@@ -3051,13 +3060,13 @@ InitializeGame(iPartnersIndex)
 	// log the event for stats engines
 	if (selection < LastRequest)
 	{
-		LogToGame(LR_Player_Prisoner, LR_Player_Guard, "\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, g_sLastRequestPhrase[selection], LR_Player_Guard);
+		LogToGame("\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, g_sLastRequestPhrase[selection], LR_Player_Guard);
 	}
 	else
 	{
 		decl String:LR_Name[MAX_DISPLAYNAME_SIZE];
 		GetArrayString(gH_DArray_LR_CustomNames, _:(selection - LastRequest), LR_Name, MAX_DISPLAYNAME_SIZE);
-		LogToGame(LR_Player_Prisoner, LR_Player_Guard, "\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, LR_Name, LR_Player_Guard);
+		LogToGame("\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, LR_Name, LR_Player_Guard);
 	}
 	
 	switch (selection)

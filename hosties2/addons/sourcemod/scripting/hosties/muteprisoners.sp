@@ -60,13 +60,6 @@ MutePrisoners_OnPluginStart()
 	{
 		SetFailState("Unable to find offset for collision groups.");
 	}
-	
-
-}
-
-MutePrisoners_OnClientConnected(client)
-{
-	g_bMuted[client] = false;
 }
 
 MutePrisoners_AllPluginsLoaded()
