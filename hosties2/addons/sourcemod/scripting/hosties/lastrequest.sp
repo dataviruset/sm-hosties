@@ -29,7 +29,7 @@
 #pragma semicolon 1
 
 // Global variables
-new bool:g_bIsLRAvailable = false;
+new bool:g_bIsLRAvailable = true;
 new bool:g_bAnnouncedThisRound = false;
 new bool:g_bInLastRequest[MAXPLAYERS+1];
 new bool:g_bIsARebel[MAXPLAYERS+1];
@@ -708,7 +708,7 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 	// roundstart done, enable LR if there should be no LR delay (credits to Caza for this :p)
 	if (gShadow_LR_Delay_Enable_Time > 0.0)
 	{
-		g_bIsLRAvailable = false;		
+		g_bIsLRAvailable = false;	
 		g_DelayLREnableTimer = CreateTimer(gShadow_LR_Delay_Enable_Time, Timer_EnableLR, _, TIMER_FLAG_NO_MAPCHANGE);
 
 		if (gShadow_Announce_Delay_Enable)
