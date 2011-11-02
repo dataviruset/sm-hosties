@@ -63,10 +63,7 @@ MutePrisoners_OnPluginStart()
 		SetFailState("Unable to find offset for collision groups.");
 	}
 	
-	HookEvent("round_start", MutePrisoners_RoundStart);
-	HookEvent("round_end", MutePrisoners_RoundEnd);
-	HookEvent("player_death", MutePrisoners_PlayerDeath);
-	HookEvent("player_spawn", MutePrisoners_PlayerSpawn);
+
 }
 
 MutePrisoners_OnClientConnected(client)
@@ -76,7 +73,18 @@ MutePrisoners_OnClientConnected(client)
 
 MutePrisoners_AllPluginsLoaded()
 {
-	g_bBaseCommNatives = DoesContainBaseCommNatives();
+	if (DoesContainBaseCommNatives())
+	{
+		HookEvent("round_start", MutePrisoners_RoundStart);
+		HookEvent("round_end", MutePrisoners_RoundEnd);
+		HookEvent("player_death", MutePrisoners_PlayerDeath);
+		HookEvent("player_spawn", MutePrisoners_PlayerSpawn);
+	}
+	else
+	{
+		PrintToServer("Hosties Mute System Disabled. Upgrade to SM >= 1.4.0");
+		LogMessage("Hosties Mute System Disabled. Upgrade to SM >= 1.4.0");
+	}
 	
 	if (!g_bBaseCommNatives)
 	{
@@ -199,7 +207,7 @@ stock UnmuteAlive()
 
 stock bool:DoesContainBaseCommNatives()
 {
-	// 1.3.9 will have Native_IsClientMuted in basecomm.inc
+	// 1.3.9 will have Native_IsClientMuted in basecomm.inc 
 	if (GetFeatureStatus(FeatureType_Native, "BaseComm_IsClientMuted") == FeatureStatus_Available)
 	{
 		return true;
