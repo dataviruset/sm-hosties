@@ -3051,13 +3051,13 @@ InitializeGame(iPartnersIndex)
 	// log the event for stats engines
 	if (selection < LastRequest)
 	{
-		LogAction(LR_Player_Prisoner, LR_Player_Guard, "\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, g_sLastRequestPhrase[selection], LR_Player_Guard);
+		LogToGame(LR_Player_Prisoner, LR_Player_Guard, "\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, g_sLastRequestPhrase[selection], LR_Player_Guard);
 	}
 	else
 	{
 		decl String:LR_Name[MAX_DISPLAYNAME_SIZE];
 		GetArrayString(gH_DArray_LR_CustomNames, _:(selection - LastRequest), LR_Name, MAX_DISPLAYNAME_SIZE);
-		LogAction(LR_Player_Prisoner, LR_Player_Guard, "\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, LR_Name, LR_Player_Guard);
+		LogToGame(LR_Player_Prisoner, LR_Player_Guard, "\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, LR_Name, LR_Player_Guard);
 	}
 	
 	switch (selection)
