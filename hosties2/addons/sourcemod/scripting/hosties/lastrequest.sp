@@ -2868,7 +2868,7 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 						GetMenuItem(playermenu, iButtonChoice, sData, sizeof(sData));
 						new ClientIdxOfCT = GetClientOfUserId(StringToInt(sData));
 						
-						if (IsClientInGame(ClientIdxOfCT) && IsPlayerAlive(ClientIdxOfCT) && (GetClientTeam(ClientIdxOfCT) == CS_TEAM_CT))
+						if (ClientIdxOfCT && IsClientInGame(ClientIdxOfCT) && IsPlayerAlive(ClientIdxOfCT) && (GetClientTeam(ClientIdxOfCT) == CS_TEAM_CT))
 						{
 							// check the number of terrorists still alive
 							new Ts, CTs, iNumCTsAvailable;
