@@ -54,6 +54,7 @@ Admin Commands:
 !stoplr (also: !abortlr and !cancellr): Requires slay admin flag and will abort any and all active last requests.
 
 Requirements:
+SourceMod 1.4.0+
 SDK Hooks 2.0+
 
 Fresh Install Instructions:
