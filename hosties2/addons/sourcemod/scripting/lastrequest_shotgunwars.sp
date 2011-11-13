@@ -47,7 +47,7 @@ enum theColors
 public Plugin:myinfo =
 {
 	name = "Last Request: Shotgun Wars (sample)",
-	author = "databomb",
+	author = "databomb & dataviruset",
 	description = "An example of how to add LRs",
 	version = PLUGIN_VERSION,
 	url = "vintagejailbreak.org"
