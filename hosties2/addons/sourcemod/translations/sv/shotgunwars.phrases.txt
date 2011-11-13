@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"Shotgun Wars"
+	{
+		"sv"		"Hagelgevärsstrid"
+	}
 	"LR SGW Start"
 	{
 		"sv"		"{1} valde att ha Shotgun War med {2}."
