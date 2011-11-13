@@ -256,19 +256,20 @@ new String:g_sLastRequestPhrase[LastRequest][MAX_DISPLAYNAME_SIZE];
 LastRequest_OnPluginStart()
 {
 	// Populate translation entries
-	Format(g_sLastRequestPhrase[LR_KnifeFight], MAX_DISPLAYNAME_SIZE, "%T", "Knife Fight", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_Shot4Shot], MAX_DISPLAYNAME_SIZE, "%T", "Shot4Shot", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_GunToss], MAX_DISPLAYNAME_SIZE, "%T", "Gun Toss", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_ChickenFight], MAX_DISPLAYNAME_SIZE, "%T", "Chicken Fight", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_HotPotato], MAX_DISPLAYNAME_SIZE, "%T", "Hot Potato", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_Dodgeball], MAX_DISPLAYNAME_SIZE, "%T", "Dodgeball", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_NoScope], MAX_DISPLAYNAME_SIZE, "%T", "No Scope Battle", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_RockPaperScissors], MAX_DISPLAYNAME_SIZE, "%T", "Rock Paper Scissors", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_Rebel], MAX_DISPLAYNAME_SIZE, "%T", "Rebel!", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_Mag4Mag], MAX_DISPLAYNAME_SIZE, "%T", "Mag4Mag", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_Race], MAX_DISPLAYNAME_SIZE, "%T", "Race", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_RussianRoulette], MAX_DISPLAYNAME_SIZE, "%T", "Russian Roulette", LANG_SERVER);
-	Format(g_sLastRequestPhrase[LR_JumpContest], MAX_DISPLAYNAME_SIZE, "%T", "Jumping Contest", LANG_SERVER);
+	// no longer pulling LANG_SERVER
+	g_sLastRequestPhrase[LR_KnifeFight] = "Knife Fight";
+	g_sLastRequestPhrase[LR_Shot4Shot] = "Shot4Shot";
+	g_sLastRequestPhrase[LR_GunToss] = "Gun Toss";
+	g_sLastRequestPhrase[LR_ChickenFight] = "Chicken Fight";
+	g_sLastRequestPhrase[LR_HotPotato] = "Hot Potato";
+	g_sLastRequestPhrase[LR_Dodgeball] = "Dodgeball";
+	g_sLastRequestPhrase[LR_NoScope] = "No Scope Battle";
+	g_sLastRequestPhrase[LR_RockPaperScissors] = "Rock Paper Scissors";
+	g_sLastRequestPhrase[LR_Rebel] = "Rebel!";
+	g_sLastRequestPhrase[LR_Mag4Mag] = "Mag4Mag";
+	g_sLastRequestPhrase[LR_Race] = "Race";
+	g_sLastRequestPhrase[LR_RussianRoulette] = "Russian Roulette";
+	g_sLastRequestPhrase[LR_JumpContest] = "Jumping Contest";
 
 	// Gather all offsets
 	g_Offset_Health = FindSendPropOffs("CBasePlayer", "m_iHealth");
@@ -2366,7 +2367,8 @@ public Action:Command_LastRequest(client, args)
 											if (LastRequest:entry != LR_Rebel || (LastRequest:entry == LR_Rebel && Ts <= gShadow_LR_Rebel_MaxTs && CTs >= gShadow_LR_Rebel_MinCTs))
 											{
 												Format(sDataField, sizeof(sDataField), "%d", entry);
-												AddMenuItem(menu, sDataField, g_sLastRequestPhrase[entry]);
+												Format(sTitleField, sizeof(sTitleField), "%T", g_sLastRequestPhrase[entry], client);
+												AddMenuItem(menu, sDataField, sTitleField);
 											}
 										}
 										else
@@ -2918,7 +2920,7 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 												decl String:lrname[MAX_DISPLAYNAME_SIZE];
 												if (g_LRLookup[client] < LastRequest)
 												{
-													Format(lrname, sizeof(lrname), "%s", g_sLastRequestPhrase[g_LRLookup[client]]);		
+													Format(lrname, sizeof(lrname), "%T", g_sLastRequestPhrase[g_LRLookup[client]], ClientIdxOfCT);		
 												}
 												else
 												{
@@ -4510,9 +4512,9 @@ public RPSmenuHandler(Handle:menu, MenuAction:action, client, param2)
 					{
 						// decide who wins -- rock 0 paper 1 scissors 2
 						decl String:RPSr[64], String:RPSp[64], String:RPSs[64], String:RPSc1[64], String:RPSc2[64];
-						Format(RPSr, sizeof(RPSr), "%T", "Rock", LANG_SERVER);
-						Format(RPSp, sizeof(RPSp), "%T", "Paper", LANG_SERVER);
-						Format(RPSs, sizeof(RPSs), "%T", "Scissors", LANG_SERVER);
+						Format(RPSr, sizeof(RPSr), "%T", "Rock", LR_Player_Prisoner);
+						Format(RPSp, sizeof(RPSp), "%T", "Paper", LR_Player_Prisoner);
+						Format(RPSs, sizeof(RPSs), "%T", "Scissors", LR_Player_Prisoner);
 		
 						switch (RPS_Prisoner_Choice)
 						{
