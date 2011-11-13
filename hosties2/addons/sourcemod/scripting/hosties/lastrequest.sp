@@ -2366,8 +2366,7 @@ public Action:Command_LastRequest(client, args)
 											if (LastRequest:entry != LR_Rebel || (LastRequest:entry == LR_Rebel && Ts <= gShadow_LR_Rebel_MaxTs && CTs >= gShadow_LR_Rebel_MinCTs))
 											{
 												Format(sDataField, sizeof(sDataField), "%d", entry);
-												Format(sTitleField, sizeof(sTitleField), "%T", g_sLastRequestPhrase[entry], client);
-												AddMenuItem(menu, sDataField, sTitleField);
+												AddMenuItem(menu, sDataField, g_sLastRequestPhrase[entry]);
 											}
 										}
 										else
@@ -2919,7 +2918,7 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 												decl String:lrname[MAX_DISPLAYNAME_SIZE];
 												if (g_LRLookup[client] < LastRequest)
 												{
-													Format(lrname, sizeof(lrname), "%T", g_sLastRequestPhrase[g_LRLookup[client]], ClientIdxOfCT);		
+													Format(lrname, sizeof(lrname), "%s", g_sLastRequestPhrase[g_LRLookup[client]]);		
 												}
 												else
 												{
