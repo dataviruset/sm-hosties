@@ -1,0 +1,15 @@
+﻿"Phrases"
+{
+	"Shotgun Wars"
+	{
+		"fr"		"Shotgun Wars"
+	}
+	"LR SGW Start"
+	{
+		"fr"		"{1} choisis de faire une Guerre de Pompes avec {2}."
+	}
+	"SGW Win"
+	{
+		"fr"		"{1} a gagné la guerre des pompes."
+	}
+}
