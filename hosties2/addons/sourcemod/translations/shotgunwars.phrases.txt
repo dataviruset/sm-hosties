@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"Shotgun Wars"
+	{
+		"en"		"Shotgun Wars"
+	}
 	"LR SGW Start"
 	{
 		"#format"	"{1:N},{2:N}"
