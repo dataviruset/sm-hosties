@@ -1,4 +1,4 @@
-"Phrases"
+﻿"Phrases"
 {
 	"Knife Fight"
 	{
@@ -118,7 +118,7 @@
 	}
 	"LR Player Disconnect"
 	{
-		"fr"		"Le Joueur [EV DV] {1} s'est déconnecté - DV abandonné."
+		"fr"		"Le Joueur [EN DV] {1} s'est déconnecté - DV abandonné."
 	}
 	"Chicken Fight Win And Slay"
 	{
@@ -170,7 +170,7 @@
 	}
 	"Choose A Player"
 	{
-		"fr"		"Choisissez un Joueur"
+		"fr"		"Choisissez un Joueur :"
 	}
 	"Rebel Ask CT For LR"
 	{
@@ -238,7 +238,7 @@
 	}
 	"LR RPS Start"
 	{
-		"fr"		"{1} a choisis de Joueur à Pierre Feuille Ciseaux avec {2}."
+		"fr"		"{1} a choisis de Jouer à Pierre Feuille Ciseaux avec {2}."
 	}
 	"LR Mag4Mag Start"
 	{
@@ -246,7 +246,7 @@
 	}
 	"LR RR Start"
 	{
-		"fr"		"{1} a choisis de Joueur à la Roulette Russe avec {2}."
+		"fr"		"{1} a choisis de Jouer à la Roulette Russe avec {2}."
 	}
 	"LR Has Chosen to Rebel!"
 	{
