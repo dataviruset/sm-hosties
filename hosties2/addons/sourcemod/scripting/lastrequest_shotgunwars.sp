@@ -32,6 +32,8 @@
 // This global will store the index number for the new Last Request
 new g_LREntryNum;
 
+new String:g_sLR_Name[64];
+
 new Handle:gH_Timer_GiveHealth = INVALID_HANDLE;
 new Handle:gH_Timer_Countdown = INVALID_HANDLE;
 
@@ -58,6 +60,9 @@ public OnPluginStart()
 	// Load translations
 	LoadTranslations("shotgunwars.phrases");
 	
+	// Load the name in default server language
+	Format(g_sLR_Name, sizeof(g_sLR_Name), "%T", "Shotgun Wars", LANG_SERVER);
+	
 	// Create any cvars you need here
 	
 }
@@ -67,7 +72,7 @@ public OnConfigsExecuted()
 	static bool:bAddedShotgunWars = false;
 	if (!bAddedShotgunWars)
 	{
-		g_LREntryNum = AddLastRequestToList(ShotgunWars_Start, ShotgunWars_Stop, "Shotgun Wars");
+		g_LREntryNum = AddLastRequestToList(ShotgunWars_Start, ShotgunWars_Stop, g_sLR_Name);
 		bAddedShotgunWars = true;
 	}	
 }
@@ -75,7 +80,7 @@ public OnConfigsExecuted()
 // The plugin should remove any LRs it loads when it's unloaded
 public OnPluginEnd()
 {
-	RemoveLastRequestFromList(ShotgunWars_Start, ShotgunWars_Stop, "Shotgun Wars");
+	RemoveLastRequestFromList(ShotgunWars_Start, ShotgunWars_Stop, g_sLR_Name);
 }
 
 public ShotgunWars_Start(Handle:LR_Array, iIndexInArray)
