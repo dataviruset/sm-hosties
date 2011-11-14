@@ -2,562 +2,562 @@
 {
 	"Knife Fight"
 	{
-		"en"		"Knivkamp"
+		"da"		"Knivkamp"
 	}
 	"Shot4Shot"
 	{
-		"en"		"Skud For Skud"
+		"da"		"Skud For Skud"
 	}
 	"Gun Toss"
 	{
-		"en"		"Pistolkast"
+		"da"		"Pistolkast"
 	}
 	"Chicken Fight"
 	{
-		"en"		"Kyllingekamp"
+		"da"		"Kyllingekamp"
 	}
 	"Hot Potato"
 	{
-		"en"		"Varm kartoffel"
+		"da"		"Varm kartoffel"
 	}
 	"Dodgeball"
 	{
-		"en"		"Høvdingebold"
+		"da"		"Høvdingebold"
 	}
 	"No Scope Battle"
 	{
-		"en"		"Intet sigte kamp"
+		"da"		"Intet sigte kamp"
 	}
 	"Rock Paper Scissors"
 	{
-		"en"		"Sten Saks Papir"
+		"da"		"Sten Saks Papir"
 	}
 	"Russian Roulette"
 	{
-		"en"		"Russisk roulette"
+		"da"		"Russisk roulette"
 	}
 	"Jumping Contest"
 	{
-		"en"		"Hoppe konkurrence"
+		"da"		"Hoppe konkurrence"
 	}
 	"Rebel!"
 	{
-		"en"		"Oprør!"
+		"da"		"Oprør!"
 	}
 	"Mag4Mag"
 	{
-		"en"		"Mag for Mag"
+		"da"		"Mag for Mag"
 	}
 	"Race"
 	{
-		"en"		"Ræs"
+		"da"		"Ræs"
 	}
 	"Already Dropped Deagle"
 	{
-		"en"		"Du har allerede smidt din deagle!"
+		"da"		"Du har allerede smidt din deagle!"
 	}
 	"Hot Potato PickUp"
 	{
-		"en"		"{1} Samlede den varme kartoffel op!"
+		"da"		"{1} Samlede den varme kartoffel op!"
 	}
 	"Powered By Hosties"
 	{
-		"en"		"Denne server er drevet af SM_Hosties v2 (oversat til dansk af Marzvinet), god fornøjelse!"
+		"da"		"Denne server er drevet af SM_Hosties v2 (oversat til dansk af Marzvinet), god fornøjelse!"
 	}
 	"Please Follow Rules"
 	{
-		"en"		"Følg venligst de regler, der er nævnt i !rules."
+		"da"		"Følg venligst de regler, der er nævnt i !rules."
 	}
 	"Knife Fight Gun Attack Slay"
 	{
-		"en"		"{1} blev slået ihjel for at angribe {2} med {3} under en knivkamp."
+		"da"		"{1} blev slået ihjel for at angribe {2} med {3} under en knivkamp."
 	}
 	"Knife Fight Gun Attack Abort"
 	{
-		"en"		"{1} angreb {2} med en {3} - knivkampen er slut."
+		"da"		"{1} angreb {2} med en {3} - knivkampen er slut."
 	}
 	"Chicken Fight Gun Attack Slay"
 	{
-		"en"		"{1} blev dræbt for at angribe {2} med {3} under Kyllingekampen."
+		"da"		"{1} blev dræbt for at angribe {2} med {3} under Kyllingekampen."
 	}
 	"Chicken Fight Gun Attack Abort"
 	{
-		"en"		"{1} angreb {2} med en {3} - Kyllingekampen er slut."
+		"da"		"{1} angreb {2} med en {3} - Kyllingekampen er slut."
 	}
 	"Hot Potato Attack Slay"
 	{
-		"en"		"{1} blev dræbt for at angribe {2} under varm kartoffel Konkurrencen."
+		"da"		"{1} blev dræbt for at angribe {2} under varm kartoffel Konkurrencen."
 	}
 	"Hot Potato Attack Abort"
 	{
-		"en"		"{1} angreb {2} - Varm kartoffel er slut."
+		"da"		"{1} angreb {2} - Varm kartoffel er slut."
 	}
 	"New Rebel"
 	{
-		"en"		"{1} Er nu oprører."
+		"da"		"{1} Er nu oprører."
 	}
 	"Freeattack"
 	{
-		"en"		"{1} angreb {2}."
+		"da"		"{1} angreb {2}."
 	}
 	"Non LR Kill LR Slay"
 	{
-		"en"		"Ikke LR-Spiller {1} blev dræbt for at angribe LR-Spilleren {2}."
+		"da"		"Ikke LR-Spiller {1} blev dræbt for at angribe LR-Spilleren {2}."
 	}
 	"Non LR Kill LR Abort"
 	{
-		"en"		"Ikke LR-Spiller {1} dræbte LR-Spiller {2} - LR er afsluttet."
+		"da"		"Ikke LR-Spiller {1} dræbte LR-Spiller {2} - LR er afsluttet."
 	}
 	"Rebel Kill"
 	{
-		"en"		"{1} Dræbte oprøreren {2}."
+		"da"		"{1} Dræbte oprøreren {2}."
 	}
 	"LR Available"
 	{
-		"en"		"Terroristerne kan nu skrive !lr for at have en last request."
+		"da"		"Terroristerne kan nu skrive !lr for at have en last request."
 	}
 	"LR Player Disconnect"
 	{
-		"en"		"LR-Spiller {1} afbrød forbindelsen - LR er slut."
+		"da"		"LR-Spiller {1} afbrød forbindelsen - LR er slut."
 	}
 	"Chicken Fight Win And Slay"
 	{
-		"en"		"{1} vandt kyllingekampen - {2} blev dræbt."
+		"da"		"{1} vandt kyllingekampen - {2} blev dræbt."
 	}
 	"Chicken Fight Win"
 	{
-		"en"		"{1} vandt kyllingekampen."
+		"da"		"{1} vandt kyllingekampen."
 	}
 	"Chicken Fight Kill Loser"
 	{
-		"en"		"Dræb {1}!"
+		"da"		"Dræb {1}!"
 	}
 	"S4S Shot Taken"
 	{
-		"en"		"{1} Har taget sit skud."
+		"da"		"{1} Har taget sit skud."
 	}
 	"Distance Meter"
 	{
-		"en"		"Meter-distance:"
+		"da"		"Meter-distance:"
 	}
 	"LR Rebel Not Allowed"
 	{
-		"en"		"Du kan ikke have LR som rebel."
+		"da"		"Du kan ikke have LR som rebel."
 	}
 	"LR Choose"
 	{
-		"en"		"Vælg en last request"
+		"da"		"Vælg en last request"
 	}
 	"No CTs Alive"
 	{
-		"en"		"Der er ingen CT'er (I live) til at lave LR med."
+		"da"		"Der er ingen CT'er (I live) til at lave LR med."
 	}
 	"Too Many Ts"
 	{
-		"en"		"Der er for mange Terrorister levende til at have LR nu!"
+		"da"		"Der er for mange Terrorister levende til at have LR nu!"
 	}
 	"Not Alive Or In Wrong Team"
 	{
-		"en"		"Du er ikke i live, eller på det forkerte hold til at lave LR."
+		"da"		"Du er ikke i live, eller på det forkerte hold til at lave LR."
 	}
 	"Another LR In Progress"
 	{
-		"en"		"Der er allerede en LR igang."
+		"da"		"Der er allerede en LR igang."
 	}
 	"LR Disabled"
 	{
-		"en"		"Desværre, men LR er ikke tilladt på denne server."
+		"da"		"Desværre, men LR er ikke tilladt på denne server."
 	}
 	"Choose A Player"
 	{
-		"en"		"Vælg en spiller"
+		"da"		"Vælg en spiller"
 	}
 	"Rebel Ask CT For LR"
 	{
-		"en"		"Oprører {1} vil gerne lave {2} med dig. Accepter?"
+		"da"		"Oprører {1} vil gerne lave {2} med dig. Accepter?"
 	}
 	"Yes"
 	{
-		"en"		"Ja"
+		"da"		"Ja"
 	}
 	"No"
 	{
-		"en"		"Nej"
+		"da"		"Nej"
 	}
 	"Asking For Permission"
 	{
-		"en"		"Spørger {1} om tilladelse fordi du er en rebel..."
+		"da"		"Spørger {1} om tilladelse fordi du er en rebel..."
 	}
 	"Target Is Not Alive Or In Wrong Team"
 	{
-		"en"		"Målet er ikke i live, eller på det forkerte hold.."
+		"da"		"Målet er ikke i live, eller på det forkerte hold.."
 	}
 	"Declined LR Request"
 	{
-		"en"		"{1} Afslog dit LR forslag."
+		"da"		"{1} Afslog dit LR forslag."
 	}
 	"LR Partner Died"
 	{
-		"en"		"Din LR partner døde."
+		"da"		"Din LR partner døde."
 	}
 	"Too Slow Another LR In Progress"
 	{
-		"en"		"Uuups, for langsom. Der er allerede en LR igang."
+		"da"		"Uuups, for langsom. Der er allerede en LR igang."
 	}
 	"LR Request Decline Or Too Long"
 	{
-		"en"		"{1} afslog dit LR forslag, eller var for lang tid om at svare."
+		"da"		"{1} afslog dit LR forslag, eller var for lang tid om at svare."
 	}
 	"LR KF Start"
 	{
-		"en"		"{1} Valgte at lave kniv duel med {2}."
+		"da"		"{1} Valgte at lave kniv duel med {2}."
 	}
 	"LR S4S Start"
 	{
-		"en"		"{1} Valgte at lave skud for skud med {2}."
+		"da"		"{1} Valgte at lave skud for skud med {2}."
 	}
 	"LR GT Start"
 	{
-		"en"		"{1} valgte at lave pistolkast med {2}."
+		"da"		"{1} valgte at lave pistolkast med {2}."
 	}
 	"LR CF Start"
 	{
-		"en"		"{1} valgte at lave kyllingekamp med {2}."
+		"da"		"{1} valgte at lave kyllingekamp med {2}."
 	}
 	"LR HP Start"
 	{
-		"en"		"{1} Valgte at have varm kartoffel med {2}."
+		"da"		"{1} Valgte at have varm kartoffel med {2}."
 	}
 	"LR DB Start"
 	{
-		"en"		"{1} valgte at have høvdingebold med {2}."
+		"da"		"{1} valgte at have høvdingebold med {2}."
 	}
 	"LR NS Start"
 	{
-		"en"		"{1} valgte at have ingen sigte kamp med {2}."
+		"da"		"{1} valgte at have ingen sigte kamp med {2}."
 	}
 	"LR RPS Start"
 	{
-		"en"		"{1} Valgte at have sten saks papir med {2}."
+		"da"		"{1} Valgte at have sten saks papir med {2}."
 	}
 	"LR Mag4Mag Start"
 	{
-		"en"		"{1} valgte at have mag for mag med {2}."
+		"da"		"{1} valgte at have mag for mag med {2}."
 	}
 	"LR RR Start"
 	{
-		"en"		"{1} valgte at have russisk Roulette med {2}."
+		"da"		"{1} valgte at have russisk Roulette med {2}."
 	}
 	"LR Has Chosen to Rebel!"
 	{
-		"en"		"{1} Har valgt at lave oprør"
+		"da"		"{1} Har valgt at lave oprør"
 	}
 	"Start Jump Contest"
 	{
-		"en"		"{1} Valgte en flest hop kamp med {2}."
+		"da"		"{1} Valgte en flest hop kamp med {2}."
 	}
 	"Start Brink of Death"
 	{
-		"en"		"{1} valgte at have på randen af ​​døden med{2}."
+		"da"		"{1} valgte at have på randen af ​​døden med{2}."
 	}
 	"Start Farthest Jump"
 	{
-		"en"		"{1} Valgte at have længste hop med {2}."
+		"da"		"{1} Valgte at have længste hop med {2}."
 	}
 	"No Rebels ATM"
 	{
-		"en"		"Der er ingen oprørende terrorister lige i øjeblikket."
+		"da"		"Der er ingen oprørende terrorister lige i øjeblikket."
 	}
 	"Rebelling Terrorists"
 	{
-		"en"		"Oprørende terrorister:"
+		"da"		"Oprørende terrorister:"
 	}
 	"CheckPlayers CMD Disabled"
 	{
-		"en"		"!checkplayers-Kommandoen er fravalgt på denne server."
+		"da"		"!checkplayers-Kommandoen er fravalgt på denne server."
 	}
 	"Server Rules"
 	{
-		"en"		"Server-Regler:"
+		"da"		"Server-Regler:"
 	}
 	"HP Win"
 	{
-		"en"		"{1} Vandt varm kartoffel - {2} blev dræbt."
+		"da"		"{1} Vandt varm kartoffel - {2} blev dræbt."
 	}
 	"HP Last One To Have The Potato"
 	{
-		"en"		"Du var den sidste der havde den varme kartoffel."
+		"da"		"Du var den sidste der havde den varme kartoffel."
 	}
 	"Ts Muted"
 	{
-		"en"		"Terrorister er stumme de første {1} sekunder af runden!"
+		"da"		"Terrorister er stumme de første {1} sekunder af runden!"
 	}
 	"Ts Can Speak Again"
 	{
-		"en"		"Terrorister kan nu snakke... Stille og roligt..."
+		"da"		"Terrorister kan nu snakke... Stille og roligt..."
 	}
 	"Now Muted"
 	{
-		"en"		"Du er nu stum, du vil få din stemme tilbage i slutningen af runden."
+		"da"		"Du er nu stum, du vil få din stemme tilbage i slutningen af runden."
 	}
 	"NS Weapon Chooser Menu"
 	{
-		"en"		"Vælg venligst et våben til ikke sigte kampen:"
+		"da"		"Vælg venligst et våben til ikke sigte kampen:"
 	}
 	"CT Attack T Gun"
 	{
-		"en"		"{1} angreb {2} som havde en pistol..."
+		"da"		"{1} angreb {2} som havde en pistol..."
 	}
 	"Rock"
 	{
-		"en"		"Sten"
+		"da"		"Sten"
 	}
 	"Paper"
 	{
-		"en"		"Papir"
+		"da"		"Papir"
 	}
 	"Scissors"
 	{
-		"en"		"Saks"
+		"da"		"Saks"
 	}
 	"LR RPS No Answer"
 	{
-		"en"		"{1} valgte ikke sten, saks eller papir, eller valgte ikke i tide."
+		"da"		"{1} valgte ikke sten, saks eller papir, eller valgte ikke i tide."
 	}
 	"LR RPS Done"
 	{
-		"en"		"{1} valgte {2}, {3} valgte {4} - {5} vandt"
+		"da"		"{1} valgte {2}, {3} valgte {4} - {5} vandt"
 	}
 	"LR RPS Tie"
 	{
-		"en"		"{1} valgte {2}, {3} valgte {4} - uafgjort."
+		"da"		"{1} valgte {2}, {3} valgte {4} - uafgjort."
 	}
 	"LR Not With Bot"
 	{
-		"en"		"Desværre, du kan ikke lave LR med en bot."
+		"da"		"Desværre, du kan ikke lave LR med en bot."
 	}
 	"LR Not Available"
 	{
-		"en"		"Du kan ikke lave LR lige nu."
+		"da"		"Du kan ikke lave LR lige nu."
 	}
 	"LR Delay Announcement"
 	{
-		"en"		"Terrorister kan ikke have LR før der er gået {1} sekunder!"
+		"da"		"Terrorister kan ikke have LR før der er gået {1} sekunder!"
 	}
 	"Freekill Slay"
 	{
-		"en"		"{1} blev dræbt for at dræbe for mange ikke oprørende terrorister!"
+		"da"		"{1} blev dræbt for at dræbe for mange ikke oprørende terrorister!"
 	}
 	"Freekill Kick"
 	{
-		"en"		"{1} blev smidt ud for at dræbe for mange ikke oprørende terrorister!"
+		"da"		"{1} blev smidt ud for at dræbe for mange ikke oprørende terrorister!"
 	}
 	"Freekill Kick Reason"
 	{
-		"en"		"Smidt ud for at dræbe for mange ikke oprørende terrorister!"
+		"da"		"Smidt ud for at dræbe for mange ikke oprørende terrorister!"
 	}
 	"Freekill Ban"
 	{
-		"en"		"{1} blev banned for at dræbe for mange, ikke oprørende terrorister!"
+		"da"		"{1} blev banned for at dræbe for mange, ikke oprørende terrorister!"
 	}
 	"Freekill Ban Reason"
 	{
-		"en"		"Banned for at dræbe for mange ikke oprørende terrorister!"
+		"da"		"Banned for at dræbe for mange ikke oprørende terrorister!"
 	}
 	"Freekill Record Increased"
 	{
-		"en"		"Du har {1} ud af {2} ikke oprørende terrorist drab (Før handling bliver taget)..."
+		"da"		"Du har {1} ud af {2} ikke oprørende terrorist drab (Før handling bliver taget)..."
 	}
 	"Race Won"
 	{
-		"en"		"{1} Vandt ræset!"
+		"da"		"{1} Vandt ræset!"
 	}
 	"Won Jump Contest"
 	{
-		"en"		"{1} Vandt hoppe konkurrencen!"
+		"da"		"{1} Vandt hoppe konkurrencen!"
 	}
 	"Russian Roulette - Hit"
 	{
-		"en"		"Russisk Roulette: kugle ramte {1}!"
+		"da"		"Russisk Roulette: kugle ramte {1}!"
 	}
 	"Russian Roulette - Miss"
 	{
-		"en"		"Russisk Roulette: ramte ikke. snurrer igen..."
+		"da"		"Russisk Roulette: ramte ikke. snurrer igen..."
 	}
 	"Randomly Chose First Player"
 	{
-		"en"		"Udvalgte tilfældigt {1} til at skyde først."
+		"da"		"Udvalgte tilfældigt {1} til at skyde først."
 	}
 	"LR Interference Slay"
 	{
-		"en"		"{1} blev dræbt for at angribe {2} med {3} Under LR."
+		"da"		"{1} blev dræbt for at angribe {2} med {3} Under LR."
 	}
 	"LR Interference Abort"
 	{
-		"en"		"{1} Angreb {2} med {3}. LR afbrudt."
+		"da"		"{1} Angreb {2} med {3}. LR afbrudt."
 	}
 	"LR Interference Slay - No Victim"
 	{
-		"en"		"{1} blev dræbt for at angribe {2} under LR."
+		"da"		"{1} blev dræbt for at angribe {2} under LR."
 	}
 	"LR Interference Abort - No Victim"
 	{
-		"en"		"{1} angrebet med {2}. LR slut."
+		"da"		"{1} angrebet med {2}. LR slut."
 	}
 	"LR Cheating Abort"
 	{
-		"en"		"{1} snød LR afbrudt."
+		"da"		"{1} snød LR afbrudt."
 	}
 	"LR Cheating Slay"
 	{
-		"en"		"{1} dræbt for at snyde under LR."
+		"da"		"{1} dræbt for at snyde under LR."
 	}
 	"Noscope Knife Attack Slay"
 	{
-		"en"		"{1} dræbt for at angribe {2} med en kniv under ingen sigte kamp."
+		"da"		"{1} dræbt for at angribe {2} med en kniv under ingen sigte kamp."
 	}
 	"Noscope Knife Attack Abort"
 	{
-		"en"		"{1} angreb {2} med en kniv - ingen sigte kamp afbrudt."
+		"da"		"{1} angreb {2} med en kniv - ingen sigte kamp afbrudt."
 	}
 	"S4S Rebel Slayed"
 	{
-		"en"		"{1} var dræbt for at lave oprør under Skud For Skud."
+		"da"		"{1} var dræbt for at lave oprør under Skud For Skud."
 	}
 	"S4S Rebel Aborted"
 	{
-		"en"		"{1} lavede oprør under LR - Skud For Skud afbrudt."
+		"da"		"{1} lavede oprør under LR - Skud For Skud afbrudt."
 	}
 	"M4M Mag Used"
 	{
-		"en"		"{1} Har brugt sit magasin."
+		"da"		"{1} Har brugt sit magasin."
 	}
 	"LR No CTs Available"
 	{
-		"en"		"Der er imidlertid ingen CT, du kan lave LR med."
+		"da"		"Der er imidlertid ingen CT, du kan lave LR med."
 	}
 	"LR Aborted"
 	{
-		"en"		"Afsluttede alle iganværende LR's!"
+		"da"		"Afsluttede alle iganværende LR's!"
 	}
 	"Knife Fight Selection Menu"
 	{
-		"en"		"Vælg din knivkamp:"
+		"da"		"Vælg din knivkamp:"
 	}
 	"Knife_Vintage"
 	{
-		"en"		"Vintage knive"
+		"da"		"Vintage knive"
 	}
 	"Knife_Drunk"
 	{
-		"en"		"Fuld boksning"
+		"da"		"Fuld boksning"
 	}
 	"Knife_LowGrav"
 	{
-		"en"		"Måne sko"
+		"da"		"Måne sko"
 	}
 	"Knife_HiSpeed"
 	{
-		"en"		"Meep-Meep Fart"
+		"da"		"Meep-Meep Fart"
 	}
 	"Knife_Drugs"
 	{
-		"en"		"Trippende"
+		"da"		"Trippende"
 	}
 	"Knife_ThirdPerson"
 	{
-		"en"		"Trejde person"
+		"da"		"Trejde person"
 	}
 	"Pistol Selection Menu"
 	{
-		"en"		"Vælg en pistol:"
+		"da"		"Vælg en pistol:"
 	}
 	"Pistol_Deagle"
 	{
-		"en"		"Deagle"
+		"da"		"Deagle"
 	}
 	"Pistol_P228"
 	{
-		"en"		"P228"
+		"da"		"P228"
 	}
 	"Pistol_Glock"
 	{
-		"en"		"Glock"
+		"da"		"Glock"
 	}
 	"Pistol_FiveSeven"
 	{
-		"en"		"Five-Seven"
+		"da"		"Five-Seven"
 	}
 	"Pistol_Dualies"
 	{
-		"en"		"Dualies"
+		"da"		"Dualies"
 	}
 	"Pistol_USP"
 	{
-		"en"		"USP"
+		"da"		"USP"
 	}
 	"NSW_AWP"
 	{
-		"en"		"AWP"
+		"da"		"AWP"
 	}
 	"NSW_Scout"
 	{
-		"en"		"Scout"
+		"da"		"Scout"
 	}
 	"NSW_SG550"
 	{
-		"en"		"SG550"
+		"da"		"SG550"
 	}
 	"NSW_G3SG1"
 	{
-		"en"		"G3SG1"
+		"da"		"G3SG1"
 	}
 	"Find a Starting Location"
 	{
-		"en"		"Vælg start punkt"
+		"da"		"Vælg start punkt"
 	}
 	"Choose an End Point"
 	{
-		"en"		"Vælg en slut punkt"
+		"da"		"Vælg en slut punkt"
 	}
 	"Use Current Position"
 	{
-		"en"		"Brug aktuelle punkt"
+		"da"		"Brug aktuelle punkt"
 	}
 	"Race Points too Close"
 	{
-		"en"		"Dit slutpunkt var for tæt på startpunktet."
+		"da"		"Dit slutpunkt var for tæt på startpunktet."
 	}
 	"Too Near Obstruction"
 	{
-		"en"		"Noget blokere vejen. Find et åbent sted og prøv igen."
+		"da"		"Noget blokere vejen. Find et åbent sted og prøv igen."
 	}
 	"Jump Contest Menu"
 	{
-		"en"		"Vælg en hoppe konkurrence:"
+		"da"		"Vælg en hoppe konkurrence:"
 	}
 	"Jump_TheMost"
 	{
-		"en"		"Flest hop"
+		"da"		"Flest hop"
 	}
 	"Jump_Farthest"
 	{
-		"en"		"Længst hop"
+		"da"		"Længst hop"
 	}
 	"Jump_BrinkOfDeath"
 	{
-		"en"		"På randen af død"
+		"da"		"På randen af død"
 	}
 	"Must Be On Ground"
 	{
-		"en"		"Du skal være på jorden for at vælge dette."
+		"da"		"Du skal være på jorden for at vælge dette."
 	}
 	"Farthest Jump Won"
 	{
-		"en"		"{1} vandt længste hop {3} i forhold til {2}'s {4}."
+		"da"		"{1} vandt længste hop {3} i forhold til {2}'s {4}."
 	}
 	"Race Could Start Soon"
 	{
-		"en"		"{1} valgte ræs LR. Kig efter start og slut punkt!"
+		"da"		"{1} valgte ræs LR. Kig efter start og slut punkt!"
 	}
 }
