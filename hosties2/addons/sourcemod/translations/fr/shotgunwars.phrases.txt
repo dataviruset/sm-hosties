@@ -2,7 +2,7 @@
 {
 	"Shotgun Wars"
 	{
-		"fr"		"Shotgun Wars"
+		"fr"		"Guerre des Pompes"
 	}
 	"LR SGW Start"
 	{
