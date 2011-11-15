@@ -27,7 +27,7 @@
 
 #pragma semicolon 1
 
-#define PLUGIN_VERSION "1.0.1"
+#define PLUGIN_VERSION "1.0.2"
 
 // This global will store the index number for the new Last Request
 new g_LREntryNum;
