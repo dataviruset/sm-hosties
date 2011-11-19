@@ -1307,6 +1307,37 @@ public LastRequest_PlayerJump(Handle:event, const String:name[], bool:dontBroadc
 					}
 				}
 			}
+			else if (type == LR_GunToss)
+			{
+				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+				new GTp1dropped = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
+				new GTp2dropped = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global2);
+
+				// we want to grab the last jump position *before* they throw their gun
+				if (client == LR_Player_Prisoner && !GTp1dropped)
+				{
+					// record position
+					decl Float:Prisoner_Position[3];
+					GetClientAbsOrigin(LR_Player_Prisoner, Prisoner_Position);
+					new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);
+					SetPackPosition(JumpPackPosition, 96);
+					WritePackFloat(JumpPackPosition, Prisoner_Position[0]);
+					WritePackFloat(JumpPackPosition, Prisoner_Position[1]);
+					WritePackFloat(JumpPackPosition, Prisoner_Position[2]);
+				}
+				else if (client == LR_Player_Guard && !GTp2dropped)
+				{
+					// record position
+					decl Float:Guard_Position[3];
+					GetClientAbsOrigin(LR_Player_Guard, Guard_Position);
+					new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);
+					SetPackPosition(JumpPackPosition, 120);
+					WritePackFloat(JumpPackPosition, Guard_Position[0]);
+					WritePackFloat(JumpPackPosition, Guard_Position[1]);
+					WritePackFloat(JumpPackPosition, Guard_Position[2]);
+				}
+			}
 		}
 	}
 }
@@ -1565,8 +1596,6 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 					// determine if LR weapon is being used
 					new Pistol_Prisoner = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData));
 					new Pistol_Guard = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData));
-					
-					PrintToChatAll("weapon index: %d prisoner %d guard %d", weapon, Pistol_Prisoner, Pistol_Guard);
 					
 					if ((weapon != -1) && (weapon != Pistol_Prisoner) && (weapon != Pistol_Guard))
 					{
@@ -3296,6 +3325,12 @@ InitializeGame(iPartnersIndex)
 			WritePackFloat(DataPackPosition, Float:0.0);
 			WritePackFloat(DataPackPosition, Float:0.0);
 			WritePackFloat(DataPackPosition, Float:0.0); // 
+			WritePackFloat(DataPackPosition, Float:0.0);
+			WritePackFloat(DataPackPosition, Float:0.0);
+			WritePackFloat(DataPackPosition, Float:0.0); // player 1 last jump position
+			WritePackFloat(DataPackPosition, Float:0.0);
+			WritePackFloat(DataPackPosition, Float:0.0);
+			WritePackFloat(DataPackPosition, Float:0.0); // player 2 last jump position
 
 			StripAllWeapons(LR_Player_Prisoner);
 			StripAllWeapons(LR_Player_Guard);
@@ -3806,8 +3841,7 @@ InitializeGame(iPartnersIndex)
 			new Pistol_GuardEntRef = EntIndexToEntRef(Pistol_Guard);
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, Pistol_PrisonerEntRef, _:Block_PrisonerData);
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, Pistol_GuardEntRef, _:Block_GuardData);		
-			
-			PrintToChatAll("prisoner %d guard %d", Pistol_Prisoner, Pistol_Guard);
+				
 			PrintToChatAll(CHAT_BANNER, "LR RR Start", LR_Player_Prisoner, LR_Player_Guard);
 			
 			// randomize who starts first
@@ -4858,6 +4892,13 @@ public Action:Timer_GunToss(Handle:timer)
 				GTp2droppos[0] = ReadPackFloat(PositionDataPack);
 				GTp2droppos[1] = ReadPackFloat(PositionDataPack);
 				GTp2droppos[2] = ReadPackFloat(PositionDataPack);
+				decl Float:GTp1jumppos[3], Float:GTp2jumppos[3];
+				GTp1jumppos[0] = ReadPackFloat(PositionDataPack);
+				GTp1jumppos[1] = ReadPackFloat(PositionDataPack);
+				GTp1jumppos[2] = ReadPackFloat(PositionDataPack);
+				GTp2jumppos[0] = ReadPackFloat(PositionDataPack);
+				GTp2jumppos[1] = ReadPackFloat(PositionDataPack);
+				GTp2jumppos[2] = ReadPackFloat(PositionDataPack);
 			
 				GetEntPropVector(GTdeagle1, Prop_Data, "m_vecOrigin", GTdeagle1pos);
 				if (GTp1dropped && !GTp1done)
@@ -4941,7 +4982,7 @@ public Action:Timer_GunToss(Handle:timer)
 				new Float:f_GuardDistance;
 				if (GTp2dropped)
 				{
-					f_GuardDistance = GetVectorDistance(GTp2droppos, GTdeagle2pos);
+					f_GuardDistance = GetVectorDistance(GTp2jumppos, GTdeagle2pos);
 				}
 				else
 				{
@@ -4951,7 +4992,7 @@ public Action:Timer_GunToss(Handle:timer)
 				new Float:f_PrisonerDistance;
 				if (GTp1dropped)
 				{
-					f_PrisonerDistance = GetVectorDistance(GTp1droppos, GTdeagle1pos);
+					f_PrisonerDistance = GetVectorDistance(GTp1jumppos, GTdeagle1pos);
 				}
 				else
 				{
