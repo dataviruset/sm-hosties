@@ -1564,9 +1564,11 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 				{
 					// determine if LR weapon is being used
 					new Pistol_Prisoner = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData));
-					new Guard_Prisoner = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData));
+					new Pistol_Guard = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData));
 					
-					if (inflictor != Pistol_Prisoner && inflictor != Guard_Prisoner)
+					PrintToChatAll("weapon index: %d prisoner %d guard %d", weapon, Pistol_Prisoner, Pistol_Guard);
+					
+					if (weapon != Pistol_Prisoner && weapon != Pistol_Guard)
 					{
 						DecideRebelsFate(attacker, idx, victim);
 					}
@@ -1661,6 +1663,20 @@ public Action:OnWeaponEquip(client, weapon)
 			new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
 			new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
 			new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+			
+			// anti-cheat
+			if (type == LR_GunToss)
+			{
+				new GTp1done = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global3);
+				new GTp2done = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global4);
+				new GTdeagle1 = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData));
+				new GTdeagle2 = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData));
+				
+				if ((weapon == GTdeagle1 && !GTp1done) || (weapon == GTdeagle2 && !GTp2done))
+				{
+					DecideRebelsFate(client, idx, -1);
+				}
+			}
 			
 			if (client == LR_Player_Prisoner || client == LR_Player_Guard)
 			{
@@ -1794,15 +1810,15 @@ public Action:OnWeaponDrop(client, weapon)
 								SetEntData(GTdeagle1, g_Offset_Clip1, 7);
 							}
 							
-							decl Float:GTp1droppos[3];
-							GetClientAbsOrigin(LR_Player_Prisoner, GTp1droppos);
-							SetPackPosition(PositionDataPack, 48);
-							WritePackFloat(PositionDataPack, GTp1droppos[0]);
-							WritePackFloat(PositionDataPack, GTp1droppos[1]);
-							WritePackFloat(PositionDataPack, GTp1droppos[2]);
-							
 							if (weapon == GTdeagle1)
 							{
+
+								decl Float:GTp1droppos[3];
+								GetClientAbsOrigin(LR_Player_Prisoner, GTp1droppos);
+								SetPackPosition(PositionDataPack, 48);
+								WritePackFloat(PositionDataPack, GTp1droppos[0]);
+								WritePackFloat(PositionDataPack, GTp1droppos[1]);
+								WritePackFloat(PositionDataPack, GTp1droppos[2]);
 								SetArrayCell(gH_DArray_LR_Partners, idx, true, _:Block_Global1);
 							}
 						}
@@ -1812,15 +1828,16 @@ public Action:OnWeaponDrop(client, weapon)
 							{
 								SetEntData(GTdeagle2, g_Offset_Clip1, 7);
 							}
-							decl Float:GTp2droppos[3];
-							GetClientAbsOrigin(LR_Player_Guard, GTp2droppos);
-							SetPackPosition(PositionDataPack, 72);
-							WritePackFloat(PositionDataPack, GTp2droppos[0]);
-							WritePackFloat(PositionDataPack, GTp2droppos[1]);
-							WritePackFloat(PositionDataPack, GTp2droppos[2]);
-							
+
 							if (weapon == GTdeagle2)
 							{
+								decl Float:GTp2droppos[3];
+								GetClientAbsOrigin(LR_Player_Guard, GTp2droppos);
+								SetPackPosition(PositionDataPack, 72);
+								WritePackFloat(PositionDataPack, GTp2droppos[0]);
+								WritePackFloat(PositionDataPack, GTp2droppos[1]);
+								WritePackFloat(PositionDataPack, GTp2droppos[2]);
+								
 								SetArrayCell(gH_DArray_LR_Partners, idx, true, _:Block_Global2);
 							}
 						}	
@@ -3790,6 +3807,7 @@ InitializeGame(iPartnersIndex)
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, Pistol_PrisonerEntRef, _:Block_PrisonerData);
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, Pistol_GuardEntRef, _:Block_GuardData);		
 			
+			PrintToChatAll("prisoner %d guard %d", Pistol_Prisoner, Pistol_Guard);
 			PrintToChatAll(CHAT_BANNER, "LR RR Start", LR_Player_Prisoner, LR_Player_Guard);
 			
 			// randomize who starts first
@@ -4920,16 +4938,35 @@ public Action:Timer_GunToss(Handle:timer)
 				}
 				
 				// broadcast distance
-				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
-				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
-				if (gShadow_SendGlobalMsgs)
+				new Float:f_GuardDistance;
+				if (GTp2dropped)
 				{
-					PrintHintTextToAll("%N: %f.1 meters/n%N: %f.1 meters", LR_Player_Prisoner, GetVectorDistance(GTp1droppos, GTdeagle1pos), LR_Player_Guard, GetVectorDistance(GTp2droppos, GTdeagle2pos));
+					f_GuardDistance = GetVectorDistance(GTp2droppos, GTdeagle2pos);
 				}
 				else
 				{
-					PrintHintText(LR_Player_Prisoner, "%N: %f.1 meters/n%N: %f.1 meters", LR_Player_Prisoner, GetVectorDistance(GTp1droppos, GTdeagle1pos), LR_Player_Guard, GetVectorDistance(GTp2droppos, GTdeagle2pos));
-					PrintHintText(LR_Player_Guard, "%N: %f.1 meters/n%N: %f.1 meters", LR_Player_Prisoner, GetVectorDistance(GTp1droppos, GTdeagle1pos), LR_Player_Guard, GetVectorDistance(GTp2droppos, GTdeagle2pos));					
+					f_GuardDistance = 0.0;
+				}
+				
+				new Float:f_PrisonerDistance;
+				if (GTp1dropped)
+				{
+					f_PrisonerDistance = GetVectorDistance(GTp1droppos, GTdeagle1pos);
+				}
+				else
+				{
+					f_PrisonerDistance = 0.0;
+				}				
+				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+				if (gShadow_SendGlobalMsgs)
+				{	
+					PrintHintTextToAll("%N: %3.1f meters \n\n%N: %3.1f meters", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+				}
+				else
+				{
+					PrintHintText(LR_Player_Prisoner, "%N: %3.1f meters \n\n%N: %3.1f meters", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+					PrintHintText(LR_Player_Guard, "%N: %3.1f meters \n\n%N: %3.1f meters", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);					
 				}
 				
 			}
