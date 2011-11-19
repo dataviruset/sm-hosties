@@ -1568,7 +1568,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 					
 					PrintToChatAll("weapon index: %d prisoner %d guard %d", weapon, Pistol_Prisoner, Pistol_Guard);
 					
-					if (weapon != Pistol_Prisoner && weapon != Pistol_Guard)
+					if ((weapon != -1) && (weapon != Pistol_Prisoner) && (weapon != Pistol_Guard))
 					{
 						DecideRebelsFate(attacker, idx, victim);
 					}
