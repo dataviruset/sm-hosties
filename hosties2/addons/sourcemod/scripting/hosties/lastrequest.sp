@@ -4982,7 +4982,7 @@ public Action:Timer_GunToss(Handle:timer)
 				new Float:f_GuardDistance;
 				if (GTp2dropped)
 				{
-					f_GuardDistance = GetVectorDistance(GTp2jumppos, GTdeagle2pos);
+					f_GuardDistance = GetVectorDistance(GTp2jumppos, GTdeagle2lastpos);
 				}
 				else
 				{
@@ -4992,7 +4992,7 @@ public Action:Timer_GunToss(Handle:timer)
 				new Float:f_PrisonerDistance;
 				if (GTp1dropped)
 				{
-					f_PrisonerDistance = GetVectorDistance(GTp1jumppos, GTdeagle1pos);
+					f_PrisonerDistance = GetVectorDistance(GTp1jumppos, GTdeagle1lastpos);
 				}
 				else
 				{
@@ -5002,12 +5002,12 @@ public Action:Timer_GunToss(Handle:timer)
 				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
 				if (gShadow_SendGlobalMsgs)
 				{	
-					PrintHintTextToAll("%N: %3.1f meters \n\n%N: %3.1f meters", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+					PrintHintTextToAll("%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
 				}
 				else
 				{
-					PrintHintText(LR_Player_Prisoner, "%N: %3.1f meters \n\n%N: %3.1f meters", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
-					PrintHintText(LR_Player_Guard, "%N: %3.1f meters \n\n%N: %3.1f meters", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);					
+					PrintHintText(LR_Player_Prisoner, "%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+					PrintHintText(LR_Player_Guard, "%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);					
 				}
 				
 			}
