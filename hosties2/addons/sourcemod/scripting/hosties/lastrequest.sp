@@ -4038,6 +4038,7 @@ public Action:Timer_FarthestJumpDetector(Handle:timer)
 						// determine who is farthest from their start position
 						new Float:Prisoner_Distance = GetVectorDistance(Prisoner_Position, Prisoner_JumpPosition);
 						new Float:Guard_Distance = GetVectorDistance(Guard_Position, Guard_JumpPosition);
+						// *** need to change these so they output formated 2 digits after decimal point or integers
                   
 						if (Prisoner_Distance > Guard_Distance)
 						{
@@ -4838,11 +4839,11 @@ public Action:Timer_GunToss(Handle:timer)
 				GTp1droppos[2] = ReadPackFloat(PositionDataPack);
 				GTp2droppos[0] = ReadPackFloat(PositionDataPack);
 				GTp2droppos[1] = ReadPackFloat(PositionDataPack);
-				GTp2droppos[2] = ReadPackFloat(PositionDataPack);				
+				GTp2droppos[2] = ReadPackFloat(PositionDataPack);
 			
+				GetEntPropVector(GTdeagle1, Prop_Data, "m_vecOrigin", GTdeagle1pos);
 				if (GTp1dropped && !GTp1done)
-				{					
-					GetEntPropVector(GTdeagle1, Prop_Data, "m_vecOrigin", GTdeagle1pos);
+				{
 					if (GetVectorDistance(GTdeagle1lastpos, GTdeagle1pos) < 3.00)
 					{
 						GTp1done = true;
@@ -4878,9 +4879,9 @@ public Action:Timer_GunToss(Handle:timer)
 					TE_SendToAll();				
 				}
 				
+				GetEntPropVector(GTdeagle2, Prop_Data, "m_vecOrigin", GTdeagle2pos);
 				if (GTp2dropped && !GTp2done)
 				{					
-					GetEntPropVector(GTdeagle2, Prop_Data, "m_vecOrigin", GTdeagle2pos);
 					if (GetVectorDistance(GTdeagle2lastpos, GTdeagle2pos) < 3.00)
 					{
 						GTp2done = true;
@@ -4916,7 +4917,21 @@ public Action:Timer_GunToss(Handle:timer)
 					}
 					
 					TE_SendToAll();				
-				}		
+				}
+				
+				// broadcast distance
+				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+				if (gShadow_SendGlobalMsgs)
+				{
+					PrintHintTextToAll("%N: %f.1 meters/n%N: %f.1 meters", LR_Player_Prisoner, GetVectorDistance(GTp1droppos, GTdeagle1pos), LR_Player_Guard, GetVectorDistance(GTp2droppos, GTdeagle2pos));
+				}
+				else
+				{
+					PrintHintText(LR_Player_Prisoner, "%N: %f.1 meters/n%N: %f.1 meters", LR_Player_Prisoner, GetVectorDistance(GTp1droppos, GTdeagle1pos), LR_Player_Guard, GetVectorDistance(GTp2droppos, GTdeagle2pos));
+					PrintHintText(LR_Player_Guard, "%N: %f.1 meters/n%N: %f.1 meters", LR_Player_Prisoner, GetVectorDistance(GTp1droppos, GTdeagle1pos), LR_Player_Guard, GetVectorDistance(GTp2droppos, GTdeagle2pos));					
+				}
+				
 			}
 		}
 	}
