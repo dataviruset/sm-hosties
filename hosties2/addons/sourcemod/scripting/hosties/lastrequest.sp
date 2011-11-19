@@ -5017,8 +5017,8 @@ public Action:Timer_GunToss(Handle:timer)
 					new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
 					new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
 					if (gShadow_SendGlobalMsgs)
-					{	
-						PrintHintTextToAll("%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+					{
+						PrintHintTextToAll("%t\n\n%N: %3.1fm\n%N: %3.1fm", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
 					}
 					else
 					{
