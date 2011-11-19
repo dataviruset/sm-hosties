@@ -1687,6 +1687,18 @@ public Action:OnWeaponDecideUse(client, weapon)
 					return Plugin_Handled;
 				}				
 			}
+			else if (type == LR_GunToss)
+			{
+				new GTp1done = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global3);
+				new GTp2done = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global4);
+				new GTdeagle1 = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData));
+				new GTdeagle2 = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData));
+				
+				if ((weapon == GTdeagle1 && !GTp1done) || (weapon == GTdeagle2 && !GTp2done))
+				{
+					return Plugin_Handled;
+				}
+			}
 		}
 	}
 	return Plugin_Continue;
@@ -1702,21 +1714,7 @@ public Action:OnWeaponEquip(client, weapon)
 			new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
 			new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
 			new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
-			
-			// anti-cheat
-			if (type == LR_GunToss)
-			{
-				new GTp1done = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global3);
-				new GTp2done = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global4);
-				new GTdeagle1 = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_PrisonerData));
-				new GTdeagle2 = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData));
-				
-				if ((weapon == GTdeagle1 && !GTp1done) || (weapon == GTdeagle2 && !GTp2done))
-				{
-					DecideRebelsFate(client, idx, -1);
-				}
-			}
-			
+
 			if (client == LR_Player_Prisoner || client == LR_Player_Guard)
 			{
 				if (type == LR_GunToss)
