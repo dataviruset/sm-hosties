@@ -102,6 +102,7 @@ new Handle:gH_Cvar_ColorRebels_Blue = INVALID_HANDLE;
 new Handle:gH_Cvar_ColorRebels_Green = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Beacons = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_HelpBeams = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_HelpBeams_Distance = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Beacon_Interval = INVALID_HANDLE;
 new Handle:gH_Cvar_RebelOnImpact = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_ChickenFight_Slay = INVALID_HANDLE;
@@ -120,6 +121,7 @@ new Handle:gH_Cvar_LR_NoScope_Weapon = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_S4S_DoubleShot = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_GunToss_MarkerMode = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_GunToss_StartMode = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_GunToss_ShowMeter = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Race_AirPoints = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Race_NotifyCTs = INVALID_HANDLE;
 new Handle:gH_Cvar_Announce_CT_FreeHit = INVALID_HANDLE;
@@ -178,6 +180,7 @@ new gShadow_ColorRebels = -1;
 new bool:gShadow_LR_Enable = false;
 new bool:gShadow_LR_Beacons = false;
 new bool:gShadow_LR_HelpBeams = false;
+new Float:gShadow_LR_HelpBeams_Distance = -1.0;
 new Float:gShadow_LR_HotPotato_MaxTime = -1.0;
 new Float:gShadow_LR_HotPotato_MinTime = -1.0;
 new Float:gShadow_LR_HotPotato_Speed = -1.0;
@@ -185,6 +188,7 @@ new bool:gShadow_LR_S4S_DoubleShot;
 new bool:gShadow_LR_NonContKiller_Action;
 new gShadow_LR_GunToss_MarkerMode = -1;
 new gShadow_LR_GunToss_StartMode = -1;
+new gShadow_LR_GunToss_ShowMeter = -1;
 new bool:gShadow_LR_Race_AirPoints = false;
 new bool:gShadow_LR_Race_NotifyCTs = false;
 new bool:gShadow_Announce_CT_FreeHit = false;
@@ -419,6 +423,8 @@ LastRequest_OnPluginStart()
 	gShadow_LR_Beacons = true;
 	gH_Cvar_LR_HelpBeams = CreateConVar("sm_hosties_lr_beams", "1", "Displays connecting beams between LR contestants: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_LR_HelpBeams = true;
+	gH_Cvar_LR_HelpBeams_Distance = CreateConVar("sm_hosties_lr_beams_distance", "0.0", "Controls how close LR partners must be before the connecting beams will disappear: 0 - always on, >0 the distance in game units", FCVAR_PLUGIN, true, 0.0);
+	gShadow_LR_HelpBeams_Distance = 0.0;
 	gH_Cvar_LR_Beacon_Interval = CreateConVar("sm_hosties_lr_beacon_interval", "1.0", "The interval in seconds of which the beacon 'beeps' on LR", FCVAR_PLUGIN, true, 0.1);
 	gShadow_LR_Beacon_Interval = 1.0;
 	gH_Cvar_LR_ChickenFight_Slay = CreateConVar("sm_hosties_lr_cf_slay", "1", "Slay the loser of a Chicken Fight instantly? 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
@@ -457,6 +463,8 @@ LastRequest_OnPluginStart()
 	gShadow_LR_GunToss_MarkerMode = 0;
 	gH_Cvar_LR_GunToss_StartMode = CreateConVar("sm_hosties_lr_gt_mode", "1", "How Gun Toss will be played: 0 - no double-dropping checking, deagle gets 7 ammo at start, 1 - double dropping check, deagle gets 7 ammo on drop, colouring of deagles, deagle markers", FCVAR_PLUGIN);
 	gShadow_LR_GunToss_StartMode = 1;
+	gH_Cvar_LR_GunToss_ShowMeter = CreateConVar("sm_hosties_lr_gt_meter", "1", "Displays a distance meter: 0 - do not display, 1 - display", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_GunToss_ShowMeter = 1;
 	gH_Cvar_LR_Delay_Enable_Time = CreateConVar("sm_hosties_lr_enable_delay", "0.0", "Delay in seconds before a last request can be started: 0.0 - instantly, >0.0 - (float value) delay in seconds", FCVAR_PLUGIN, true, 0.0);
 	gShadow_LR_Delay_Enable_Time = 0.0;
 	gH_Cvar_LR_Damage = CreateConVar("sm_hosties_lr_damage", "0", "Enables that players can not attack players in LR and players in LR can not attack players outside LR: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
@@ -526,6 +534,7 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_ColorRebels, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_Beacons, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_HelpBeams, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_HelpBeams_Distance, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_Beacon_Interval, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_RebelOnImpact, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_ColorRebels_Blue, ConVarChanged_Setting);	
@@ -549,6 +558,7 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_LR_S4S_DoubleShot, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_GunToss_MarkerMode, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_GunToss_StartMode, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_GunToss_ShowMeter, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_Delay_Enable_Time, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_Damage, ConVarChanged_Setting); 
 	HookConVarChange(gH_Cvar_LR_NoScope_Delay, ConVarChanged_Setting); 
@@ -2012,6 +2022,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_LR_Race_NotifyCTs = bool:GetConVarInt(gH_Cvar_LR_Race_NotifyCTs);
 	gShadow_LR_Beacons = bool:GetConVarInt(gH_Cvar_LR_Beacons);
 	gShadow_LR_HelpBeams = bool:GetConVarInt(gH_Cvar_LR_HelpBeams);
+	gShadow_LR_HelpBeams_Distance = GetConVarFloat(gH_Cvar_LR_HelpBeams_Distance);
 	gShadow_LR_Beacon_Interval = GetConVarFloat(gH_Cvar_LR_Beacon_Interval);
 	gShadow_RebelOnImpact = bool:GetConVarInt(gH_Cvar_RebelOnImpact);
 	gShadow_ColorRebels_Blue = GetConVarInt(gH_Cvar_ColorRebels_Blue);
@@ -2036,6 +2047,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_LR_S4S_DoubleShot = bool:GetConVarInt(gH_Cvar_LR_S4S_DoubleShot);
 	gShadow_LR_GunToss_MarkerMode = GetConVarInt(gH_Cvar_LR_GunToss_MarkerMode);
 	gShadow_LR_GunToss_StartMode = GetConVarInt(gH_Cvar_LR_GunToss_StartMode);
+	gShadow_LR_GunToss_ShowMeter = GetConVarInt(gH_Cvar_LR_GunToss_ShowMeter);
 	gShadow_LR_Delay_Enable_Time = GetConVarFloat(gH_Cvar_LR_Delay_Enable_Time);
 	gShadow_Announce_Delay_Enable = bool:GetConVarInt(gH_Cvar_Announce_Delay_Enable);
 	gShadow_LR_Damage = bool:GetConVarInt(gH_Cvar_LR_Damage); 	
@@ -2117,6 +2129,10 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	{
 		gShadow_LR_HelpBeams = bool:StringToInt(newValue);
 	}
+	else if (cvar == gH_Cvar_LR_HelpBeams_Distance)
+	{
+		gShadow_LR_HelpBeams_Distance = StringToFloat(newValue);
+	}	
 	else if (cvar == gH_Cvar_LR_Beacon_Interval)
 	{
 		gShadow_LR_Beacon_Interval = StringToFloat(newValue);
@@ -2212,6 +2228,10 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	else if (cvar == gH_Cvar_LR_GunToss_StartMode)
 	{
 		gShadow_LR_GunToss_StartMode = StringToInt(newValue);
+	}
+	else if (cvar == gH_Cvar_LR_GunToss_ShowMeter)
+	{
+		gShadow_LR_GunToss_ShowMeter = StringToInt(newValue);
 	}
 	else if (cvar == gH_Cvar_LR_Delay_Enable_Time)
 	{
@@ -4202,15 +4222,9 @@ public Action:Timer_Beacon(Handle:timer)
 		for (new LRindex = 0; LRindex < GetArraySize(gH_DArray_LR_Partners); LRindex++)
 		{
 			new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, LRindex, _:Block_LRType);
-			//new laserBeamSetting = GetArrayCell(gH_DArray_LR_Partners, LRindex, 10);
-			new laserBeamSetting = -1;
-			if (type != LR_Rebel && laserBeamSetting != 0)
+			
+			if (type != LR_Rebel)
 			{
-				if (laserBeamSetting > 0)
-				{
-					//SetArrayCell(gH_DArray_LR_Partners, LRindex, --laserBeamSetting, 10);
-				}
-				
 				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, LRindex, _:Block_Prisoner);
 				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, LRindex, _:Block_Guard);
 				
@@ -4225,14 +4239,14 @@ public Action:Timer_Beacon(Handle:timer)
 				GetClientEyePosition(LR_Player_Guard, Guard_Pos);
 				Guard_Pos[2] -= 40.0;
 				distance = GetVectorDistance(Prisoner_Pos, Guard_Pos);
-				if (distance < 340.0)
+				
+				if (distance > gShadow_LR_HelpBeams_Distance)
 				{
-					//SetArrayCell(gH_DArray_LR_Partners, LRindex, 0, 10);
+					TE_SetupBeamPoints(Prisoner_Pos, Guard_Pos, LaserSprite, LaserHalo, 1, 1, 0.1, 5.0, 5.0, 0, 10.0, greyColor, 255);			
+					TE_Send(clients, 2);
+					TE_SetupBeamPoints(Guard_Pos, Prisoner_Pos, LaserSprite, LaserHalo, 1, 1, 0.1, 5.0, 5.0, 0, 10.0, greyColor, 255);			
+					TE_Send(clients, 2);
 				}
-				TE_SetupBeamPoints(Prisoner_Pos, Guard_Pos, LaserSprite, LaserHalo, 1, 1, 0.1, 5.0, 5.0, 0, 10.0, greyColor, 255);			
-				TE_Send(clients, 2);
-				TE_SetupBeamPoints(Guard_Pos, Prisoner_Pos, LaserSprite, LaserHalo, 1, 1, 0.1, 5.0, 5.0, 0, 10.0, greyColor, 255);			
-				TE_Send(clients, 2);
 			}
 		}
 	}
@@ -4979,37 +4993,39 @@ public Action:Timer_GunToss(Handle:timer)
 				}
 				
 				// broadcast distance
-				new Float:f_GuardDistance;
-				if (GTp2dropped)
+				if (gShadow_LR_GunToss_ShowMeter)
 				{
-					f_GuardDistance = GetVectorDistance(GTp2jumppos, GTdeagle2lastpos);
+					new Float:f_GuardDistance;
+					if (GTp2dropped)
+					{
+						f_GuardDistance = GetVectorDistance(GTp2jumppos, GTdeagle2lastpos);
+					}
+					else
+					{
+						f_GuardDistance = 0.0;
+					}
+					
+					new Float:f_PrisonerDistance;
+					if (GTp1dropped)
+					{
+						f_PrisonerDistance = GetVectorDistance(GTp1jumppos, GTdeagle1lastpos);
+					}
+					else
+					{
+						f_PrisonerDistance = 0.0;
+					}				
+					new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+					new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+					if (gShadow_SendGlobalMsgs)
+					{	
+						PrintHintTextToAll("%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+					}
+					else
+					{
+						PrintHintText(LR_Player_Prisoner, "%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						PrintHintText(LR_Player_Guard, "%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);					
+					}
 				}
-				else
-				{
-					f_GuardDistance = 0.0;
-				}
-				
-				new Float:f_PrisonerDistance;
-				if (GTp1dropped)
-				{
-					f_PrisonerDistance = GetVectorDistance(GTp1jumppos, GTdeagle1lastpos);
-				}
-				else
-				{
-					f_PrisonerDistance = 0.0;
-				}				
-				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
-				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
-				if (gShadow_SendGlobalMsgs)
-				{	
-					PrintHintTextToAll("%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
-				}
-				else
-				{
-					PrintHintText(LR_Player_Prisoner, "%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
-					PrintHintText(LR_Player_Guard, "%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);					
-				}
-				
 			}
 		}
 	}
