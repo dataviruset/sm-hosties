@@ -5034,7 +5034,7 @@ public Action:Timer_GunToss(Handle:timer)
 	
 	if (gShadow_LR_GunToss_ShowMeter && gShadow_SendGlobalMsgs && (iNumGunTosses > 0))
 	{
-		PrintHintTextToAll("%t \n %s", "Distance Meter", sHintTextGlobal);
+		PrintHintTextToAll("%t %s", "Distance Meter", sHintTextGlobal);
 	}
 	
 	if (iNumGunTosses <= 0)
