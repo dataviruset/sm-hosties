@@ -28,16 +28,16 @@
 #pragma semicolon 1
 
 // Constants
-#define 	PLUGIN_VERSION	 			"2.0.4b"
-#define 	MAX_DISPLAYNAME_SIZE 	32
-#define 	MAX_DATAENTRY_SIZE 		5
-#define 	NORMAL_VISION 				90
-#define 	SERVERTAG		 			"SM_Hosties v2"
+#define 	PLUGIN_VERSION			"2.0.4b"
+#define 	MAX_DISPLAYNAME_SIZE	32
+#define 	MAX_DATAENTRY_SIZE		5
+#define 	NORMAL_VISION			90
+#define 	SERVERTAG				"SM_Hosties v2"
 
 // Note: you cannot safely turn these modules on and off yet. Use cvars to disable functionality.
 
 // Add ability to disable collisions for players
-#define	MODULE_NOBLOCK				1
+#define	MODULE_NOBLOCK			1
 // Add the last request system
 #define	MODULE_LASTREQUEST		1
 // Add a game description override
@@ -47,11 +47,11 @@
 // Add round-end team overlays
 #define	MODULE_TEAMOVERLAYS		1
 // Add !rules command
-#define	MODULE_RULES				1
+#define	MODULE_RULES			1
 // Add !checkplayers command
 #define	MODULE_CHECKPLAYERS		1
 // Add muting system
-#define	MODULE_MUTE					1
+#define	MODULE_MUTE				1
 // Add freekill detection and prevention
 #define	MODULE_FREEKILL			1
 

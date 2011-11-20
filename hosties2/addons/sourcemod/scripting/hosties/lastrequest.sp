@@ -3449,19 +3449,19 @@ InitializeGame(iPartnersIndex)
 			{
 				SetEntityMoveType(LR_Player_Prisoner, MOVETYPE_NONE);
 				SetEntityMoveType(LR_Player_Guard, MOVETYPE_NONE);			
-				ScaleVector(f_GuardDirection, -1.0);				
+				ScaleVector(f_GuardDirection, -1.0);
 				TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, NULL_VECTOR);
 			}
 			else
 			{
 				if (gShadow_LR_HotPotato_Mode == 1)
-				{	
+				{
 					if (gShadow_NoBlock)
 					{
 						UnblockEntity(LR_Player_Prisoner, g_Offset_CollisionGroup);
 						UnblockEntity(LR_Player_Guard, g_Offset_CollisionGroup);
-					}				
-					TeleportEntity(LR_Player_Guard, p1pos, NULL_VECTOR, NULL_VECTOR);					
+					}
+					TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, NULL_VECTOR);
 				}
 				
 				SetEntPropFloat(LR_Player_Prisoner, Prop_Data, "m_flLaggedMovementValue", gShadow_LR_HotPotato_Speed);				
@@ -5020,8 +5020,8 @@ public Action:Timer_GunToss(Handle:timer)
 					}
 					else
 					{
-						PrintHintText(LR_Player_Prisoner, "%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
-						PrintHintText(LR_Player_Guard, "%N: %3.1fm \n\n%N: %3.1fm", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);					
+						PrintHintText(LR_Player_Prisoner, "%t\n\n%N: %3.1fm\n%N: %3.1fm", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						PrintHintText(LR_Player_Guard, "%t\n\n%N: %3.1fm\n%N: %3.1fm", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
 					}
 				}
 			}
