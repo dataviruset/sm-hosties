@@ -29,7 +29,7 @@
 
 // Constants
 #define 	PLUGIN_VERSION			"2.0.4"
-#define 	MAX_DISPLAYNAME_SIZE	32
+#define 	MAX_DISPLAYNAME_SIZE	64
 #define 	MAX_DATAENTRY_SIZE		5
 #define 	NORMAL_VISION			90
 #define 	SERVERTAG				"SM_Hosties v2"
