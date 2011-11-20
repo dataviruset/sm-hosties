@@ -4871,6 +4871,9 @@ public Action:Timer_GunToss(Handle:timer)
 	// is there still a gun toss LR going on?
 	new iNumGunTosses = 0;
 	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
+	
+	new String:sHintTextGlobal[200];
+	
 	if (iArraySize > 0)
 	{
 		for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
@@ -5015,19 +5018,25 @@ public Action:Timer_GunToss(Handle:timer)
 
 					new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
 					new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
-					if (gShadow_SendGlobalMsgs)
-					{
-						PrintHintTextToAll("%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
-					}
-					else
+					if (!gShadow_SendGlobalMsgs)
 					{
 						PrintHintText(LR_Player_Prisoner, "%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
 						PrintHintText(LR_Player_Guard, "%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+					}
+					else
+					{
+						Format(sHintTextGlobal, sizeof(sHintTextGlobal), "%s \n %t (%d) \n %N: %3.1f \n %N: %3.1f", sHintTextGlobal, "Distance Meter", iNumGunTosses, LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
 					}
 				}
 			}
 		}
 	}
+	
+	if (gShadow_LR_GunToss_ShowMeter && gShadow_SendGlobalMsgs && (iNumGunTosses > 0))
+	{
+		PrintHintTextToAll(sHintTextGlobal);
+	}
+	
 	if (iNumGunTosses <= 0)
 	{
 		g_GunTossTimer = INVALID_HANDLE;
