@@ -1879,7 +1879,7 @@ public Action:OnWeaponDrop(client, weapon)
 							}
 						}	
 						
-						if (g_GunTossTimer == INVALID_HANDLE)
+						if (g_GunTossTimer == INVALID_HANDLE && (weapon == GTdeagle1 || weapon == GTdeagle2))
 						{
 							g_GunTossTimer = CreateTimer(0.1, Timer_GunToss, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 						}			
@@ -5011,17 +5011,18 @@ public Action:Timer_GunToss(Handle:timer)
 					else
 					{
 						f_PrisonerDistance = 0.0;
-					}				
+					}
+
 					new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
 					new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
 					if (gShadow_SendGlobalMsgs)
 					{
-						PrintHintTextToAll("%t\n\n%N: %3.1fm\n%N: %3.1fm", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						PrintHintTextToAll("%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
 					}
 					else
 					{
-						PrintHintText(LR_Player_Prisoner, "%t\n\n%N: %3.1fm\n%N: %3.1fm", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
-						PrintHintText(LR_Player_Guard, "%t\n\n%N: %3.1fm\n%N: %3.1fm", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						PrintHintText(LR_Player_Prisoner, "%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						PrintHintText(LR_Player_Guard, "%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
 					}
 				}
 			}
