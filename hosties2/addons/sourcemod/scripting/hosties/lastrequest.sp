@@ -5025,7 +5025,7 @@ public Action:Timer_GunToss(Handle:timer)
 					}
 					else
 					{
-						Format(sHintTextGlobal, sizeof(sHintTextGlobal), "%s \n %t (%d) \n %N: %3.1f \n %N: %3.1f", sHintTextGlobal, "Distance Meter", iNumGunTosses, LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						Format(sHintTextGlobal, sizeof(sHintTextGlobal), "%s \n \n %N: %3.1f \n %N: %3.1f", sHintTextGlobal, LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
 					}
 				}
 			}
@@ -5034,7 +5034,7 @@ public Action:Timer_GunToss(Handle:timer)
 	
 	if (gShadow_LR_GunToss_ShowMeter && gShadow_SendGlobalMsgs && (iNumGunTosses > 0))
 	{
-		PrintHintTextToAll(sHintTextGlobal);
+		PrintHintTextToAll("%t \n %s", "Distance Meter", sHintTextGlobal);
 	}
 	
 	if (iNumGunTosses <= 0)
