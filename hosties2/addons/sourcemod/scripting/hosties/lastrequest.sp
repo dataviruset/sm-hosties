@@ -4683,7 +4683,7 @@ public RPSmenuHandler(Handle:menu, MenuAction:action, client, param2)
 							if (client == LR_Player_Prisoner)
 							{
 								ForcePlayerSuicide(LR_Player_Guard);
-								PrintToChatAll(CHAT_BANNER, "LR RPS Done", LR_Player_Prisoner, RPSc2, LR_Player_Guard, RPSc1, LR_Player_Prisoner);
+								PrintToChatAll(CHAT_BANNER, "LR RPS Done", LR_Player_Prisoner, RPSc1, LR_Player_Guard, RPSc2, LR_Player_Prisoner);
 							}
 							else
 							{
@@ -4702,7 +4702,7 @@ public RPSmenuHandler(Handle:menu, MenuAction:action, client, param2)
 							else
 							{
 								ForcePlayerSuicide(LR_Player_Prisoner);
-								PrintToChatAll(CHAT_BANNER, "LR RPS Done", LR_Player_Prisoner, RPSc2, LR_Player_Guard, RPSc1, LR_Player_Guard);
+								PrintToChatAll(CHAT_BANNER, "LR RPS Done", LR_Player_Prisoner, RPSc1, LR_Player_Guard, RPSc2, LR_Player_Guard);
 							}
 						}				
 					}				
