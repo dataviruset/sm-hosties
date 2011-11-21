@@ -2962,6 +2962,11 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 													{
 														PrintToChat(client, CHAT_BANNER, "Must Be On Ground");
 													}
+													// make sure they're not ducked
+													else if ((game == LR_JumpContest) && (GetEntityFlags(client) & FL_DUCKING))
+													{
+														PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
+													}
 													else
 													{
 														new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
