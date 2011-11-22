@@ -4113,7 +4113,6 @@ public Action:Timer_FarthestJumpDetector(Handle:timer)
 						// determine who is farthest from their start position
 						new Float:Prisoner_Distance = GetVectorDistance(Prisoner_Position, Prisoner_JumpPosition);
 						new Float:Guard_Distance = GetVectorDistance(Guard_Position, Guard_JumpPosition);
-						// *** need to change these so they output formated 2 digits after decimal point or integers
                   
 						if (Prisoner_Distance > Guard_Distance)
 						{
@@ -4123,7 +4122,7 @@ public Action:Timer_FarthestJumpDetector(Handle:timer)
 						// award ties to the guard
 						else if (Guard_Distance >= Prisoner_Distance)
 						{
-							PrintToChatAll(CHAT_BANNER, "Farthest Jump Won", LR_Player_Guard, LR_Player_Prisoner, Prisoner_Distance, Guard_Distance);
+							PrintToChatAll(CHAT_BANNER, "Farthest Jump Won", LR_Player_Guard, LR_Player_Prisoner, Guard_Distance, Prisoner_Distance);
 							ForcePlayerSuicide(LR_Player_Prisoner);
 						}						
 					}
