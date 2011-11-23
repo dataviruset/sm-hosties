@@ -148,7 +148,7 @@ native ProcessAllLastRequests(FuncProcessLR:ProcessLR, iLastRequestIndex);
 
 stock SetThirdPerson(client)
 {
-	if (IsClientInGame(client))
+	if (IsValidEntity(client) && IsClientInGame(client))
 	{
 		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 0);
 		SetEntProp(client, Prop_Send, "m_iObserverMode", 1);
@@ -159,7 +159,7 @@ stock SetThirdPerson(client)
 
 stock SetFirstPerson(client)
 {
-	if (IsClientInGame(client))
+	if (IsValidEntity(client) && IsClientInGame(client))
 	{
 		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 1);
 		SetEntProp(client, Prop_Send, "m_iObserverMode", 0);
