@@ -30,6 +30,7 @@
 
 // Global variables
 new bool:g_bIsLRAvailable = true;
+new bool:g_bRoundInProgress = true;
 new bool:g_bAnnouncedThisRound = false;
 new bool:g_bInLastRequest[MAXPLAYERS+1];
 new bool:g_bIsARebel[MAXPLAYERS+1];
@@ -716,6 +717,9 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 {
 	g_bAnnouncedThisRound = false;
 	
+	// Set variable to know that the round has started
+	g_bRoundInProgress = true;
+	
 	// roundstart done, enable LR if there should be no LR delay (credits to Caza for this :p)
 	if (gShadow_LR_Delay_Enable_Time > 0.0)
 	{
@@ -764,6 +768,9 @@ public LastRequest_RoundEnd(Handle:event, const String:name[], bool:dontBroadcas
 {
 	// Block LRs and reset
 	g_bIsLRAvailable = false;
+	
+	// Set variable to know that the round has ended
+	g_bRoundInProgress = false;
 	
 	// Remove all the LR data
 	ClearArray(gH_DArray_LR_Partners);
@@ -853,20 +860,20 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
 	new target = GetClientOfUserId(GetEventInt(event, "userid"));
 	
-	if (Local_IsClientInLR(attacker) || Local_IsClientInLR(target))	
+	if (Local_IsClientInLR(attacker) || Local_IsClientInLR(target))
 	{
 		for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
 		{
 			new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
-
+			
 			if ((type == LR_Rebel) || !attacker || (attacker == target))
 			{
 				continue;
 			}
-
+			
 			new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
 			new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
-					
+			
 			// someone outside the group interfered inside this LR
 			if ((target == LR_Player_Prisoner || target == LR_Player_Guard) && \
             attacker != LR_Player_Prisoner && attacker != LR_Player_Guard)
@@ -930,7 +937,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 	}
 	// if a T attacks a CT and there's no last requests active
 	else if (attacker && target && (GetClientTeam(attacker) == CS_TEAM_T) && (GetClientTeam(target) == CS_TEAM_CT) \
-		&& !g_bIsARebel[attacker])
+		&& !g_bIsARebel[attacker] && g_bRoundInProgress)
 	{
 		g_bIsARebel[attacker] = true;
 		if (IsClientInGame(attacker))
@@ -950,12 +957,12 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 			if (gShadow_ColorRebels)
 			{
 				SetEntityRenderColor(attacker, gShadow_ColorRebels_Red, gShadow_ColorRebels_Green, 
-               gShadow_ColorRebels_Blue, 255);
+				gShadow_ColorRebels_Blue, 255);
 			}
 		}
 	}
 	else if (attacker && target && (GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(target) == CS_TEAM_T) \
-		&& !g_bIsARebel[target])
+		&& !g_bIsARebel[target] && g_bRoundInProgress)
 	{
 		new bool:bPrisonerHasGun = PlayerHasGun(target);
 		
