@@ -98,6 +98,8 @@ new Handle:gH_Cvar_RebelHandling = INVALID_HANDLE;
 new Handle:gH_Cvar_SendGlobalMsgs = INVALID_HANDLE;
 new Handle:gH_Cvar_ColorRebels = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Enable = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_MenuTime = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_KillTimeouts = INVALID_HANDLE;
 new Handle:gH_Cvar_ColorRebels_Red = INVALID_HANDLE;
 new Handle:gH_Cvar_ColorRebels_Blue = INVALID_HANDLE;
 new Handle:gH_Cvar_ColorRebels_Green = INVALID_HANDLE;
@@ -146,6 +148,7 @@ new Handle:gH_Cvar_LR_KnifeFight_LowGrav = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_KnifeFight_HiSpeed = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_KnifeFight_Drunk = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Beacon_Sound = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_AutoDisplay = INVALID_HANDLE;
 
 new gShadow_LR_KnifeFight_On = -1;
 new gShadow_LR_Shot4Shot_On = -1;
@@ -179,6 +182,8 @@ new gShadow_RebelHandling = -1;
 new gShadow_SendGlobalMsgs = -1;
 new gShadow_ColorRebels = -1;
 new bool:gShadow_LR_Enable = false;
+new gShadow_LR_MenuTime = 0;
+new bool:gShadow_LR_AutoDisplay = false;
 new bool:gShadow_LR_Beacons = false;
 new bool:gShadow_LR_HelpBeams = false;
 new Float:gShadow_LR_HelpBeams_Distance = -1.0;
@@ -217,6 +222,7 @@ new Float:gShadow_LR_KnifeFight_LowGrav = -1.0;
 new Float:gShadow_LR_KnifeFight_HiSpeed = -1.0;
 new gShadow_LR_KnifeFight_Drunk = -1;
 new String:gShadow_LR_Beacon_Sound[PLATFORM_MAX_PATH];
+new bool:gShadow_LR_KillTimeouts = false;
 
 // Custom types local to the plugin
 enum NoScopeWeapon
@@ -371,8 +377,12 @@ LastRequest_OnPluginStart()
 	gH_Frwd_LR_Process = CreateForward(ET_Event, Param_Cell, Param_Cell);
 	
 	// Register cvars
-	gH_Cvar_LR_Enable = CreateConVar("sm_hosties_lr", "1", "Enable or disable Last Requests (the !lr command): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);	
+	gH_Cvar_LR_Enable = CreateConVar("sm_hosties_lr", "1", "Enable or disable Last Requests (the !lr command): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_LR_Enable = true;
+	gH_Cvar_LR_MenuTime = CreateConVar("sm_hosties_lr_menutime", "0", "Sets the time the LR menu is displayed (in seconds)", FCVAR_PLUGIN, true, 0.0);
+	gShadow_LR_MenuTime = 0;
+	gH_Cvar_LR_KillTimeouts = CreateConVar("sm_hosties_lr_killtimeouts", "0", "Kills Ts who timeout the LR menu and controls whether the exit button is displayed: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_KillTimeouts = false;
 	gH_Cvar_LR_KnifeFight_On = CreateConVar("sm_hosties_lr_kf_enable", "1", "Enable LR Knife Fight: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_LR_KnifeFight_On = true;
 	gH_Cvar_LR_Shot4Shot_On = CreateConVar("sm_hosties_lr_s4s_enable", "1", "Enable LR Shot4Shot: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
@@ -510,6 +520,8 @@ LastRequest_OnPluginStart()
 	gShadow_Announce_Delay_Enable = false;
 	gH_Cvar_Announce_HotPotato_Eqp = CreateConVar("sm_hosties_lr_hp_pickupannounce", "0", "Enable announcement when a Hot Potato contestant picks up the hot potato: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_Announce_HotPotato_Eqp = false;
+	gH_Cvar_LR_AutoDisplay = CreateConVar("sm_hosties_lr_autodisplay", "0", "Automatically display the LR menu to non-rebelers when they become elgible for LR: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_AutoDisplay = false;
 	
 	// Listen for changes
 	HookConVarChange(gH_Cvar_LR_KnifeFight_On, ConVarChanged_LastRequest);
@@ -527,6 +539,8 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_LR_JumpContest_On, ConVarChanged_LastRequest);
 	
 	HookConVarChange(gH_Cvar_LR_Enable, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_MenuTime, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_KillTimeouts, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_HotPotato_Mode, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_SendGlobalMsgs, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_MaxPrisonersToLR, ConVarChanged_Setting);
@@ -582,6 +596,7 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_Announce_Shot4Shot, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_Announce_Delay_Enable, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_Announce_HotPotato_Eqp, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_AutoDisplay, ConVarChanged_Setting);
 	
 	// Account for late loading
 	for (new idx = 1; idx <= MaxClients ; idx++)
@@ -858,6 +873,17 @@ public LastRequest_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 		{
 			PrintToChat(attacker, CHAT_BANNER, "Rebel Kill", attacker, victim);
 			PrintToChat(victim, CHAT_BANNER, "Rebel Kill", attacker, victim);
+		}
+	}
+	
+	if (gShadow_LR_AutoDisplay && gShadow_LR_Enable && (Ts > 0) && (NumCTsAvailable > 0) && (Ts <= gShadow_MaxPrisonersToLR))
+	{
+		for (new idx = 1; idx <= MaxClients; idx++)
+		{
+			if (IsClientInGame(idx) && IsPlayerAlive(idx) && GetClientTeam(idx) == CS_TEAM_T && !g_bIsARebel[idx])
+			{
+				DisplayLastRequestMenu(idx, Ts, CTs);
+			}
 		}
 	}
 	
@@ -2050,6 +2076,8 @@ LastRequest_OnConfigsExecuted()
 	
 	// update settings from configs
 	gShadow_LR_Enable = bool:GetConVarInt(gH_Cvar_LR_Enable);
+	gShadow_LR_MenuTime = GetConVarInt(gH_Cvar_LR_MenuTime);
+	gShadow_LR_KillTimeouts = bool:GetConVarInt(gH_Cvar_LR_KillTimeouts);
 	gShadow_LR_HotPotato_Mode = GetConVarInt(gH_Cvar_LR_HotPotato_Mode);
 	gShadow_SendGlobalMsgs = GetConVarInt(gH_Cvar_SendGlobalMsgs);
 	gShadow_MaxPrisonersToLR = GetConVarInt(gH_Cvar_MaxPrisonersToLR);
@@ -2062,6 +2090,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_Announce_RebelDown = bool:GetConVarInt(gH_Cvar_Announce_RebelDown);		
 	gShadow_Announce_Weapon_Attack = bool:GetConVarInt(gH_Cvar_Announce_Weapon_Attack);
 	gShadow_Announce_HotPotato_Eqp = bool:GetConVarInt(gH_Cvar_Announce_HotPotato_Eqp);
+	gShadow_LR_AutoDisplay = bool:GetConVarInt(gH_Cvar_LR_AutoDisplay);
 	gShadow_LR_Race_AirPoints = bool:GetConVarInt(gH_Cvar_LR_Race_AirPoints);
 	gShadow_LR_Race_NotifyCTs = bool:GetConVarInt(gH_Cvar_LR_Race_NotifyCTs);
 	gShadow_LR_Beacons = bool:GetConVarInt(gH_Cvar_LR_Beacons);
@@ -2112,6 +2141,14 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	if (cvar == gH_Cvar_LR_Enable)
 	{
 		gShadow_LR_Enable = bool:StringToInt(newValue);
+	}
+	else if (cvar == gH_Cvar_LR_MenuTime)
+	{
+		gShadow_LR_MenuTime = StringToInt(newValue);
+	}
+	else if (cvar == gH_Cvar_LR_KillTimeouts)
+	{
+		gShadow_LR_KillTimeouts = bool:StringToInt(newValue);
 	}
 	else if (cvar == gH_Cvar_LR_HotPotato_Mode)
 	{
@@ -2288,7 +2325,11 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	else if (cvar == gH_Cvar_Announce_HotPotato_Eqp)
 	{
 		gShadow_Announce_HotPotato_Eqp = bool:StringToInt(newValue);
-	}	
+	}
+	else if (cvar == gH_Cvar_LR_AutoDisplay)
+	{
+		gShadow_LR_AutoDisplay = bool:StringToInt(newValue);
+	}
 	else if (cvar == gH_Cvar_LR_Damage)
 	{
 		gShadow_LR_Damage = bool:StringToInt(newValue);
@@ -2459,42 +2500,7 @@ public Action:Command_LastRequest(client, args)
 							{
 								if (NumCTsAvailable > 0)
 								{
-									gH_BuildLR[client] = CreateDataPack();
-									new Handle:menu = CreateMenu(LR_Selection_Handler);
-									SetMenuTitle(menu, "%T", "LR Choose", client);
-									
-									decl String:sDataField[MAX_DATAENTRY_SIZE];
-									decl String:sTitleField[MAX_DISPLAYNAME_SIZE];
-									new LastRequest:entry;	
-									new iLR_ArraySize = GetArraySize(gH_DArray_LastRequests);
-									new iCustomCount = 0;
-									new iCustomLR_Size = GetArraySize(gH_DArray_LR_CustomNames);
-									for (new iLR_Index = 0; iLR_Index < iLR_ArraySize; iLR_Index++)
-									{
-										entry = GetArrayCell(gH_DArray_LastRequests, iLR_Index);
-										if (entry < LastRequest)
-										{
-											if (LastRequest:entry != LR_Rebel || (LastRequest:entry == LR_Rebel && Ts <= gShadow_LR_Rebel_MaxTs && CTs >= gShadow_LR_Rebel_MinCTs))
-											{
-												Format(sDataField, sizeof(sDataField), "%d", entry);
-												Format(sTitleField, sizeof(sTitleField), "%T", g_sLastRequestPhrase[entry], client);
-												AddMenuItem(menu, sDataField, sTitleField);
-											}
-										}
-										else
-										{
-											if (iCustomCount < iCustomLR_Size)
-											{
-												Format(sDataField, sizeof(sDataField), "%d", entry);
-												GetArrayString(gH_DArray_LR_CustomNames, iCustomCount, sTitleField, MAX_DISPLAYNAME_SIZE);
-												AddMenuItem(menu, sDataField, sTitleField);
-												iCustomCount++;
-											}
-										}
-									}
-									
-									SetMenuExitButton(menu, true);
-									DisplayMenu(menu, client, MENU_TIME_FOREVER);
+									DisplayLastRequestMenu(client, Ts, CTs);
 								}
 								else
 								{
@@ -2533,6 +2539,46 @@ public Action:Command_LastRequest(client, args)
 	}
 
 	return Plugin_Handled;
+}
+
+DisplayLastRequestMenu(client, Ts, CTs)
+{
+	gH_BuildLR[client] = CreateDataPack();
+	new Handle:menu = CreateMenu(LR_Selection_Handler);
+	SetMenuTitle(menu, "%T", "LR Choose", client);
+	
+	decl String:sDataField[MAX_DATAENTRY_SIZE];
+	decl String:sTitleField[MAX_DISPLAYNAME_SIZE];
+	new LastRequest:entry;	
+	new iLR_ArraySize = GetArraySize(gH_DArray_LastRequests);
+	new iCustomCount = 0;
+	new iCustomLR_Size = GetArraySize(gH_DArray_LR_CustomNames);
+	for (new iLR_Index = 0; iLR_Index < iLR_ArraySize; iLR_Index++)
+	{
+		entry = GetArrayCell(gH_DArray_LastRequests, iLR_Index);
+		if (entry < LastRequest)
+		{
+			if (LastRequest:entry != LR_Rebel || (LastRequest:entry == LR_Rebel && Ts <= gShadow_LR_Rebel_MaxTs && CTs >= gShadow_LR_Rebel_MinCTs))
+			{
+				Format(sDataField, sizeof(sDataField), "%d", entry);
+				Format(sTitleField, sizeof(sTitleField), "%T", g_sLastRequestPhrase[entry], client);
+				AddMenuItem(menu, sDataField, sTitleField);
+			}
+		}
+		else
+		{
+			if (iCustomCount < iCustomLR_Size)
+			{
+				Format(sDataField, sizeof(sDataField), "%d", entry);
+				GetArrayString(gH_DArray_LR_CustomNames, iCustomCount, sTitleField, MAX_DISPLAYNAME_SIZE);
+				AddMenuItem(menu, sDataField, sTitleField);
+				iCustomCount++;
+			}
+		}
+	}
+	
+	SetMenuExitButton(menu, gShadow_LR_KillTimeouts ? false : true);
+	DisplayMenu(menu, client, gShadow_LR_MenuTime);
 }
 
 public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoice)
@@ -2727,6 +2773,13 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 			}
 			CloseHandle(menu);
 		}
+		case MenuAction_Cancel:
+		{
+			if (gShadow_LR_KillTimeouts)
+			{
+				ForcePlayerSuicide(client);
+			}
+		}
 	}
 }
 
@@ -2768,7 +2821,7 @@ CreateMainPlayerHandler(client)
 	else
 	{
 		SetMenuExitButton(playermenu, true);
-		DisplayMenu(playermenu, client, 20);
+		DisplayMenu(playermenu, client, gShadow_LR_MenuTime);
 	}
 }
 
@@ -3684,7 +3737,7 @@ InitializeGame(iPartnersIndex)
 			AddMenuItem(rpsmenu1, "2", s1);
 
 			SetMenuExitButton(rpsmenu1, true);
-			DisplayMenu(rpsmenu1, LR_Player_Prisoner, 20);
+			DisplayMenu(rpsmenu1, LR_Player_Prisoner, 15);
 
 			new Handle:rpsmenu2 = CreateMenu(RPSmenuHandler);
 			SetMenuTitle(rpsmenu2, "%T", "Rock Paper Scissors", LR_Player_Guard);
@@ -3699,7 +3752,7 @@ InitializeGame(iPartnersIndex)
 			AddMenuItem(rpsmenu2, "2", s2);
 
 			SetMenuExitButton(rpsmenu2, true);
-			DisplayMenu(rpsmenu2, LR_Player_Guard, 20);
+			DisplayMenu(rpsmenu2, LR_Player_Guard, 15);
 
 			// announce LR
 			PrintToChatAll(CHAT_BANNER, "LR RPS Start", LR_Player_Prisoner, LR_Player_Guard);
@@ -4705,7 +4758,7 @@ public RPSmenuHandler(Handle:menu, MenuAction:action, client, param2)
 							AddMenuItem(rpsmenu1, "2", s1);
 				
 							SetMenuExitButton(rpsmenu1, true);
-							DisplayMenu(rpsmenu1, LR_Player_Prisoner, 20);
+							DisplayMenu(rpsmenu1, LR_Player_Prisoner, 15);
 				
 							new Handle:rpsmenu2 = CreateMenu(RPSmenuHandler);
 							SetMenuTitle(rpsmenu2, "%T", "Rock Paper Scissors", LR_Player_Guard);
@@ -4720,7 +4773,7 @@ public RPSmenuHandler(Handle:menu, MenuAction:action, client, param2)
 							AddMenuItem(rpsmenu2, "2", s2);
 				
 							SetMenuExitButton(rpsmenu2, true);
-							DisplayMenu(rpsmenu2, LR_Player_Guard, 20);
+							DisplayMenu(rpsmenu2, LR_Player_Guard, 15);
 						}
 						// if THIS player has won
 						else if ( (RPS_Guard_Choice == 0 && RPS_Prisoner_Choice == 2) || (RPS_Guard_Choice == 1 && RPS_Prisoner_Choice == 0) || (RPS_Guard_Choice == 2 && RPS_Prisoner_Choice == 1) )
