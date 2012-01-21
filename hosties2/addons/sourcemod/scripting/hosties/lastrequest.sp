@@ -638,6 +638,7 @@ LastRequest_APL()
 	CreateNative("IsClientRebel", Native_IsClientRebel);
 	CreateNative("IsClientInLastRequest", Native_IsClientInLR);
 	CreateNative("ProcessAllLastRequests", Native_ProcessLRs);
+	CreateNative("ChangeRebelStatus", Native_ChangeRebelStatus);
 	
 	RegPluginLibrary("lastrequest");
 }
@@ -710,6 +711,22 @@ public Native_IsClientRebel(Handle:h_Plugin, iNumParameters)
 		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%d)", client);
 	}
 	return bool:g_bIsARebel[client];
+}
+
+public Native_ChangeRebelStatus(Handle:h_Plugin, iNumParameters)
+{
+	new client = GetNativeCell(1);
+	if (client > MaxClients || client < 0)
+	{
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%d)", client);
+	}
+	new status = GetNativeCell(2);
+	if (status < 0 || status > 1)
+	{
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid rebel status (%d)", status);
+	}
+	g_bIsARebel[client] = bool:status;
+	return 1;
 }
 
 public Native_IsClientInLR(Handle:h_Plugin, iNumParameters)

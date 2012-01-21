@@ -80,18 +80,19 @@ enum LR_Structure
 
 public SharedPlugin:__pl_lastrequest =
 {
-        name = "lastrequest",
-        file = "sm_hosties.smx",
-        required = 1,
+	name = "lastrequest",
+	file = "sm_hosties.smx",
+	required = 1,
 };
 
 public __pl_lastrequest_SetNTVOptional()
 {
-        MarkNativeAsOptional("IsClientRebel");
-        MarkNativeAsOptional("IsClientInLastRequest");
-        MarkNativeAsOptional("AddLastRequestToList");
-        MarkNativeAsOptional("RemoveLastRequestFromList");
-        MarkNativeAsOptional("ProcessAllLastRequests");
+	MarkNativeAsOptional("IsClientRebel");
+	MarkNativeAsOptional("IsClientInLastRequest");
+	MarkNativeAsOptional("AddLastRequestToList");
+	MarkNativeAsOptional("RemoveLastRequestFromList");
+	MarkNativeAsOptional("ProcessAllLastRequests");
+	MarkNativeAsOptional("ChangeRebelStatus");
 }
 
 functag FuncLastRequest public(type, prisoner, guard);
@@ -114,7 +115,7 @@ native bool:IsClientRebel(client);
  *									Otherwise client index of partner or -1 if in LR but no partner exists
  * @error                       Invalid client index.
  */
- native IsClientInLastRequest(client);
+native IsClientInLastRequest(client);
 
 /**
  * Adds a custom last request.
@@ -145,6 +146,16 @@ native void:RemoveLastRequestFromList(FuncProcessLR:Start, FuncLastRequest:Stop,
  * @return						Number of last requests in progress.
  */
 native ProcessAllLastRequests(FuncProcessLR:ProcessLR, iLastRequestIndex);
+
+/**
+ * Alters the boolean array determining if a given client is considered a rebel.
+ *
+ * @param client				Client Index
+ * @param status				Boolean Rebel Status (true = rebel)
+ * @noreturn
+ * @error						Invalid parameters
+ */
+native ChangeRebelStatus(client, status);
 
 stock SetThirdPerson(client)
 {
