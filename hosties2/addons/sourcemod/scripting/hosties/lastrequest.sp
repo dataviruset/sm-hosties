@@ -1259,6 +1259,24 @@ public LastRequest_BulletImpact(Handle:event, const String:name[], bool:dontBroa
 	}
 }
 
+public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
+{
+	for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
+	{	
+		new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
+		if (type == LR_NoScope)
+		{
+			new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+			new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+			if (client == LR_Player_Prisoner || client == LR_Player_Guard)
+			{
+				buttons &= ~IN_ATTACK2;
+			}
+		}
+	}
+	return Plugin_Continue;
+}
+
 public Action:LastRequest_WeaponZoom(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
