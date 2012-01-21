@@ -26,6 +26,10 @@ new Handle:gH_Cvar_RulesOn = INVALID_HANDLE;
 new bool:gShadow_RulesOn;
 new Handle:gH_Cvar_Announce_Rules = INVALID_HANDLE;
 new bool:gShadow_Announce_Rules;
+new Handle:gH_Cvar_Rules_Mode = INVALID_HANDLE;
+new gShadow_Rules_Mode = 1;
+new Handle:gH_Cvar_Rules_Website = INVALID_HANDLE;
+new String:gShadow_Rules_Website[192];
 new Handle:gH_DArray_Rules = INVALID_HANDLE;
 
 Rules_OnPluginStart()
@@ -36,8 +40,16 @@ Rules_OnPluginStart()
 	gH_Cvar_Announce_Rules = CreateConVar("sm_hosties_announce_rules", "1", "Enable or disable rule announcements in the beginning of every round ('please follow the rules listed in !rules'): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_Announce_Rules = true;
 	
+	gH_Cvar_Rules_Mode = CreateConVar("sm_hosties_rules_mode", "1", "1 - Panel Mode, 2 - Website", FCVAR_PLUGIN, true, 1.0, true, 2.0);
+	gShadow_Rules_Mode = 1;
+	
+	gH_Cvar_Rules_Website = CreateConVar("sm_hosties_rules_website", "http://www.youtube.com/watch?v=oHg5SJYRHA0", "The website for the rules page.", FCVAR_PLUGIN);
+	Format(gShadow_Rules_Website, sizeof(gShadow_Rules_Website), "http://www.youtube.com/watch?v=oHg5SJYRHA0");
+	
 	HookConVarChange(gH_Cvar_RulesOn, Rules_CvarChanged);
 	HookConVarChange(gH_Cvar_Announce_Rules, Rules_CvarChanged);
+	HookConVarChange(gH_Cvar_Rules_Mode, Rules_CvarChanged);
+	HookConVarChange(gH_Cvar_Rules_Website, Rules_CvarChanged);
 	
 	HookEvent("round_start", Rules_RoundStart);
 	
@@ -97,32 +109,50 @@ public Rules_CvarChanged(Handle:cvar, const String:oldValue[], const String:newV
 	{
 		gShadow_Announce_Rules = bool:StringToInt(newValue);
 	}
+	else if (cvar == gH_Cvar_Rules_Mode)
+	{
+		gShadow_Rules_Mode = StringToInt(newValue);
+	}
+	else if (cvar == gH_Cvar_Rules_Website)
+	{
+		Format(gShadow_Rules_Website, sizeof(gShadow_Rules_Website), "%s", newValue);
+	}
 }
 
 public Action:Command_Rules(client, args)
 {
 	if (gShadow_RulesOn)
 	{
-		new iNumOfRules = GetArraySize(gH_DArray_Rules);
-		
-		if (iNumOfRules > 0)
+		switch (gShadow_Rules_Mode)
 		{
-			new Handle:Hosties_Rules_Panel = CreatePanel();
-			decl String:sPanelText[256];	
-			Format(sPanelText, sizeof(sPanelText), "%t", "Server Rules");
-			SetPanelTitle(Hosties_Rules_Panel, sPanelText);
-			DrawPanelText(Hosties_Rules_Panel, " ");		
-			
-			for (new line = 0; line < iNumOfRules; line++)
+			case 1:
 			{
-				GetArrayString(gH_DArray_Rules, line, sPanelText, sizeof(sPanelText));
-				DrawPanelText(Hosties_Rules_Panel, sPanelText);
+				new iNumOfRules = GetArraySize(gH_DArray_Rules);
+				
+				if (iNumOfRules > 0)
+				{
+					new Handle:Hosties_Rules_Panel = CreatePanel();
+					decl String:sPanelText[256];	
+					Format(sPanelText, sizeof(sPanelText), "%t", "Server Rules");
+					SetPanelTitle(Hosties_Rules_Panel, sPanelText);
+					DrawPanelText(Hosties_Rules_Panel, " ");		
+					
+					for (new line = 0; line < iNumOfRules; line++)
+					{
+						GetArrayString(gH_DArray_Rules, line, sPanelText, sizeof(sPanelText));
+						DrawPanelText(Hosties_Rules_Panel, sPanelText);
+					}
+					
+					DrawPanelText(Hosties_Rules_Panel, "0. to Exit");
+					
+					SendPanelToClient(Hosties_Rules_Panel, client, Panel_Handler, MENU_TIME_FOREVER);
+					CloseHandle(Hosties_Rules_Panel);
+				}
 			}
-			
-			DrawPanelText(Hosties_Rules_Panel, "0. to Exit");
-			
-			SendPanelToClient(Hosties_Rules_Panel, client, Panel_Handler, MENU_TIME_FOREVER);
-			CloseHandle(Hosties_Rules_Panel);
+			case 2:
+			{
+				ShowMOTDPanel(client, "Rules", gShadow_Rules_Website);
+			}
 		}
 	}
 
