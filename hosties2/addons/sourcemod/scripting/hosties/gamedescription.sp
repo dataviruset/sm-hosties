@@ -22,12 +22,11 @@
 #include <sdkhooks>
 #include <hosties>
 
-// this looks like it's largely from psychonic, so thanks to him!
-new bool:g_bIsMapLoaded = false;
 new Handle:gH_Cvar_GameDescriptionOn = INVALID_HANDLE;
 new bool:gShadow_GameDescriptionOn;
 new Handle:gH_Cvar_GameDescriptionTag = INVALID_HANDLE;
 new String:gShadow_GameDescriptionTag[64];
+new bool:g_bSTAvailable = false; // SteamTools
 
 GameDescription_OnPluginStart()
 {
@@ -39,6 +38,12 @@ GameDescription_OnPluginStart()
 	
 	HookConVarChange(gH_Cvar_GameDescriptionOn, GameDescription_CvarChanged);
 	HookConVarChange(gH_Cvar_GameDescriptionTag, GameDescription_CvarChanged);
+	
+	// check for SteamTools
+	if (GetFeatureStatus(FeatureType_Native, "Steam_SetGameDescription") == FeatureStatus_Available)
+	{
+		g_bSTAvailable = true;
+	}
 }
 
 public GameDescription_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
@@ -50,6 +55,11 @@ public GameDescription_CvarChanged(Handle:cvar, const String:oldValue[], const S
 	else if (cvar == gH_Cvar_GameDescriptionTag)
 	{
 		Format(gShadow_GameDescriptionTag, sizeof(gShadow_GameDescriptionTag), newValue);
+		
+		if (gShadow_GameDescriptionOn && g_bSTAvailable)
+		{
+			Steam_SetGameDescription(gShadow_GameDescriptionTag);
+		}
 	}
 }
 
@@ -57,25 +67,9 @@ GameDesc_OnConfigsExecuted()
 {
 	gShadow_GameDescriptionOn = GetConVarBool(gH_Cvar_GameDescriptionOn);
 	GetConVarString(gH_Cvar_GameDescriptionTag, gShadow_GameDescriptionTag, sizeof(gShadow_GameDescriptionTag));
-}
-
-GameDescription_OnMapStart()
-{
-	g_bIsMapLoaded = true;
-}
-
-GameDescription_OnMapEnd()
-{
-	g_bIsMapLoaded = false;
-}
-
-public Action:OnGetGameDescription(String:gameDesc[64])
-{
-	if (gShadow_GameDescriptionOn && g_bIsMapLoaded)
+	
+	if (gShadow_GameDescriptionOn && g_bSTAvailable)
 	{
-		strcopy(gameDesc, sizeof(gameDesc), gShadow_GameDescriptionTag);
-		return Plugin_Changed;
+		Steam_SetGameDescription(gShadow_GameDescriptionTag);
 	}
-
-	return Plugin_Continue;
 }

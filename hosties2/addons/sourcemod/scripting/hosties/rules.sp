@@ -151,7 +151,7 @@ public Action:Command_Rules(client, args)
 			}
 			case 2:
 			{
-				ShowMOTDPanel(client, "Rules", gShadow_Rules_Website);
+				ShowMOTDPanel(client, "Rules", gShadow_Rules_Website, MOTDPANEL_TYPE_URL);
 			}
 		}
 	}

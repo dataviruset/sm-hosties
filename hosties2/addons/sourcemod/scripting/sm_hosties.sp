@@ -22,8 +22,12 @@
 #include <cstrike>
 #include <adminmenu>
 #include <sdkhooks>
-#include <sourcebans>
 #include <hosties>
+
+#undef REQUIRE_PLUGIN
+#tryinclude <steamtools>
+#tryinclude <sourcebans>
+#define REQUIRE_PLUGIN
 
 // Compiler directives
 #pragma semicolon 1
@@ -61,7 +65,7 @@
 ******************************************************************************/
 
 // Global vars
-new bool:g_bSBAvailable = false;
+new bool:g_bSBAvailable = false; // SourceBans
 
 // From freekillers.sp
 enum FreekillPunishment
@@ -144,6 +148,8 @@ public OnPluginStart()
 	
 	CreateConVar("sm_hosties_version", PLUGIN_VERSION, "SM_Hosties plugin version (unchangeable)", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	
+	RegAdminCmd("sm_hostiesadmin", Command_HostiesAdmin, ADMFLAG_SLAY);	
+	
 	#if (MODULE_STARTWEAPONS == 1)
 	StartWeapons_OnPluginStart();
 	#endif
@@ -177,9 +183,6 @@ public OnPluginStart()
 
 public OnMapStart()
 {
-	#if (MODULE_GAMEDESCRIPTION == 1)
-	GameDescription_OnMapStart();
-	#endif
 	#if (MODULE_TEAMOVERLAYS == 1)
 	TeamOverlays_OnMapStart();
 	#endif
@@ -190,9 +193,6 @@ public OnMapStart()
 
 public OnMapEnd()
 {
-	#if (MODULE_GAMEDESCRIPTION == 1)
-	GameDescription_OnMapEnd();
-	#endif
 	#if (MODULE_FREEKILL == 1)	
 	Freekillers_OnMapEnd();
 	#endif
@@ -325,6 +325,12 @@ public OnAdminMenuReady(Handle:h_TopMenu)
 	
 	// Let other modules add menu objects
 	LastRequest_Menus(gH_TopMenu, gM_Hosties);
+}
+
+public Action:Command_HostiesAdmin(client, args)
+{
+	DisplayTopMenu(gH_TopMenu, client, TopMenuPosition_LastRoot);
+	return Plugin_Handled;
 }
 
 public HostiesCategoryHandler(Handle:h_TopMenu, TopMenuAction:action, TopMenuObject:object, param, String:buffer[], maxlength)
