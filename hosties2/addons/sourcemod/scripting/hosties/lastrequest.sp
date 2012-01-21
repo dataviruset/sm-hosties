@@ -31,6 +31,7 @@
 // Global variables
 new bool:g_bIsLRAvailable = true;
 new bool:g_bRoundInProgress = true;
+new bool:g_bListenersAdded = false;
 new bool:g_bAnnouncedThisRound = false;
 new bool:g_bInLastRequest[MAXPLAYERS+1];
 new bool:g_bIsARebel[MAXPLAYERS+1];
@@ -149,6 +150,7 @@ new Handle:gH_Cvar_LR_KnifeFight_HiSpeed = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_KnifeFight_Drunk = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Beacon_Sound = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_AutoDisplay = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_BlockSuicide = INVALID_HANDLE;
 
 new gShadow_LR_KnifeFight_On = -1;
 new gShadow_LR_Shot4Shot_On = -1;
@@ -223,6 +225,7 @@ new Float:gShadow_LR_KnifeFight_HiSpeed = -1.0;
 new gShadow_LR_KnifeFight_Drunk = -1;
 new String:gShadow_LR_Beacon_Sound[PLATFORM_MAX_PATH];
 new bool:gShadow_LR_KillTimeouts = false;
+new bool:gShadow_LR_BlockSuicide = false;
 
 // Custom types local to the plugin
 enum NoScopeWeapon
@@ -522,6 +525,8 @@ LastRequest_OnPluginStart()
 	gShadow_Announce_HotPotato_Eqp = false;
 	gH_Cvar_LR_AutoDisplay = CreateConVar("sm_hosties_lr_autodisplay", "0", "Automatically display the LR menu to non-rebelers when they become elgible for LR: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_LR_AutoDisplay = false;
+	gH_Cvar_LR_BlockSuicide = CreateConVar("sm_hosties_lr_blocksuicide", "0", "Blocks LR participants from commiting suicide to avoid deaths: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gShadow_LR_BlockSuicide = false;
 	
 	// Listen for changes
 	HookConVarChange(gH_Cvar_LR_KnifeFight_On, ConVarChanged_LastRequest);
@@ -597,6 +602,7 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_Announce_Delay_Enable, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_Announce_HotPotato_Eqp, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_AutoDisplay, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_BlockSuicide, ConVarChanged_Setting);
 	
 	// Account for late loading
 	for (new idx = 1; idx <= MaxClients ; idx++)
@@ -2108,6 +2114,23 @@ LastRequest_OnConfigsExecuted()
 	gShadow_Announce_Weapon_Attack = bool:GetConVarInt(gH_Cvar_Announce_Weapon_Attack);
 	gShadow_Announce_HotPotato_Eqp = bool:GetConVarInt(gH_Cvar_Announce_HotPotato_Eqp);
 	gShadow_LR_AutoDisplay = bool:GetConVarInt(gH_Cvar_LR_AutoDisplay);
+	gShadow_LR_BlockSuicide = bool:GetConVarInt(gH_Cvar_LR_BlockSuicide);
+	if (gShadow_LR_BlockSuicide && !g_bListenersAdded)
+	{
+		AddCommandListener(Suicide_Check, "kill");
+		AddCommandListener(Suicide_Check, "explode");
+		AddCommandListener(Suicide_Check, "jointeam");
+		AddCommandListener(Suicide_Check, "spectate");
+		g_bListenersAdded = true;
+	}
+	else if (!gShadow_LR_BlockSuicide && g_bListenersAdded)
+	{
+		RemoveCommandListener(Suicide_Check, "kill");
+		RemoveCommandListener(Suicide_Check, "explode");
+		RemoveCommandListener(Suicide_Check, "jointeam");
+		RemoveCommandListener(Suicide_Check, "spectate");
+		g_bListenersAdded = false;
+	}
 	gShadow_LR_Race_AirPoints = bool:GetConVarInt(gH_Cvar_LR_Race_AirPoints);
 	gShadow_LR_Race_NotifyCTs = bool:GetConVarInt(gH_Cvar_LR_Race_NotifyCTs);
 	gShadow_LR_Beacons = bool:GetConVarInt(gH_Cvar_LR_Beacons);
@@ -2347,6 +2370,27 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	{
 		gShadow_LR_AutoDisplay = bool:StringToInt(newValue);
 	}
+	else if (cvar == gH_Cvar_LR_BlockSuicide)
+	{
+		gShadow_LR_BlockSuicide = bool:StringToInt(newValue);
+		if (gShadow_LR_BlockSuicide && !g_bListenersAdded)
+		{
+			AddCommandListener(Suicide_Check, "kill");
+			AddCommandListener(Suicide_Check, "explode");
+			AddCommandListener(Suicide_Check, "jointeam");
+			AddCommandListener(Suicide_Check, "spectate");
+			g_bListenersAdded = true;
+		}
+		else if (!gShadow_LR_BlockSuicide && g_bListenersAdded)
+		{
+			RemoveCommandListener(Suicide_Check, "kill");
+			RemoveCommandListener(Suicide_Check, "explode");
+			RemoveCommandListener(Suicide_Check, "jointeam");
+			RemoveCommandListener(Suicide_Check, "spectate");
+			g_bListenersAdded = false;
+		}
+		
+	}
 	else if (cvar == gH_Cvar_LR_Damage)
 	{
 		gShadow_LR_Damage = bool:StringToInt(newValue);
@@ -2468,6 +2512,15 @@ public ConVarChanged_LastRequest(Handle:cvar, const String:oldValue[], const Str
 		gShadow_LR_JumpContest_On = bool:iNewValue;
 		UpdateLastRequestArray(LR_JumpContest);
 	}
+}
+
+public Action:Suicide_Check(client, const String:command[], args)
+{
+	if (client && IsClientInGame(client) && Local_IsClientInLR(client))
+	{
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
 }
 
 UpdateLastRequestArray(LastRequest:entry)
