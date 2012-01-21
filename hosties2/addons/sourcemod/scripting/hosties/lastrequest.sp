@@ -599,15 +599,32 @@ LastRequest_OnPluginStart()
 	}
 }
 
-public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[], error_max)
+LastRequest_Menus(Handle:h_TopMenu, TopMenuObject:obj_Hosties)
+{
+	AddToTopMenu(h_TopMenu, "sm_stoplr", TopMenuObject_Item, AdminMenu_StopLR, obj_Hosties, "sm_stoplr", ADMFLAG_SLAY);
+}
+
+public AdminMenu_StopLR(Handle:h_TopMenu, TopMenuAction:action, TopMenuObject:object, client, String:buffer[], maxlength)
+{
+	if (action == TopMenuAction_DisplayOption)
+	{
+		Format(buffer, maxlength, "Stop All LastRequests");
+	}
+	else if (action == TopMenuAction_SelectOption)
+	{
+		StopActiveLRs(client);
+	}
+}
+
+LastRequest_APL()
 {
 	CreateNative("AddLastRequestToList", Native_LR_AddToList);
 	CreateNative("RemoveLastRequestFromList", Native_LR_RemoveFromList);
 	CreateNative("IsClientRebel", Native_IsClientRebel);
 	CreateNative("IsClientInLastRequest", Native_IsClientInLR);
 	CreateNative("ProcessAllLastRequests", Native_ProcessLRs);
+	
 	RegPluginLibrary("lastrequest");
-	return APLRes_Success;
 }
 
 public Native_ProcessLRs(Handle:h_Plugin, iNumParameters)
@@ -752,6 +769,12 @@ public Action:Timer_EnableLR(Handle:timer)
 
 public Action:Command_CancelLR(client, args)
 {
+	StopActiveLRs(client);
+	return Plugin_Handled;
+}
+
+StopActiveLRs(client)
+{
 	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
 	while (iArraySize > 0)
 	{
@@ -760,8 +783,6 @@ public Action:Command_CancelLR(client, args)
 		iArraySize--;
 	}
 	ShowActivity(client, "%t", "LR Aborted");
-	//PrintToChatAll(CHAT_BANNER, "LR Aborted", client);
-	return Plugin_Handled;
 }
 
 public LastRequest_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)

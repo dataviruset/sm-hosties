@@ -20,6 +20,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
+#include <adminmenu>
 #include <sdkhooks>
 #include <sourcebans>
 #include <hosties>
@@ -78,6 +79,8 @@ new Handle:gH_Cvar_Freekill_Punishment = INVALID_HANDLE;
 new Handle:gH_Cvar_Freekill_Reset = INVALID_HANDLE;
 new Handle:gH_Cvar_Freekill_Sound_Mode = INVALID_HANDLE;
 new String:gShadow_Freekill_Sound[PLATFORM_MAX_PATH];
+new Handle:gH_TopMenu = INVALID_HANDLE;
+new TopMenuObject:gM_Hosties = INVALID_TOPMENUOBJECT;
 new gShadow_Freekill_Threshold;
 new gShadow_Freekill_BanLength;
 new gShadow_Freekill_Reset;
@@ -202,9 +205,24 @@ public OnAllPluginsLoaded()
 		g_bSBAvailable = true;
 	}
 	
+	new Handle:h_TopMenu = GetAdminTopMenu();
+	if (LibraryExists("adminmenu") && (h_TopMenu != INVALID_HANDLE))
+	{
+		OnAdminMenuReady(h_TopMenu);
+	}
+	
 	#if (MODULE_MUTE == 1)
 	MutePrisoners_AllPluginsLoaded();
-	#endif	
+	#endif
+}
+
+public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[], error_max)
+{
+	LastRequest_APL();
+	
+	RegPluginLibrary("hosties");
+	
+	return APLRes_Success;
 }
 
 public OnLibraryAdded(const String:name[])
@@ -213,6 +231,10 @@ public OnLibraryAdded(const String:name[])
 	{
 		g_bSBAvailable = true;
 	}
+	else if (StrEqual(name, "adminmenu") && (GetAdminTopMenu() != INVALID_HANDLE))
+	{
+		OnAdminMenuReady(GetAdminTopMenu());
+	}
 }
 
 public OnLibraryRemoved(const String:name[])
@@ -220,6 +242,10 @@ public OnLibraryRemoved(const String:name[])
 	if (StrEqual(name, "sourcebans"))
 	{
 		g_bSBAvailable = false;
+	}
+	else if (StrEqual(name, "adminmenu"))
+	{
+	
 	}
 }
 
@@ -278,3 +304,47 @@ public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 		PrintToChatAll(CHAT_BANNER, "Powered By Hosties");
 	}
 }
+
+public OnAdminMenuReady(Handle:h_TopMenu)
+{
+	// block double calls
+	if (h_TopMenu == gH_TopMenu)
+	{
+		return;
+	}
+	
+	gH_TopMenu = h_TopMenu;
+	
+	// Build Hosties menu
+	gM_Hosties = AddToTopMenu(gH_TopMenu, "Hosties", TopMenuObject_Category, HostiesCategoryHandler, INVALID_TOPMENUOBJECT);
+	
+	if (gM_Hosties == INVALID_TOPMENUOBJECT)
+	{
+		return;
+	}
+	
+	// Let other modules add menu objects
+	LastRequest_Menus(gH_TopMenu, gM_Hosties);
+}
+
+public HostiesCategoryHandler(Handle:h_TopMenu, TopMenuAction:action, TopMenuObject:object, param, String:buffer[], maxlength)
+{
+	switch (action)
+	{
+		case (TopMenuAction_DisplayTitle):
+		{
+			if (object == gM_Hosties)
+			{
+				Format(buffer, maxlength, "Hosties:");
+			}
+		}
+		case (TopMenuAction_DisplayOption):
+		{
+			if (object == gM_Hosties)
+			{
+				Format(buffer, maxlength, "Hosties");
+			}
+		}
+	}
+}
+
