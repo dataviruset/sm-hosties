@@ -2779,6 +2779,9 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 										}
 									}
 								}
+								
+								***
+								
 							}
 							case LR_Rebel:
 							{
@@ -2787,6 +2790,7 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 								SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
 								SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Guard);
 								g_bInLastRequest[client] = true;
+								g_bIsARebel[client] = true;
 								InitializeGame(iArrayIndex);			
 							}
 							case LR_JumpContest:
@@ -4467,7 +4471,7 @@ public Action:Timer_Beacon(Handle:timer)
 	return Plugin_Continue;
 }
 
-AddBeacon(entityIndex)
+void:AddBeacon(entityIndex)
 {
 	if (IsValidEntity(entityIndex))
 	{
@@ -4479,12 +4483,60 @@ AddBeacon(entityIndex)
 	}
 }
 
-RemoveBeacon(entityIndex)
+void:RemoveBeacon(entityIndex)
 {
 	new iBeaconIndex = FindValueInArray(gH_DArray_Beacons, entityIndex);
 	if (iBeaconIndex != -1)
 	{
 		RemoveFromArray(gH_DArray_Beacons, iBeaconIndex);
+	}
+}
+
+Trail_Attach(client, LRIndex)
+{	
+	decl String:sTempName[64];
+	Format(sTempName, sizeof(sTempName), "PlayerTrail_%d", GetClientUserId(client));
+	DispatchKeyValue(client, "targetname", sTempName);
+	
+	new entIndex = CreateEntityByName("env_spritetrail");
+	if (entIndex > 0 && IsValidEntity(entIndex))
+	{		
+		DispatchKeyValue(entIndex, "parentname", sTempName);
+		DispatchKeyValue(entIndex, "spritename", "materials/sprites/orangelight1.vmt");
+		SetEntPropFloat(entIndex, Prop_Send, "m_flTextureRes", 0.05);
+		
+		DispatchKeyValue(entIndex, "renderamt", "255");
+		DispatchKeyValue(entIndex, "rendercolor", "255 128 0");
+		
+		DispatchKeyValueFloat(entIndex, "lifetime", 15.0);
+		DispatchKeyValueFloat(entIndex, "startwidth", 10.0);
+		DispatchKeyValueFloat(entIndex, "endwidth", 10.0);
+		DispatchKeyValue(entIndex, "rendermode", "5");
+		
+		DispatchSpawn(entIndex);
+		new Float:f_origin[3];
+		GetClientAbsOrigin(client, f_origin);
+		f_origin[2] += 34.0;
+		TeleportEntity(entIndex, f_origin, NULL_VECTOR, NULL_VECTOR);
+		SetVariantString(sTempName);
+		AcceptEntityInput(entIndex, "SetParent", entIndex, entIndex);
+		
+		return entIndex;
+	}
+	return 0;
+}
+
+void:Trail_Remove(client, LRIndex)
+{
+	new ent = g_iClientSpriteEntIndex[client];
+	if (ent != 0)
+	{
+		if (IsValidEntity(ent))
+		{
+			SDKUnhook(ent, SDKHook_SetTransmit, Hook_SetTransmit);
+			AcceptEntityInput(ent, "Kill");
+		}
+		g_iClientSpriteEntIndex[client] = 0;
 	}
 }
 
@@ -4578,7 +4630,28 @@ public Action:Timer_Countdown(Handle:timer)
 			bCountdownUsed = true;
 			PrintCenterText(LR_Player_Prisoner, "LR begins in %i...", countdown);
 			PrintCenterText(LR_Player_Guard, "LR begins in %i...", countdown);
-			SetArrayCell(gH_DArray_LR_Partners, idx, --countdown, _:Block_Global1);		
+			SetArrayCell(gH_DArray_LR_Partners, idx, --countdown, _:Block_Global1);
+			
+			// set up laser beams for race points
+			if (type == LR_Race && gShadow_LR_Race_NotifyCTs)
+			{
+				decl Float:LR_Prisoner_Position[3], Float:f_EndLocation[3];
+				new Handle:PositionPack = GetArrayCell(gH_DArray_LR_Partners, idx, 9);
+				ResetPack(PositionPack);
+				f_EndLocation[0] = ReadPackFloat(PositionPack);
+				f_EndLocation[1] = ReadPackFloat(PositionPack);
+				f_EndLocation[2] = ReadPackFloat(PositionPack);
+				GetClientAbsOrigin(LR_Player_Prisoner, LR_Prisoner_Position);
+				
+				new clients[2];
+				clients[0] = LR_Player_Prisoner;
+				clients[1] = LR_Player_Guard;
+				
+				TE_SetupBeamPoints(f_EndLocation, LR_Prisoner_Position, LaserSprite, LaserHalo, 1, 1, 1.1, 5.0, 5.0, 0, 10.0, redColor, 200);			
+				TE_Send(clients, 2);
+				TE_SetupBeamPoints(LR_Prisoner_Position, f_EndLocation, LaserSprite, LaserHalo, 1, 1, 1.1, 5.0, 5.0, 0, 10.0, redColor, 200);			
+				TE_Send(clients, 2);
+			}
 		}
 		else if (countdown == 0)
 		{
