@@ -25,8 +25,10 @@
 #include <hosties>
 
 #undef REQUIRE_PLUGIN
+#undef REQUIRE_EXTENSIONS
 #tryinclude <steamtools>
 #tryinclude <sourcebans>
+#define REQUIRE_EXTENSIONS
 #define REQUIRE_PLUGIN
 
 // Compiler directives
@@ -218,6 +220,8 @@ public OnAllPluginsLoaded()
 
 public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[], error_max)
 {
+	MarkNativeAsOptional("Steam_SetGameDescription");
+
 	LastRequest_APL();
 	
 	RegPluginLibrary("hosties");
