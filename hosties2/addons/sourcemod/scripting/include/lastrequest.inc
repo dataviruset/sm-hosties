@@ -98,6 +98,9 @@ public __pl_lastrequest_SetNTVOptional()
 functag FuncLastRequest public(type, prisoner, guard);
 functag FuncProcessLR public(Handle:array, iLRNumber);
 
+
+forward OnStartLR(PrisonerIndex, GuardIndex, LR_Type);
+
 /**
  * Find if a client is listed as a rebel.
  * 
