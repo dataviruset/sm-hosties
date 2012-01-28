@@ -51,6 +51,7 @@ new Handle:g_FarthestJumpTimer = INVALID_HANDLE;
 new Handle:gH_Frwd_LR_CleanUp = INVALID_HANDLE;
 new Handle:gH_Frwd_LR_Start = INVALID_HANDLE;
 new Handle:gH_Frwd_LR_Process = INVALID_HANDLE;
+new Handle:gH_Frwd_LR_StartGlobal = INVALID_HANDLE;
 
 new BeamSprite = -1;
 new HaloSprite = -1;
@@ -378,6 +379,7 @@ LastRequest_OnPluginStart()
 	gH_Frwd_LR_CleanUp = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	gH_Frwd_LR_Start = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 	gH_Frwd_LR_Process = CreateForward(ET_Event, Param_Cell, Param_Cell);
+	gH_Frwd_LR_StartGlobal = CreateGlobalForward("OnStartLR", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	
 	// Register cvars
 	gH_Cvar_LR_Enable = CreateConVar("sm_hosties_lr", "1", "Enable or disable Last Requests (the !lr command): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
@@ -2780,7 +2782,9 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 									}
 								}
 								
-								***
+								#if 0
+								// Add trail
+								#endif
 								
 							}
 							case LR_Rebel:
@@ -4176,6 +4180,15 @@ InitializeGame(iPartnersIndex)
 			Call_Finish(_:ignore);
 		}
 	}
+	
+	// Fire global
+	Call_StartForward(gH_Frwd_LR_StartGlobal);
+	Call_PushCell(LR_Player_Prisoner);
+	Call_PushCell(LR_Player_Guard);
+	// LR type
+	Call_PushCell(selection);
+	new ignore;
+	Call_Finish(_:ignore);
 	
 	// Close datapack
 	if (gH_BuildLR[LR_Player_Prisoner] != INVALID_HANDLE)
