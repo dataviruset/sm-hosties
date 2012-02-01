@@ -77,6 +77,8 @@ Rules_OnConfigsExecuted()
 {
 	gShadow_RulesOn = GetConVarBool(gH_Cvar_RulesOn);
 	
+	GetConVarString(gH_Cvar_Rules_Website, gShadow_Rules_Website, sizeof(gShadow_Rules_Website));
+	
 	ParseTheRulesFile();
 }
 
@@ -115,7 +117,7 @@ public Rules_CvarChanged(Handle:cvar, const String:oldValue[], const String:newV
 	}
 	else if (cvar == gH_Cvar_Rules_Website)
 	{
-		Format(gShadow_Rules_Website, sizeof(gShadow_Rules_Website), "%s", newValue);
+		Format(gShadow_Rules_Website, sizeof(gShadow_Rules_Website), newValue);
 	}
 }
 
