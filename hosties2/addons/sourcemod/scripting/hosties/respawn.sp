@@ -33,6 +33,54 @@ Respawn_OnPluginStart()
 
 public Action:Command_Respawn(client, args)
 {
+	if (args < 1)
+	{
+		ReplyToCommand(client, "[SM] Usage: sm_hrespawn <#userid|name>");
+		return Plugin_Handled;
+	}
+
+	decl String:arg[65];
+	GetCmdArg(1, arg, sizeof(arg));
+
+	decl String:target_name[MAX_TARGET_LENGTH];
+	decl target_list[MAXPLAYERS], target_count, bool:tn_is_ml;
+	
+	if ((target_count = ProcessTargetString(
+			arg,
+			client,
+			target_list,
+			MAXPLAYERS,
+			COMMAND_FILTER_DEAD,
+			target_name,
+			sizeof(target_name),
+			tn_is_ml)) <= 0)
+	{
+		ReplyToTargetError(client, target_count);
+		return Plugin_Handled;
+	}
+
+	for (new i = 0; i < target_count; i++)
+	{
+		if (g_DeathLocation[target_list[i]][0] != 0.0 && g_DeathLocation[target_list[i]][1] != 0.0 && g_DeathLocation[target_list[i]][2] != 0.0)
+		{
+			PerformRespawn(client, target_list[i]);
+		}
+		else
+		{
+			ReplyToCommand(client, "%N did not have any respawn data yet.", target_list[i]);
+		}
+	}
+	
+	if (tn_is_ml)
+	{
+		ShowActivity2(client, "[SM] ", "Respawned %s", target_name);
+	}
+	else
+	{
+		// ***
+		ShowActivity2(client, "[SM] ", "Respawned ");
+	}
+	
 	return Plugin_Handled;
 }
 
@@ -64,9 +112,19 @@ DisplayRespawnMenu(client)
 	SetMenuTitle(menu, title);
 	SetMenuExitBackButton(menu, true);
 	
-	//AddTargetsToMenu(menu, client, true, true);
-	AddTargetsToMenu2(menu, client, COMMAND_FILTER_DEAD);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	new targets_added = AddTargetsToMenu2(menu, client, COMMAND_FILTER_DEAD);
+	if (targets_added == 0)
+	{
+		ReplyToCommand(client, "%t", "Target is not in game");
+		if (gH_TopMenu != INVALID_HANDLE)
+		{
+			DisplayTopMenu(gH_TopMenu, client, TopMenuPosition_LastCategory);
+		}
+	}
+	else
+	{
+		DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	}
 }
 
 public AdminMenu_Respawn(Handle:topmenu, 
@@ -120,6 +178,10 @@ public MenuHandler_Respawn(Handle:menu, MenuAction:action, param1, param2)
 		{
 			ReplyToCommand(param1, "[SM] Player has since respawned.");
 			//ReplyToCommand(param1, "[SM] %t", "Player has since died");
+		}
+		else if (g_DeathLocation[target][0] == 0.0 && g_DeathLocation[target][1] == 0.0 && g_DeathLocation[target][2] == 0.0)
+		{
+			ReplyToCommand(param1, "Player does not have respawn data yet.");
 		}
 		else
 		{
