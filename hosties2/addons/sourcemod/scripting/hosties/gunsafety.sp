@@ -33,11 +33,11 @@ new bool:gShadow_Strip_On_Ban = false;
 GunSafety_OnPluginStart()
 {
 	gH_Cvar_Strip_On_Slay = CreateConVar("sm_hosties_strip_onslay", "1", "Enable or disable the stripping of weapons from anyone who is slain.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gShadow_Strip_On_Slay = false;
+	gShadow_Strip_On_Slay = true;
 	gH_Cvar_Strip_On_Kick = CreateConVar("sm_hosties_strip_onkick", "1", "Enable or disable the stripping of weapons from anyone who is kicked.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gShadow_Strip_On_Kick = false;
+	gShadow_Strip_On_Kick = true;
 	gH_Cvar_Strip_On_Ban = CreateConVar("sm_hosties_strip_onban", "1", "Enable or disable the stripping of weapons from anyone who is banned.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gShadow_Strip_On_Ban = false;
+	gShadow_Strip_On_Ban = true;
 	
 	HookConVarChange(gH_Cvar_Strip_On_Slay, GunSafety_CvarChanged);
 	HookConVarChange(gH_Cvar_Strip_On_Kick, GunSafety_CvarChanged);
@@ -53,7 +53,6 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 	// let original command handle return text
 	if (iArgNumber < 1)
 	{
-		PrintToChatAll("exit");
 		return Plugin_Continue;
 	}
 	
@@ -69,12 +68,10 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 		if (!GetCommandOverride(command, Override_Command, _:flag))
 		{
 			flag = Admin_Slay;
-			PrintToChatAll("slay1");
 		}
 		
-		if (!GetAdminFlag(GetUserAdmin(client), flag))
+		if (client && !GetAdminFlag(GetUserAdmin(client), flag))
 		{
-			PrintToChatAll("slay2");
 			return Plugin_Continue;
 		}
 	}
@@ -89,12 +86,10 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 		if (!GetCommandOverride(command, Override_Command, _:flag))
 		{
 			flag = Admin_Kick;
-			PrintToChatAll("kick1");
 		}
 		
-		if (!GetAdminFlag(GetUserAdmin(client), flag))
+		if (client && !GetAdminFlag(GetUserAdmin(client), flag))
 		{
-			PrintToChatAll("kick2");
 			return Plugin_Continue;
 		}
 	}
@@ -108,17 +103,15 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 		new AdminFlag:flag;
 		if (!GetCommandOverride(command, Override_Command, _:flag))
 		{
-			PrintToChatAll("ban1");
 			flag = Admin_Ban;
 		}
 		
-		if (!GetAdminFlag(GetUserAdmin(client), flag))
+		if (client && !GetAdminFlag(GetUserAdmin(client), flag))
 		{
-			PrintToChatAll("ban2");
 			return Plugin_Continue;
 		}
 	}
-	
+		
 	// process the command
 	decl String:arg[65];
 	GetCmdArg(1, arg, sizeof(arg));
@@ -142,7 +135,6 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 
 	for (new i = 0; i < target_count; i++)
 	{
-		PrintToChatAll("Stripping weapons of %N", target_list[i]);
 		StripAllWeapons(target_list[i]);
 	}
 	
