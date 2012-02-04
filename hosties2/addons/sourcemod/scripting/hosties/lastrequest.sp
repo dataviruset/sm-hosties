@@ -4505,7 +4505,7 @@ void:RemoveBeacon(entityIndex)
 	}
 }
 
-Trail_Attach(client, LRIndex)
+stock Trail_Attach(client, LRIndex)
 {	
 	decl String:sTempName[64];
 	Format(sTempName, sizeof(sTempName), "PlayerTrail_%d", GetClientUserId(client));
@@ -4539,7 +4539,7 @@ Trail_Attach(client, LRIndex)
 	return 0;
 }
 
-void:Trail_Remove(client, LRIndex)
+stock void:Trail_Remove(client, LRIndex)
 {
 	new ent = g_iClientSpriteEntIndex[client];
 	if (ent != 0)
