@@ -337,6 +337,7 @@ public OnAdminMenuReady(Handle:h_TopMenu)
 	
 	// Let other modules add menu objects
 	LastRequest_Menus(gH_TopMenu, gM_Hosties);
+	GunSafety_Menus(gH_TopMenu, gM_Hosties);
 }
 
 public Action:Command_HostiesAdmin(client, args)
