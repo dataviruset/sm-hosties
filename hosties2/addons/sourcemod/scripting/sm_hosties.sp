@@ -44,23 +44,25 @@
 // Note: you cannot safely turn these modules on and off yet. Use cvars to disable functionality.
 
 // Add ability to disable collisions for players
-#define	MODULE_NOBLOCK			1
+#define	MODULE_NOBLOCK							1
 // Add the last request system
-#define	MODULE_LASTREQUEST		1
+#define	MODULE_LASTREQUEST					1
 // Add a game description override
-#define	MODULE_GAMEDESCRIPTION	1
+#define	MODULE_GAMEDESCRIPTION				1
 // Add start weapons for both teams
-#define	MODULE_STARTWEAPONS		1
+#define	MODULE_STARTWEAPONS					1
 // Add round-end team overlays
-#define	MODULE_TEAMOVERLAYS		1
+#define	MODULE_TEAMOVERLAYS					1
 // Add !rules command
-#define	MODULE_RULES			1
+#define	MODULE_RULES							1
 // Add !checkplayers command
-#define	MODULE_CHECKPLAYERS		1
+#define	MODULE_CHECKPLAYERS					1
 // Add muting system
-#define	MODULE_MUTE				1
+#define	MODULE_MUTE								1
 // Add freekill detection and prevention
-#define	MODULE_FREEKILL			1
+#define	MODULE_FREEKILL						1
+// Add gun safety
+#define	MODULE_GUNSAFETY						1
 
 /******************************************************************************
                    !EDIT BELOW THIS COMMENT AT YOUR OWN PERIL!
@@ -122,6 +124,9 @@ new gA_FreekillsOfCT[MAXPLAYERS+1];
 #if (MODULE_FREEKILL == 1)
 #include "hosties/freekillers.sp"
 #endif
+#if (MODULE_GUNSAFETY == 1)
+#include "hosties/gunsafety.sp"
+#endif
 
 // ConVars
 new Handle:gH_Cvar_Add_ServerTag	= INVALID_HANDLE;
@@ -150,7 +155,7 @@ public OnPluginStart()
 	
 	CreateConVar("sm_hosties_version", PLUGIN_VERSION, "SM_Hosties plugin version (unchangeable)", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	
-	RegAdminCmd("sm_hostiesadmin", Command_HostiesAdmin, ADMFLAG_SLAY);	
+	RegAdminCmd("sm_hostiesadmin", Command_HostiesAdmin, ADMFLAG_SLAY);
 	
 	#if (MODULE_STARTWEAPONS == 1)
 	StartWeapons_OnPluginStart();
@@ -178,6 +183,9 @@ public OnPluginStart()
 	#endif
 	#if (MODULE_FREEKILL == 1)
 	Freekillers_OnPluginStart();
+	#endif
+	#if (MODULE_GUNSAFETY == 1)
+	GunSafety_OnPluginStart();
 	#endif
 	
 	AutoExecConfig(true, "sm_hosties2");
