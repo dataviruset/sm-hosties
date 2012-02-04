@@ -63,6 +63,8 @@
 #define	MODULE_FREEKILL						1
 // Add gun safety
 #define	MODULE_GUNSAFETY						1
+// Add intelli-respawn
+#define	MODULE_RESPAWN							1
 
 /******************************************************************************
                    !EDIT BELOW THIS COMMENT AT YOUR OWN PERIL!
@@ -127,6 +129,9 @@ new gA_FreekillsOfCT[MAXPLAYERS+1];
 #if (MODULE_GUNSAFETY == 1)
 #include "hosties/gunsafety.sp"
 #endif
+#if (MODULE_RESPAWN == 1)
+#include "hosties/respawn.sp"
+#endif
 
 // ConVars
 new Handle:gH_Cvar_Add_ServerTag	= INVALID_HANDLE;
@@ -186,6 +191,9 @@ public OnPluginStart()
 	#endif
 	#if (MODULE_GUNSAFETY == 1)
 	GunSafety_OnPluginStart();
+	#endif
+	#if (MODULE_RESPAWN == 1)
+	Respawn_OnPluginStart();
 	#endif
 	
 	AutoExecConfig(true, "sm_hosties2");
@@ -338,6 +346,7 @@ public OnAdminMenuReady(Handle:h_TopMenu)
 	// Let other modules add menu objects
 	LastRequest_Menus(gH_TopMenu, gM_Hosties);
 	GunSafety_Menus(gH_TopMenu, gM_Hosties);
+	Respawn_Menus(gH_TopMenu, gM_Hosties);
 }
 
 public Action:Command_HostiesAdmin(client, args)
