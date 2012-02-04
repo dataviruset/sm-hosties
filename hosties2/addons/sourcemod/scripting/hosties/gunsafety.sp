@@ -37,6 +37,10 @@ new g_BanTime[MAXPLAYERS+1];
 
 GunSafety_OnPluginStart()
 {
+	LoadTranslations("basebans.phrases");
+	LoadTranslations("plugin.basecommands");
+	LoadTranslations("playercommands.phrases");
+
 	gH_Cvar_Strip_On_Slay = CreateConVar("sm_hosties_strip_onslay", "1", "Enable or disable the stripping of weapons from anyone who is slain.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_Strip_On_Slay = true;
 	gH_Cvar_Strip_On_Kick = CreateConVar("sm_hosties_strip_onkick", "1", "Enable or disable the stripping of weapons from anyone who is kicked.", FCVAR_PLUGIN, true, 0.0, true, 1.0);

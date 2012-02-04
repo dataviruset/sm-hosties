@@ -149,6 +149,7 @@ public Plugin:myinfo =
 public OnPluginStart()
 {
 	// Load translations
+	LoadTranslations("common.phrases");
 	LoadTranslations("hosties.phrases");
 
 	// Events hooks
