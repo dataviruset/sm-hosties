@@ -41,7 +41,7 @@ Rules_OnPluginStart()
 	gShadow_Announce_Rules = true;
 	
 	gH_Cvar_Rules_Mode = CreateConVar("sm_hosties_rules_mode", "1", "1 - Panel Mode, 2 - Website", FCVAR_PLUGIN, true, 1.0, true, 2.0);
-	gShadow_Rules_Mode = 1;
+	gShadow_Rules_Mode = 2;
 	
 	gH_Cvar_Rules_Website = CreateConVar("sm_hosties_rules_website", "http://www.youtube.com/watch?v=oHg5SJYRHA0", "The website for the rules page.", FCVAR_PLUGIN);
 	Format(gShadow_Rules_Website, sizeof(gShadow_Rules_Website), "http://www.youtube.com/watch?v=oHg5SJYRHA0");
@@ -76,7 +76,8 @@ public Rules_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 Rules_OnConfigsExecuted()
 {
 	gShadow_RulesOn = GetConVarBool(gH_Cvar_RulesOn);
-	
+	gShadow_Announce_Rules = GetConVarBool(gH_Cvar_Announce_Rules);
+	gShadow_Rules_Mode = GetConVarInt(gH_Cvar_Rules_Mode);
 	GetConVarString(gH_Cvar_Rules_Website, gShadow_Rules_Website, sizeof(gShadow_Rules_Website));
 	
 	ParseTheRulesFile();
