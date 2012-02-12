@@ -61,14 +61,7 @@ public Action:Command_Respawn(client, args)
 
 	for (new i = 0; i < target_count; i++)
 	{
-		if (g_DeathLocation[target_list[i]][0] != 0.0 && g_DeathLocation[target_list[i]][1] != 0.0 && g_DeathLocation[target_list[i]][2] != 0.0)
-		{
-			PerformRespawn(client, target_list[i]);
-		}
-		else
-		{
-			ReplyToCommand(client, "%N did not have any respawn data yet.", target_list[i]);
-		}
+		PerformRespawn(client, target_list[i]);
 	}
 	
 	if (tn_is_ml)
@@ -88,6 +81,8 @@ public Respawn_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast
 {
 	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	GetClientAbsOrigin(victim, g_DeathLocation[victim]);
+	// account for eye level versus origin level to avoid clipping
+	g_DeathLocation[victim][2] -= 16.0;
 }
 
 Respawn_Menus(Handle:h_TopMenu, TopMenuObject:obj_Hosties)
@@ -97,9 +92,17 @@ Respawn_Menus(Handle:h_TopMenu, TopMenuObject:obj_Hosties)
 
 PerformRespawn(client, target)
 {
-	LogAction(client, target, "\"%L\" respawned \"%L\"", client, target);
 	CS_RespawnPlayer(target);
-	TeleportEntity(target, g_DeathLocation[target], NULL_VECTOR, NULL_VECTOR);
+	if (g_DeathLocation[target][0] == 0.0 && g_DeathLocation[target][1] == 0.0 && g_DeathLocation[target][2] == 0.0)
+	{
+		// no death location was available
+		ReplyToCommand(client, "Player %N did not have respawn data yet and was sent back to cells.", target);
+	}
+	else
+	{
+		TeleportEntity(target, g_DeathLocation[target], NULL_VECTOR, NULL_VECTOR);
+	}
+	LogAction(client, target, "\"%L\" respawned \"%L\"", client, target);
 }
 
 DisplayRespawnMenu(client)
@@ -177,11 +180,6 @@ public MenuHandler_Respawn(Handle:menu, MenuAction:action, param1, param2)
 		else if (IsPlayerAlive(target))
 		{
 			ReplyToCommand(param1, "[SM] Player has since respawned.");
-			//ReplyToCommand(param1, "[SM] %t", "Player has since died");
-		}
-		else if (g_DeathLocation[target][0] == 0.0 && g_DeathLocation[target][1] == 0.0 && g_DeathLocation[target][2] == 0.0)
-		{
-			ReplyToCommand(param1, "Player does not have respawn data yet.");
 		}
 		else
 		{
