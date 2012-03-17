@@ -5092,6 +5092,8 @@ public Action:Timer_ChickenFight(Handle:timer)
 						
 						SetEntityRenderColor(LR_Player_Guard, gShadow_LR_ChickenFight_C_Red, gShadow_LR_ChickenFight_C_Green,
 							gShadow_LR_ChickenFight_C_Blue, 255);
+							
+						bIsChickenFight = false;
 					}
 				}
 				else if (p2EntityBelow == LR_Player_Prisoner)
@@ -5110,6 +5112,8 @@ public Action:Timer_ChickenFight(Handle:timer)
 						
 						SetEntityRenderColor(LR_Player_Prisoner, gShadow_LR_ChickenFight_C_Red, gShadow_LR_ChickenFight_C_Green,
 							gShadow_LR_ChickenFight_C_Blue, 255);
+							
+						bIsChickenFight = false;
 					}
 				}
 			}
