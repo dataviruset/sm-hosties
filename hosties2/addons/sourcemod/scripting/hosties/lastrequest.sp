@@ -52,6 +52,7 @@ new Handle:gH_Frwd_LR_CleanUp = INVALID_HANDLE;
 new Handle:gH_Frwd_LR_Start = INVALID_HANDLE;
 new Handle:gH_Frwd_LR_Process = INVALID_HANDLE;
 new Handle:gH_Frwd_LR_StartGlobal = INVALID_HANDLE;
+new Handle:gH_Frwd_LR_Available = INVALID_HANDLE;
 
 new BeamSprite = -1;
 new HaloSprite = -1;
@@ -376,6 +377,7 @@ LastRequest_OnPluginStart()
 	// -- block 9 -> Handle to Additional Data
 	
 	// Create forwards for custom LR plugins
+	gH_Frwd_LR_Available = CreateGlobalForward("OnAvailableLR", ET_Ignore, Param_Cell);
 	gH_Frwd_LR_CleanUp = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	gH_Frwd_LR_Start = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 	gH_Frwd_LR_Process = CreateForward(ET_Event, Param_Cell, Param_Cell);
@@ -912,18 +914,29 @@ public LastRequest_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 		}
 	}
 	
-	if (gShadow_Announce_LR && !g_bAnnouncedThisRound && gShadow_LR_Enable)
+	if (!g_bAnnouncedThisRound && gShadow_LR_Enable)
 	{
 		if ((Ts == gShadow_MaxPrisonersToLR) && (NumCTsAvailable > 0) && (Ts > 0))
 		{
-			g_bAnnouncedThisRound = true;
-			PrintToChatAll(CHAT_BANNER, "LR Available");
-			
-			if ((strlen(gShadow_LR_Sound) > 0) && !StrEqual(gShadow_LR_Sound, "-1"))
+		
+			Call_StartForward(gH_Frwd_LR_Available);
+			// announced = yes
+			Call_PushCell(gShadow_Announce_LR);
+			new ignore;
+			Call_Finish(_:ignore);
+		
+			if (gShadow_Announce_LR)
 			{
-				EmitSoundToAll(gShadow_LR_Sound);
+				PrintToChatAll(CHAT_BANNER, "LR Available");
+				
+				if ((strlen(gShadow_LR_Sound) > 0) && !StrEqual(gShadow_LR_Sound, "-1"))
+				{
+					EmitSoundToAll(gShadow_LR_Sound);
+				}
 			}
-		}		
+			
+			g_bAnnouncedThisRound = true;
+		}
 	}
 }
 
