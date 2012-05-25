@@ -128,9 +128,10 @@ native IsClientInLastRequest(client);
  * @param Start					Function call to when the LR is started.
  * @param Stop					Function call to when the LR is ended.
  * @param LR_Name				The name for the LR that will appear on the menu.
+ * @param AutoStart				Whether the LR will start immediately (true) or if additional menus are needed (false)
  * @return						The type index of the LR added.
  */
-native AddLastRequestToList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR_Name[]);
+native AddLastRequestToList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR_Name[], bool:AutoStart = true);
 
 /**
  * Removes a custom last request.
@@ -144,7 +145,7 @@ native AddLastRequestToList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR
 native void:RemoveLastRequestFromList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR_Name[]);
 
 /**
- * Removes a custom last request.
+ * Provides iteration for all active last requests.
  * 
  * @param ProcessLR				Function call to process each last request.
  * @param iLastRequestIndex		Index number of last request in array.
