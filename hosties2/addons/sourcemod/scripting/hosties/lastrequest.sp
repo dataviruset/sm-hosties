@@ -362,7 +362,7 @@ LastRequest_OnPluginStart()
 	HookEvent("player_jump", LastRequest_PlayerJump);
 	
 	// Make global arrays
-	gH_DArray_LastRequests = CreateArray();
+	gH_DArray_LastRequests = CreateArray(2);
 	gH_DArray_Beacons = CreateArray();
 	gH_DArray_LR_CustomNames = CreateArray(MAX_DISPLAYNAME_SIZE);
 	gH_DArray_LR_Partners = CreateArray(10);
@@ -689,10 +689,12 @@ public Native_LR_AddToList(Handle:h_Plugin, iNumParameters)
 	AddToForward(gH_Frwd_LR_CleanUp, h_Plugin, CleanUpCall);
 	decl String:sLR_Name[MAX_DISPLAYNAME_SIZE];
 	GetNativeString(3, sLR_Name, MAX_DISPLAYNAME_SIZE);
+	new bool:AutoStart = GetNativeCell(4);
 	new iPosition = PushArrayString(gH_DArray_LR_CustomNames, sLR_Name);
 	// take the maximum number of LRs + the custom LR index to get new value to push
 	iPosition += _:LastRequest;
-	PushArrayCell(gH_DArray_LastRequests, iPosition);
+	new iIndex = PushArrayCell(gH_DArray_LastRequests, iPosition);
+	SetArrayCell(gH_DArray_LastRequests, iIndex, AutoStart, 1);
 	return iPosition;
 }
 
@@ -2029,71 +2031,85 @@ LastRequest_OnConfigsExecuted()
 {
 	if (!g_bPushedToMenu)
 	{
+		new iIndex = 0;
 		// Check LRs
 		gShadow_LR_KnifeFight_On = GetConVarBool(gH_Cvar_LR_KnifeFight_On);
 		if (gShadow_LR_KnifeFight_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_KnifeFight);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_KnifeFight);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_Shot4Shot_On = GetConVarBool(gH_Cvar_LR_Shot4Shot_On);
 		if (gShadow_LR_Shot4Shot_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_Shot4Shot);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_Shot4Shot);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_GunToss_On = GetConVarBool(gH_Cvar_LR_GunToss_On);
 		if (gShadow_LR_GunToss_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_GunToss);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_GunToss);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_ChickenFight_On = GetConVarBool(gH_Cvar_LR_ChickenFight_On);
 		if (gShadow_LR_ChickenFight_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_ChickenFight);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_ChickenFight);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_HotPotato_On = GetConVarBool(gH_Cvar_LR_HotPotato_On);
 		if (gShadow_LR_HotPotato_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_HotPotato);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_HotPotato);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_Dodgeball_On = GetConVarBool(gH_Cvar_LR_Dodgeball_On);
 		if (gShadow_LR_Dodgeball_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_Dodgeball);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_Dodgeball);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_NoScope_On = GetConVarBool(gH_Cvar_LR_NoScope_On);
 		if (gShadow_LR_NoScope_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_NoScope);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_NoScope);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_RockPaperScissors_On = GetConVarBool(gH_Cvar_LR_RockPaperScissors_On);
 		if (gShadow_LR_RockPaperScissors_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_RockPaperScissors);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_RockPaperScissors);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_Rebel_On = GetConVarBool(gH_Cvar_LR_Rebel_On);
 		if (gShadow_LR_Rebel_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_Rebel);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_Rebel);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_Mag4Mag_On = GetConVarBool(gH_Cvar_LR_Mag4Mag_On);
 		if (gShadow_LR_Mag4Mag_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_Mag4Mag);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_Mag4Mag);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_Race_On = GetConVarBool(gH_Cvar_LR_Race_On);
 		if (gShadow_LR_Race_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_Race);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_Race);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_RussianRoulette_On = GetConVarBool(gH_Cvar_LR_RussianRoulette_On);
 		if (gShadow_LR_RussianRoulette_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_RussianRoulette);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_RussianRoulette);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 		gShadow_LR_JumpContest_On = GetConVarBool(gH_Cvar_LR_JumpContest_On);
 		if (gShadow_LR_JumpContest_On)
 		{
-			PushArrayCell(gH_DArray_LastRequests, LR_JumpContest);
+			iIndex = PushArrayCell(gH_DArray_LastRequests, LR_JumpContest);
+			SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 		}
 	}
 	g_bPushedToMenu = true;
@@ -2552,11 +2568,25 @@ UpdateLastRequestArray(LastRequest:entry)
 	new iArrayIndex = FindValueInArray(gH_DArray_LastRequests, entry);
 	if (iArrayIndex == -1)
 	{
-		PushArrayCell(gH_DArray_LastRequests, entry);
+		new iIndex = PushArrayCell(gH_DArray_LastRequests, entry);
+		SetArrayCell(gH_DArray_LastRequests, iIndex, true, 1);
 	}
 	else
 	{
 		RemoveFromArray(gH_DArray_LastRequests, iArrayIndex);
+	}
+}
+
+bool:IsLastRequestAutoStart(LastRequest:game)
+{
+	new iArrayIndex = FindValueInArray(gH_DArray_LastRequests, game);
+	if (iArrayIndex == -1)
+	{
+		return false;
+	}
+	else
+	{
+		return bool:GetArrayCell(gH_DArray_LastRequests, iArrayIndex, 1);
 	}
 }
 
@@ -3150,7 +3180,6 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 											{
 												if (!g_bInLastRequest[ClientIdxOfCT])
 												{
-													// lock in this LR pair
 													new LastRequest:game = g_LRLookup[client];
 													if ((game == LR_HotPotato || game == LR_RussianRoulette) && IsClientTooNearObstacle(client))
 													{
@@ -3166,14 +3195,20 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 													{
 														PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
 													}
-													else
+													else if (IsLastRequestAutoStart(game))
 													{
+														// lock in this LR pair
 														new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
 														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
 														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
 														g_bInLastRequest[client] = true;
 														g_bInLastRequest[ClientIdxOfCT] = true;
 														InitializeGame(iArrayIndex);
+													}
+													else
+													{
+														// auto start disabled, *** call forward
+														LogError("Hosties Invalid LR");
 													}
 												}
 												else
