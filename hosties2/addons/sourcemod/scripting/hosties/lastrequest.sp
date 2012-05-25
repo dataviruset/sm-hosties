@@ -153,6 +153,7 @@ new Handle:gH_Cvar_LR_KnifeFight_Drunk = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_Beacon_Sound = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_AutoDisplay = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_BlockSuicide = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_VictorPoints = INVALID_HANDLE;
 
 new gShadow_LR_KnifeFight_On = -1;
 new gShadow_LR_Shot4Shot_On = -1;
@@ -228,6 +229,7 @@ new gShadow_LR_KnifeFight_Drunk = -1;
 new String:gShadow_LR_Beacon_Sound[PLATFORM_MAX_PATH];
 new bool:gShadow_LR_KillTimeouts = false;
 new bool:gShadow_LR_BlockSuicide = false;
+new gShadow_LR_VictorPoints = -1;
 
 // Custom types local to the plugin
 enum NoScopeWeapon
@@ -531,6 +533,8 @@ LastRequest_OnPluginStart()
 	gShadow_LR_AutoDisplay = false;
 	gH_Cvar_LR_BlockSuicide = CreateConVar("sm_hosties_lr_blocksuicide", "0", "Blocks LR participants from commiting suicide to avoid deaths: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_LR_BlockSuicide = false;
+	gH_Cvar_LR_VictorPoints = CreateConVar("sm_hosties_lr_victorpoints", "1", "Amount of frags to reward victor in an LR where other player automatically dies", FCVAR_PLUGIN, true, 0.0);
+	gShadow_LR_VictorPoints = 1;
 	
 	// Listen for changes
 	HookConVarChange(gH_Cvar_LR_KnifeFight_On, ConVarChanged_LastRequest);
@@ -607,6 +611,7 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_Announce_HotPotato_Eqp, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_AutoDisplay, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_BlockSuicide, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_VictorPoints, ConVarChanged_Setting);
 	
 	// Account for late loading
 	for (new idx = 1; idx <= MaxClients ; idx++)
@@ -918,7 +923,6 @@ public LastRequest_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 	{
 		if ((Ts == gShadow_MaxPrisonersToLR) && (NumCTsAvailable > 0) && (Ts > 0))
 		{
-		
 			Call_StartForward(gH_Frwd_LR_Available);
 			// announced = yes
 			Call_PushCell(gShadow_Announce_LR);
@@ -1731,9 +1735,9 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 					{
 						case 1:
 						{
-							ForcePlayerSuicide(victim);
+							KillAndReward(victim, attacker);
 							PrintToChatAll(CHAT_BANNER, "Russian Roulette - Hit", victim);
-							
+
 						}
 						default:
 						{
@@ -2130,6 +2134,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_Announce_HotPotato_Eqp = bool:GetConVarInt(gH_Cvar_Announce_HotPotato_Eqp);
 	gShadow_LR_AutoDisplay = bool:GetConVarInt(gH_Cvar_LR_AutoDisplay);
 	gShadow_LR_BlockSuicide = bool:GetConVarInt(gH_Cvar_LR_BlockSuicide);
+	gShadow_LR_VictorPoints = GetConVarInt(gH_Cvar_LR_VictorPoints);
 	if (gShadow_LR_BlockSuicide && !g_bListenersAdded)
 	{
 		AddCommandListener(Suicide_Check, "kill");
@@ -2405,6 +2410,10 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 			g_bListenersAdded = false;
 		}
 		
+	}
+	else if (cvar == gH_Cvar_LR_VictorPoints)
+	{
+		gShadow_LR_VictorPoints = StringToInt(newValue);
 	}
 	else if (cvar == gH_Cvar_LR_Damage)
 	{
@@ -4316,16 +4325,15 @@ public Action:Timer_FarthestJumpDetector(Handle:timer)
 						if (Prisoner_Distance > Guard_Distance)
 						{
 							PrintToChatAll(CHAT_BANNER, "Farthest Jump Won", LR_Player_Prisoner, LR_Player_Guard, Prisoner_Distance, Guard_Distance);
-							ForcePlayerSuicide(LR_Player_Guard);
+							KillAndReward(LR_Player_Guard, LR_Player_Prisoner);
 						}
 						// award ties to the guard
 						else if (Guard_Distance >= Prisoner_Distance)
 						{
 							PrintToChatAll(CHAT_BANNER, "Farthest Jump Won", LR_Player_Guard, LR_Player_Prisoner, Guard_Distance, Prisoner_Distance);
-							ForcePlayerSuicide(LR_Player_Prisoner);
+							KillAndReward(LR_Player_Prisoner, LR_Player_Guard);
 						}						
 					}
-
 				}
 			}
 		}
@@ -4361,12 +4369,12 @@ public Action:Timer_JumpContestOver(Handle:timer)
 						if (Prisoner_JumpCount > Guard_JumpCount)
 						{
 							PrintToChatAll(CHAT_BANNER, "Won Jump Contest", LR_Player_Prisoner);
-							ForcePlayerSuicide(LR_Player_Guard);
+							KillAndReward(LR_Player_Guard, LR_Player_Prisoner);
 						}
 						else
 						{
 							PrintToChatAll(CHAT_BANNER, "Won Jump Contest", LR_Player_Guard);
-							ForcePlayerSuicide(LR_Player_Prisoner);
+							KillAndReward(LR_Player_Prisoner, LR_Player_Guard);
 						}
 					}
 					case Jump_BrinkOfDeath:
@@ -4385,7 +4393,8 @@ public Action:Timer_JumpContestOver(Handle:timer)
 							loser = (random) ? LR_Player_Guard : LR_Player_Prisoner;
 						}
 						
-						ForcePlayerSuicide(loser);
+						KillAndReward(loser, winner);
+						
 						if (IsPlayerAlive(winner))
 						{
 							SetEntityHealth(winner, 100);
@@ -4792,12 +4801,12 @@ public Action:Timer_Race(Handle:timer)
 				{
 					if (f_PrisonerDistance < f_GuardDistance)
 					{
-						ForcePlayerSuicide(LR_Player_Guard);
+						KillAndReward(LR_Player_Guard, LR_Player_Prisoner);
 						PrintToChatAll(CHAT_BANNER, "Race Won", LR_Player_Prisoner);
 					}
 					else
 					{
-						ForcePlayerSuicide(LR_Player_Prisoner);
+						KillAndReward(LR_Player_Prisoner, LR_Player_Guard);
 						PrintToChatAll(CHAT_BANNER, "Race Won", LR_Player_Guard);
 					}
 				}
@@ -4949,12 +4958,12 @@ public RPSmenuHandler(Handle:menu, MenuAction:action, client, param2)
 						{
 							if (client == LR_Player_Prisoner)
 							{
-								ForcePlayerSuicide(LR_Player_Guard);
+								KillAndReward(LR_Player_Guard, LR_Player_Prisoner);
 								PrintToChatAll(CHAT_BANNER, "LR RPS Done", LR_Player_Prisoner, RPSc1, LR_Player_Guard, RPSc2, LR_Player_Prisoner);
 							}
 							else
 							{
-								ForcePlayerSuicide(LR_Player_Prisoner);
+								KillAndReward(LR_Player_Prisoner, LR_Player_Guard);
 								PrintToChatAll(CHAT_BANNER, "LR RPS Done", LR_Player_Prisoner, RPSc1, LR_Player_Guard, RPSc2, LR_Player_Guard);
 							}
 						}
@@ -4963,12 +4972,12 @@ public RPSmenuHandler(Handle:menu, MenuAction:action, client, param2)
 						{
 							if (client == LR_Player_Guard)
 							{
-								ForcePlayerSuicide(LR_Player_Guard);
+								KillAndReward(LR_Player_Guard, LR_Player_Prisoner);
 								PrintToChatAll(CHAT_BANNER, "LR RPS Done", LR_Player_Prisoner, RPSc1, LR_Player_Guard, RPSc2, LR_Player_Prisoner);
 							}
 							else
 							{
-								ForcePlayerSuicide(LR_Player_Prisoner);
+								KillAndReward(LR_Player_Prisoner, LR_Player_Guard);
 								PrintToChatAll(CHAT_BANNER, "LR RPS Done", LR_Player_Prisoner, RPSc1, LR_Player_Guard, RPSc2, LR_Player_Guard);
 							}
 						}				
@@ -5059,7 +5068,7 @@ public Action:Timer_HotPotatoDone(Handle:timer, any:HotPotato_ID)
 				new HPloser = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
 				new HPwinner = ((HPloser == LR_Player_Prisoner) ? LR_Player_Guard : LR_Player_Prisoner);
 				
-				ForcePlayerSuicide(HPloser);
+				KillAndReward(HPloser, HPwinner);
 				PrintToChatAll(CHAT_BANNER, "HP Win", HPwinner, HPloser);
 				
 				if (gShadow_LR_HotPotato_Mode != 2)
@@ -5094,7 +5103,7 @@ public Action:Timer_ChickenFight(Handle:timer)
 					if (gShadow_LR_ChickenFight_Slay)
 					{
 						PrintToChatAll(CHAT_BANNER, "Chicken Fight Win And Slay", LR_Player_Prisoner, LR_Player_Guard);
-						ForcePlayerSuicide(LR_Player_Guard);		
+						KillAndReward(LR_Player_Guard, LR_Player_Prisoner);
 					}
 					else
 					{
@@ -5114,7 +5123,7 @@ public Action:Timer_ChickenFight(Handle:timer)
 					if (gShadow_LR_ChickenFight_Slay)
 					{
 						PrintToChatAll(CHAT_BANNER, "Chicken Fight Win And Slay", LR_Player_Guard, LR_Player_Prisoner);
-						ForcePlayerSuicide(LR_Player_Prisoner);
+						KillAndReward(LR_Player_Prisoner, LR_Player_Guard);
 					}
 					else
 					{
@@ -5470,6 +5479,17 @@ public Action:Timer_BeerGoggles(Handle:timer)
 		}
 	}
 	return Plugin_Continue;
+}
+
+KillAndReward(loser, victor)
+{
+	ForcePlayerSuicide(loser);
+	if (IsClientInGame(victor))
+	{
+		new iFrags = GetEntProp(victor, Prop_Data, "m_iFrags");
+		iFrags += gShadow_LR_VictorPoints;
+		SetEntProp(victor, Prop_Data, "m_iFrags", iFrags);
+	}
 }
 
 UpdatePlayerCounts(&Prisoners, &Guards, &iNumGuardsAvailable)
