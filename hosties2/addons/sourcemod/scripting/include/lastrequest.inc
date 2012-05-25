@@ -101,6 +101,8 @@ functag FuncProcessLR public(Handle:array, iLRNumber);
 
 forward OnStartLR(PrisonerIndex, GuardIndex, LR_Type);
 
+forward OnAvailableLR(Announced);
+
 /**
  * Find if a client is listed as a rebel.
  * 
