@@ -372,7 +372,7 @@ PrepareBan(client, target, time, const String:reason[])
 	decl String:authid[64], String:name[32];
 	GetClientAuthString(target, authid, sizeof(authid));
 	GetClientName(target, name, sizeof(name));
-
+	
 	if (!time)
 	{
 		if (reason[0] == '\0')
@@ -396,11 +396,28 @@ PrepareBan(client, target, time, const String:reason[])
 
 	if (reason[0] == '\0')
 	{
-		BanClient(target, time, BANFLAG_AUTO, "Banned", "Banned", "sm_ban", client);
+		if (g_bSBAvailable)
+		{
+			SBBanPlayer(client, target, time, "Banned");
+		}
+		else
+		{
+			BanClient(target, time, BANFLAG_AUTO, "Banned", "Banned", "sm_ban", client);
+		}
 	}
 	else
 	{
-		BanClient(target, time, BANFLAG_AUTO, reason, reason, "sm_ban", client);
+		if (g_bSBAvailable)
+		{
+			// avoid const-string tag mismatch
+			new String:banreason[255];
+			strcopy(banreason, sizeof(banreason), reason);
+			SBBanPlayer(client, target, time, banreason);
+		}
+		else
+		{
+			BanClient(target, time, BANFLAG_AUTO, reason, reason, "sm_ban", client);
+		}
 	}
 }
 
