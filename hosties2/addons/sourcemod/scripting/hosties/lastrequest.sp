@@ -155,6 +155,7 @@ new Handle:gH_Cvar_LR_AutoDisplay = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_BlockSuicide = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_VictorPoints = INVALID_HANDLE;
 
+new g_iLastCT_FreeAttacker = -1;
 new gShadow_LR_KnifeFight_On = -1;
 new gShadow_LR_Shot4Shot_On = -1;
 new gShadow_LR_GunToss_On = -1;
@@ -333,7 +334,7 @@ LastRequest_OnPluginStart()
 	g_Offset_PunchAngle = FindSendPropInfo("CBasePlayer", "m_vecPunchAngle");
 	if (g_Offset_PunchAngle == -1)
 	{
-		SetFailState("Unable to find offset for punch angle.");
+		//SetFailState("Unable to find offset for punch angle.");
 	}
 	g_Offset_SecAttack = FindSendPropOffs("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 	if (g_Offset_SecAttack == -1)
@@ -689,7 +690,15 @@ public Native_LR_AddToList(Handle:h_Plugin, iNumParameters)
 	AddToForward(gH_Frwd_LR_CleanUp, h_Plugin, CleanUpCall);
 	decl String:sLR_Name[MAX_DISPLAYNAME_SIZE];
 	GetNativeString(3, sLR_Name, MAX_DISPLAYNAME_SIZE);
-	new bool:AutoStart = GetNativeCell(4);
+	new bool:AutoStart;
+	if (iNumParameters > 3)
+	{
+		AutoStart = GetNativeCell(4);
+	}
+	else
+	{
+		AutoStart = true;
+	}
 	new iPosition = PushArrayString(gH_DArray_LR_CustomNames, sLR_Name);
 	// take the maximum number of LRs + the custom LR index to get new value to push
 	iPosition += _:LastRequest;
@@ -1057,19 +1066,32 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 	{
 		new bool:bPrisonerHasGun = PlayerHasGun(target);
 		
-		if (gShadow_Announce_CT_FreeHit)
+		if (gShadow_Announce_CT_FreeHit && target != g_iLastCT_FreeAttacker)
 		{
+			g_iLastCT_FreeAttacker = target;
 			
 			if (gShadow_Announce_Weapon_Attack && bPrisonerHasGun)
 			{
 				if (IsClientInGame(target) && IsPlayerAlive(target))
 				{
-					PrintToChatAll(CHAT_BANNER, "CT Attack T Gun", attacker, target);
+					for (new idx = 1; idx <= MaxClients; idx++)
+					{
+						if (IsClientInGame(idx))
+						{
+							PrintToConsole(idx, CHAT_BANNER, "CT Attack T Gun", attacker, target);
+						}
+					}
 				}
 			}
 			else
 			{
-				PrintToChatAll(CHAT_BANNER, "Freeattack", attacker, target);
+				for (new idx = 1; idx <= MaxClients; idx++)
+				{
+					if (IsClientInGame(idx))
+					{
+						PrintToConsole(idx, CHAT_BANNER, "Freeattack", attacker, target);
+					}
+				}
 			}
 		}
 		
@@ -2736,7 +2758,10 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
 								Format(sDataField, sizeof(sDataField), "%d", Knife_Drunk);
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drunk", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+								if (g_Offset_PunchAngle != -1)
+								{
+									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+								}
 								Format(sDataField, sizeof(sDataField), "%d", Knife_LowGrav);
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_LowGrav", client);
 								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
