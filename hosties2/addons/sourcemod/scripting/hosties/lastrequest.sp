@@ -233,10 +233,9 @@ new bool:gShadow_LR_BlockSuicide = false;
 new gShadow_LR_VictorPoints = -1;
 
 // Autostart
-new LastRequest:g_selection;
-new g_LR_Player_Prisoner;
-new g_LR_Player_Guard;
-new Handle:gH_DArray_LR_Partners2 = INVALID_HANDLE;
+new LastRequest:g_selection[MAXPLAYERS + 1];
+new g_LR_Player_Guard[MAXPLAYERS + 1];
+new Handle:gH_DArray_LR_Partners2[MAXPLAYERS + 1] = INVALID_HANDLE;
 
 // Custom types local to the plugin
 enum NoScopeWeapon
@@ -746,38 +745,59 @@ public Native_LR_RemoveFromList(Handle:h_Plugin, iNumParameters)
 
 public Native_LR_Initialize(Handle:h_Plugin, iNumParameters)
 {
-	if(!IsLastRequestAutoStart(g_selection))
+	new LR_Player_Prisoner = 0;
+	for(new i = 1 ; i <= MAXPLAYERS;i++)
 	{
-		gH_DArray_LR_Partners = gH_DArray_LR_Partners2;
-		new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, g_selection);
-		SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, g_LR_Player_Prisoner, _:Block_Prisoner);
-		SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, g_LR_Player_Guard, _:Block_Guard);
-
-		g_bInLastRequest[g_LR_Player_Prisoner] = true;
-		g_bInLastRequest[g_LR_Player_Guard] = true;
-
-		// Fire global
-		Call_StartForward(gH_Frwd_LR_StartGlobal);
-		Call_PushCell(g_LR_Player_Prisoner);
-		Call_PushCell(g_LR_Player_Guard);
-		// LR type
-		Call_PushCell(g_selection);
-		new ignore;
-		Call_Finish(_:ignore);
-		
-		// Close datapack
-		if (gH_BuildLR[g_LR_Player_Prisoner] != INVALID_HANDLE)
+		if(IsClientInGame(i))
 		{
-			CloseHandle(gH_BuildLR[g_LR_Player_Prisoner]);		
+			if(i == GetNativeCell(1))
+			{
+				if(GetClientTeam(i) == 2)
+				{
+					LR_Player_Prisoner = i;
+				}
+			}
 		}
-		gH_BuildLR[g_LR_Player_Prisoner] = INVALID_HANDLE;
-		
-		// Beacon players
-		if (gShadow_LR_Beacons)
+	}
+	if(LR_Player_Prisoner != 0)
+	{
+		if(!IsLastRequestAutoStart(g_selection[LR_Player_Prisoner]))
 		{
-			AddBeacon(g_LR_Player_Prisoner);
-			AddBeacon(g_LR_Player_Guard);
+			gH_DArray_LR_Partners = gH_DArray_LR_Partners2[LR_Player_Prisoner];
+			new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, g_selection[LR_Player_Prisoner]);
+			SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, LR_Player_Prisoner, _:Block_Prisoner);
+			SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, g_LR_Player_Guard[LR_Player_Prisoner], _:Block_Guard);
+
+			g_bInLastRequest[LR_Player_Prisoner] = true;
+			g_bInLastRequest[g_LR_Player_Guard[LR_Player_Prisoner]] = true;
+
+			// Fire global
+			Call_StartForward(gH_Frwd_LR_StartGlobal);
+			Call_PushCell(LR_Player_Prisoner);
+			Call_PushCell(g_LR_Player_Guard[LR_Player_Prisoner]);
+			// LR type
+			Call_PushCell(g_selection[LR_Player_Prisoner]);
+			new ignore;
+			Call_Finish(_:ignore);
+			
+			// Close datapack
+			if (gH_BuildLR[LR_Player_Prisoner] != INVALID_HANDLE)
+			{
+				CloseHandle(gH_BuildLR[LR_Player_Prisoner]);		
+			}
+			gH_BuildLR[LR_Player_Prisoner] = INVALID_HANDLE;
+			
+			// Beacon players
+			if (gShadow_LR_Beacons)
+			{
+				AddBeacon(LR_Player_Prisoner);
+				AddBeacon(g_LR_Player_Guard[LR_Player_Prisoner]);
+			}
 		}
+	}
+	else
+	{
+		SetFailState("InitializeLR Failure (Invalid client index).");
 	}
 }
 
@@ -4430,10 +4450,9 @@ InitializeGame(iPartnersIndex)
 			
 			if(!IsLastRequestAutoStart(selection))
 			{
-				gH_DArray_LR_Partners2 = gH_DArray_LR_Partners;
-				g_LR_Player_Prisoner = LR_Player_Prisoner;
-				g_LR_Player_Guard = LR_Player_Guard;
-				g_selection = selection;
+				gH_DArray_LR_Partners2[LR_Player_Prisoner] = gH_DArray_LR_Partners;
+				g_LR_Player_Guard[LR_Player_Prisoner] = LR_Player_Guard;
+				g_selection[LR_Player_Prisoner] = selection;
 				
 				RemoveFromArray(gH_DArray_LR_Partners, iPartnersIndex);
 			}
