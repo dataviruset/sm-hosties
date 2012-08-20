@@ -541,6 +541,10 @@
 	{
 		"en"		"P228"
 	}
+	"Pistol_P250"
+	{
+		"en"		"P250"
+	}
 	"Pistol_Glock"
 	{
 		"en"		"Glock"
@@ -557,6 +561,10 @@
 	{
 		"en"		"USP"
 	}
+	"Pistol_P2000"
+	{
+		"en"		"P2000"
+	}
 	"NSW_AWP"
 	{
 		"en"		"AWP"
@@ -565,9 +573,17 @@
 	{
 		"en"		"Scout"
 	}
+	"NSW_SSG08"
+	{
+		"en"		"SSG08 (Scout)"
+	}
 	"NSW_SG550"
 	{
 		"en"		"SG550"
+	}
+	"NSW_SCAR20"
+	{
+		"en"		"SCAR20"
 	}
 	"NSW_G3SG1"
 	{
