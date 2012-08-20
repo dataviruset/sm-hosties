@@ -34,4 +34,14 @@
 	{
 		"en"		"Distance between fruits' spawn location is too big!"
 	}
+	"Fruit Ninja Winner"
+	{
+		"#format"	"{1:s}, {2:i}, {3:s}, {4:i}, {5:s}, {6:i}"
+		"en"		"{1}: {2}\n{3}: {4}\nThe winner of the FruitNinja is {5} with {6} sliced fruit!"
+	}
+	"Fruit Ninja Score"
+	{
+		"#format"	"{1:s}, {2:i}, {3:s}, {4:i}, {5:i}"
+		"en"		"{1}: {2}\n{3}: {4}\nTime left to slice fruit: {5} seconds"
+	}
 }
