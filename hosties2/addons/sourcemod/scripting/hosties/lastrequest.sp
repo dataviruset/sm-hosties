@@ -995,7 +995,7 @@ public LastRequest_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 		{
 			if (IsClientInGame(idx) && IsPlayerAlive(idx) && GetClientTeam(idx) == CS_TEAM_T && !g_bIsARebel[idx])
 			{
-				DisplayLastRequestMenu(idx, Ts, CTs);
+				FakeClientCommand(idx, "sm_lastrequest");
 			}
 		}
 	}
