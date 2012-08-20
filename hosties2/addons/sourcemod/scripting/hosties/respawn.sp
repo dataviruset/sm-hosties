@@ -64,15 +64,7 @@ public Action:Command_Respawn(client, args)
 		PerformRespawn(client, target_list[i]);
 	}
 	
-	if (tn_is_ml)
-	{
-		ShowActivity2(client, "[SM] ", "Respawned %s", target_name);
-	}
-	else
-	{
-		// ***
-		ShowActivity2(client, "[SM] ", "Respawned ");
-	}
+	ShowActivity(client, CHAT_BANNER, "Respawned Target", target_name);
 	
 	return Plugin_Handled;
 }
@@ -82,7 +74,7 @@ public Respawn_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast
 	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	GetClientAbsOrigin(victim, g_DeathLocation[victim]);
 	// account for eye level versus origin level to avoid clipping
-	g_DeathLocation[victim][2] -= 16.0;
+	g_DeathLocation[victim][2] -= 45.0;
 }
 
 Respawn_Menus(Handle:h_TopMenu, TopMenuObject:obj_Hosties)
@@ -96,7 +88,7 @@ PerformRespawn(client, target)
 	if (g_DeathLocation[target][0] == 0.0 && g_DeathLocation[target][1] == 0.0 && g_DeathLocation[target][2] == 0.0)
 	{
 		// no death location was available
-		ReplyToCommand(client, "Player %N did not have respawn data yet and was sent back to cells.", target);
+		ReplyToCommand(client, CHAT_BANNER, "Respawn Data Unavailable", target);
 	}
 	else
 	{
@@ -110,15 +102,14 @@ DisplayRespawnMenu(client)
 	new Handle:menu = CreateMenu(MenuHandler_Respawn);
 	
 	decl String:title[100];
-	Format(title, sizeof(title), "Respawn player:");
-	//Format(title, sizeof(title), "%T:", "Slay player", client);
+	Format(title, sizeof(title), "%T", "Respawn Player", client);
 	SetMenuTitle(menu, title);
 	SetMenuExitBackButton(menu, true);
 	
 	new targets_added = AddTargetsToMenu2(menu, client, COMMAND_FILTER_DEAD);
 	if (targets_added == 0)
 	{
-		ReplyToCommand(client, "%t", "Target is not in game");
+		ReplyToCommand(client, CHAT_BANNER, "Target is not in game");
 		if (gH_TopMenu != INVALID_HANDLE)
 		{
 			DisplayTopMenu(gH_TopMenu, client, TopMenuPosition_LastCategory);
@@ -139,8 +130,7 @@ public AdminMenu_Respawn(Handle:topmenu,
 {
 	if (action == TopMenuAction_DisplayOption)
 	{
-		Format(buffer, maxlength, "Respawn player");
-		//Format(buffer, maxlength, "%T", "Slay player", param);
+		Format(buffer, maxlength, "%T", "Respawn Player", param);
 	}
 	else if (action == TopMenuAction_SelectOption)
 	{
@@ -171,23 +161,22 @@ public MenuHandler_Respawn(Handle:menu, MenuAction:action, param1, param2)
 
 		if ((target = GetClientOfUserId(userid)) == 0)
 		{
-			PrintToChat(param1, "[SM] %t", "Player no longer available");
+			PrintToChat(param1, CHAT_BANNER, "Player no longer available");
 		}
 		else if (!CanUserTarget(param1, target))
 		{
-			PrintToChat(param1, "[SM] %t", "Unable to target");
+			PrintToChat(param1, CHAT_BANNER, "Unable to target");
 		}
 		else if (IsPlayerAlive(target))
 		{
-			ReplyToCommand(param1, "[SM] Player has since respawned.");
+			ReplyToCommand(param1, CHAT_BANNER, "Player Alive");
 		}
 		else
 		{
 			decl String:name[32];
 			GetClientName(target, name, sizeof(name));
 			PerformRespawn(param1, target);
-			ShowActivity2(param1, "[SM] ", "respawned %s", name);
-			//ShowActivity2(param1, "[SM] ", "%t", "Slayed target", "_s", name);
+			ShowActivity(param1, CHAT_BANNER, "Respawned Target", name);
 		}
 		
 		DisplayRespawnMenu(param1);
