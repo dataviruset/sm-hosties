@@ -1,0 +1,37 @@
+"Phrases"
+{
+	"FruitNinja"
+	{
+		"en"		"FruitNinja"
+	}
+	"LR FruitNinja Start"
+	{
+		"#format"	"{1:N}, {2:N}"
+		"en"		"{1} chose to have FruitNinja with {2}."
+	}
+	"Tie and Slay"
+	{
+		"en"		"Its a tie! Both players were slayed due to long time!"
+	}
+	"Tie and Extra"
+	{
+		"#format"	"{1:i}"
+		"en"		"Players' scores were the same, {1} extra seconds have been added!"
+	}
+	"Obstacle"
+	{
+		"en"		"You are too close to an obstacle!"
+	}
+	"On Ground"
+	{
+		"en"		"You must be on ground to select fruits' spawn location!"
+	}
+	"Distance too small"
+	{
+		"en"		"Distance between fruits' spawn location is too small!"
+	}
+	"Distance too big"
+	{
+		"en"		"Distance between fruits' spawn location is too big!"
+	}
+}
