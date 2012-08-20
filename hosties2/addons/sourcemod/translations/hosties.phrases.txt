@@ -565,6 +565,10 @@
 	{
 		"en"		"P2000"
 	}
+	"Pistol_Tec9"
+	{
+		"en"		"Tec 9"
+	}
 	"NSW_AWP"
 	{
 		"en"		"AWP"
