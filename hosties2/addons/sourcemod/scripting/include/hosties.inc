@@ -26,6 +26,13 @@
 // Change to include your own clan tag but leave the '%t' intact
 #define CHAT_BANNER			"\x03[SM] \x01%t"
 
+enum GameType
+{
+	Game_Unknown = -1,
+	Game_CSS,
+	Game_CSGO
+}; 
+
 enum MediaType
 {
 	type_Generic = 0,
