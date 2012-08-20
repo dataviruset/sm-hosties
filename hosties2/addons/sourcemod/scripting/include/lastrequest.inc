@@ -82,7 +82,11 @@ public SharedPlugin:__pl_lastrequest =
 {
 	name = "lastrequest",
 	file = "sm_hosties.smx",
+	#if defined REQUIRE_PLUGIN
 	required = 1,
+	#else
+	required = 0,
+	#endif
 };
 
 public __pl_lastrequest_SetNTVOptional()
@@ -93,6 +97,7 @@ public __pl_lastrequest_SetNTVOptional()
 	MarkNativeAsOptional("RemoveLastRequestFromList");
 	MarkNativeAsOptional("ProcessAllLastRequests");
 	MarkNativeAsOptional("ChangeRebelStatus");
+	MarkNativeAsOptional("InitializeLR");
 }
 
 functag FuncLastRequest public(type, prisoner, guard);
@@ -128,7 +133,7 @@ native IsClientInLastRequest(client);
  * @param Start					Function call to when the LR is started.
  * @param Stop					Function call to when the LR is ended.
  * @param LR_Name				The name for the LR that will appear on the menu.
- * @param AutoStart				Whether the LR will start immediately (true) or if additional menus are needed (false)
+ * @param AutoStart				Whether the LR will start immediately (true) or if additional menus are needed (false).
  * @return						The type index of the LR added.
  */
 native AddLastRequestToList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR_Name[], bool:AutoStart = true);
@@ -162,6 +167,8 @@ native ProcessAllLastRequests(FuncProcessLR:ProcessLR, iLastRequestIndex);
  * @error						Invalid parameters
  */
 native ChangeRebelStatus(client, status);
+
+native InitializeLR();
 
 stock SetThirdPerson(client)
 {
@@ -249,13 +256,53 @@ public bool:Trace_FilterNothing(entity, contentsMask)
 	return entity == 0;
 }
 
-// Based on Client_IsLookingAtWall from SM-LIB with permission from Berni
+// Based on Client_IsLookingAtWall, Edict_GetClosestToEdict from SM-LIB with permission from Berni
 // detects if it's safe to teleport a player where the player is aiming
-stock bool:IsClientTooNearObstacle(client)
+stock bool:IsClientTooNearObstacle(client, Float:distance = 110.0, bool:checkAllEntities = false)
 {
-	new Float:distance = 110.0;
-	decl Float:posEye[3], Float:posEyeAngles[3];
+	decl Float:posEye[3], Float:posEyeAngles[3], Float:vecOrigin[3], Float:vecOrigin_edict[3], String:Class_edict[64];
 	new bool:isClientLookingAtWall = false;
+	new bool:isClientCloseToEdict = false;
+	
+	GetClientAbsOrigin(client, vecOrigin);
+	
+	if (checkAllEntities)
+	{
+		for (new edict=1; edict <= GetMaxEntities(); edict++)
+		{
+			
+			if (!IsValidEntity(edict))
+			{
+				continue;
+			}
+			
+			GetEdictClassname(edict, Class_edict, sizeof(Class_edict));
+			
+			if (StrContains(Class_edict, "player") != -1)
+			{
+				continue;
+			}
+			
+			if (StrContains(Class_edict, "weapon") != -1)
+			{
+				continue;
+			}
+				
+			if (GetEntSendPropOffs(edict, "m_vecOrigin") == -1)
+			{
+				continue;
+			}
+			
+			GetEntPropVector(edict, Prop_Data, "m_vecOrigin", vecOrigin_edict);
+			
+			new Float:edict_distance = GetVectorDistance(vecOrigin, vecOrigin_edict);
+			
+			if (edict_distance <= distance)
+			{
+				isClientCloseToEdict = true;
+			}
+		}
+	}
 	
 	GetClientEyePosition(client, posEye);
 	GetClientEyeAngles(client,	posEyeAngles);
@@ -264,7 +311,8 @@ stock bool:IsClientTooNearObstacle(client)
 	
 	new Handle:trace = TR_TraceRayFilterEx(posEye, posEyeAngles, CONTENTS_SOLID, RayType_Infinite, Trace_FilterNothing);
 	
-	if (TR_DidHit(trace)) {
+	if (TR_DidHit(trace))
+	{
 		decl Float:posEnd[3];
 
 		TR_GetEndPosition(posEnd, trace);
@@ -287,5 +335,10 @@ stock bool:IsClientTooNearObstacle(client)
 	}
 	
 	CloseHandle(trace);	
-	return isClientLookingAtWall;
-}										 
+	
+	if (isClientCloseToEdict || isClientLookingAtWall)
+	{
+		return true;
+	}
+	return false;
+}
