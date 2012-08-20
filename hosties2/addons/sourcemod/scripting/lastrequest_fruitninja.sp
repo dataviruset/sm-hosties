@@ -253,7 +253,7 @@ public MenuHandler(Handle:menu, MenuAction:action, param1, param2)
 		if(param2 == 0)
 		{
 			FruitNinjaMode = 1;
-			InitializeLR();
+			InitializeLR(LR_Player_Prisoner);
 			FruitNinja_AfterMenu(LR_Player_Prisoner, LR_Player_Guard);
 		}
 		if(param2 == 1)
@@ -363,7 +363,7 @@ public MenuHandler3(Handle:menu, MenuAction:action, param1, param2)
 						if(gH_Timer_CircleBeamCT == INVALID_HANDLE)
 							gH_Timer_CircleBeamCT = CreateTimer(0.5, Timer_CircleBeamCT, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 
-						InitializeLR();
+						InitializeLR(LR_Player_Prisoner);
 						FruitNinja_AfterMenu(LR_Player_Prisoner, LR_Player_Guard);
 					}
 				}
@@ -983,11 +983,8 @@ public Action:FruitNinja( Handle:timer )
 					}
 				}
 				
-				new String:message[255];
-				Format( message, sizeof( message ), "%s: %d\n%s: %d\n \nThe winner of the FruitNinja is %s with %d sliced fruit!", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], WinnerName, WinnerCount );
-				
-				PrintToChatAll(CHAT_BANNER, "\x01The winner of the FruitNinja is \x03%s\x01 with \x03%d\x01 sliced fruits!", WinnerName, WinnerCount );
-				SendPanelToAll( "FruitNinja", message );
+				PrintHintText(LR_Player_Guard, "%t", "Fruit Ninja Winner", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], WinnerName, WinnerCount );
+				PrintHintText(LR_Player_Prisoner, "%t", "Fruit Ninja Winner", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], WinnerName, WinnerCount );
 			}
 			return Plugin_Stop;
 		}
@@ -1012,11 +1009,8 @@ public Action:FruitNinja( Handle:timer )
 			// Send menu
 			//-----------------------------------------	
 			
-			new String:message[128];
-			
-			Format( message, sizeof( message ), "%s: %d\n%s: %d\n \nTime left to slice fruit: %d seconds", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], TimeRemaining );
-			
-			SendPanelToAll( "FruitNinja", message );
+			PrintHintText(LR_Player_Prisoner, "%t", "Fruit Ninja Score", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], TimeRemaining );
+			PrintHintText(LR_Player_Guard, "%t", "Fruit Ninja Score", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], TimeRemaining );
 			
 			//-----------------------------------------
 			// Spawn random fruit for LR_Player_Guard
@@ -1073,11 +1067,8 @@ public Action:FruitNinja( Handle:timer )
 					}
 				}
 				
-				new String:message[255];
-				Format( message, sizeof( message ), "%s: %d\n%s: %d\n \nThe winner of the FruitNinja is %s with %d sliced fruit!", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], WinnerName, WinnerCount );
-				
-				PrintToChatAll(CHAT_BANNER, "\x01The winner of the FruitNinja is \x03%s\x01 with \x03%d\x01 sliced fruits!", WinnerName, WinnerCount );
-				SendPanelToAll( "FruitNinja", message );
+				PrintHintText(LR_Player_Prisoner, "%t", "Fruit Ninja Winner", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], WinnerName, WinnerCount );
+				PrintHintText(LR_Player_Guard, "%t", "Fruit Ninja Winner", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], WinnerName, WinnerCount );
 			}
 			return Plugin_Stop;
 		}
