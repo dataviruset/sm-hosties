@@ -232,6 +232,12 @@ new bool:gShadow_LR_KillTimeouts = false;
 new bool:gShadow_LR_BlockSuicide = false;
 new gShadow_LR_VictorPoints = -1;
 
+// Autostart
+new LastRequest:g_selection;
+new g_LR_Player_Prisoner;
+new g_LR_Player_Guard;
+new Handle:gH_DArray_LR_Partners2 = INVALID_HANDLE;
+
 // Custom types local to the plugin
 enum NoScopeWeapon
 {
@@ -248,7 +254,8 @@ enum PistolWeapon
 	Pistol_Glock,
 	Pistol_FiveSeven,
 	Pistol_Dualies,
-	Pistol_USP
+	Pistol_USP,
+	Pistol_Tec9
 };
 
 enum KnifeType
@@ -331,10 +338,17 @@ LastRequest_OnPluginStart()
 	{
 		SetFailState("Unable to find offset for default FOV.");
 	}
-	g_Offset_PunchAngle = FindSendPropInfo("CBasePlayer", "m_vecPunchAngle");
+	if (g_Game == Game_CSS)
+	{
+		g_Offset_PunchAngle = FindSendPropInfo("CBasePlayer", "m_vecPunchAngle");
+	}
+	else if (g_Game == Game_CSGO)
+	{
+		g_Offset_PunchAngle = FindSendPropInfo("CBasePlayer", "m_aimPunchAngle");
+	}
 	if (g_Offset_PunchAngle == -1)
 	{
-		//SetFailState("Unable to find offset for punch angle.");
+		SetFailState("Unable to find offset for punch angle.");
 	}
 	g_Offset_SecAttack = FindSendPropOffs("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 	if (g_Offset_SecAttack == -1)
@@ -655,6 +669,7 @@ LastRequest_APL()
 	CreateNative("IsClientInLastRequest", Native_IsClientInLR);
 	CreateNative("ProcessAllLastRequests", Native_ProcessLRs);
 	CreateNative("ChangeRebelStatus", Native_ChangeRebelStatus);
+	CreateNative("InitializeLR", Native_LR_Initialize);
 	
 	RegPluginLibrary("lastrequest");
 }
@@ -727,6 +742,43 @@ public Native_LR_RemoveFromList(Handle:h_Plugin, iNumParameters)
 		RemoveFromArray(gH_DArray_LastRequests, iPosition);
 	}
 	return 1;
+}
+
+public Native_LR_Initialize(Handle:h_Plugin, iNumParameters)
+{
+	if(!IsLastRequestAutoStart(g_selection))
+	{
+		gH_DArray_LR_Partners = gH_DArray_LR_Partners2;
+		new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, g_selection);
+		SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, g_LR_Player_Prisoner, _:Block_Prisoner);
+		SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, g_LR_Player_Guard, _:Block_Guard);
+
+		g_bInLastRequest[g_LR_Player_Prisoner] = true;
+		g_bInLastRequest[g_LR_Player_Guard] = true;
+
+		// Fire global
+		Call_StartForward(gH_Frwd_LR_StartGlobal);
+		Call_PushCell(g_LR_Player_Prisoner);
+		Call_PushCell(g_LR_Player_Guard);
+		// LR type
+		Call_PushCell(g_selection);
+		new ignore;
+		Call_Finish(_:ignore);
+		
+		// Close datapack
+		if (gH_BuildLR[g_LR_Player_Prisoner] != INVALID_HANDLE)
+		{
+			CloseHandle(gH_BuildLR[g_LR_Player_Prisoner]);		
+		}
+		gH_BuildLR[g_LR_Player_Prisoner] = INVALID_HANDLE;
+		
+		// Beacon players
+		if (gShadow_LR_Beacons)
+		{
+			AddBeacon(g_LR_Player_Prisoner);
+			AddBeacon(g_LR_Player_Guard);
+		}
+	}
 }
 
 public Native_IsClientRebel(Handle:h_Plugin, iNumParameters)
@@ -1918,6 +1970,9 @@ public Action:OnWeaponEquip(client, weapon)
 							StrEqual(weapon_name, "weapon_elite") ||
 							StrEqual(weapon_name, "weapon_fiveseven") ||
 							StrEqual(weapon_name, "weapon_glock") ||
+							StrEqual(weapon_name, "weapon_p250") ||
+							StrEqual(weapon_name, "weapon_hkp2000") ||
+							StrEqual(weapon_name, "weapon_tec9") ||
 							StrEqual(weapon_name, "weapon_usp"))
 						{
 							return Plugin_Handled;
@@ -2019,8 +2074,14 @@ public Action:OnWeaponDrop(client, weapon)
 						
 						if (g_GunTossTimer == INVALID_HANDLE && (weapon == GTdeagle1 || weapon == GTdeagle2))
 						{
-							g_GunTossTimer = CreateTimer(0.1, Timer_GunToss, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-						}			
+							if (g_Game == Game_CSS)
+							{
+								g_GunTossTimer = CreateTimer(0.1, Timer_GunToss, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+							}
+							else if (g_Game == Game_CSGO)
+							{
+								g_GunTossTimer = CreateTimer(1.0, Timer_GunToss, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+						}	}
 					}
 				}
 			}
@@ -2032,10 +2093,20 @@ public Action:OnWeaponDrop(client, weapon)
 LastRequest_OnMapStart()
 {
 	// Precache any materials needed
-	BeamSprite = PrecacheModel("materials/sprites/laser.vmt");
-	LaserSprite = PrecacheModel("materials/sprites/lgtning.vmt");
-	LaserHalo = PrecacheModel("materials/sprites/plasmahalo.vmt");
-	HaloSprite = PrecacheModel("materials/sprites/halo01.vmt");
+	if (g_Game == Game_CSS)
+	{
+		BeamSprite = PrecacheModel("materials/sprites/laser.vmt");
+		HaloSprite = PrecacheModel("materials/sprites/halo01.vmt");
+		LaserSprite = PrecacheModel("materials/sprites/lgtning.vmt");
+		LaserHalo = PrecacheModel("materials/sprites/plasmahalo.vmt");
+	}
+	else if (g_Game == Game_CSGO)
+	{
+		BeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
+		HaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
+		LaserSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
+		LaserHalo = PrecacheModel("materials/sprites/light_glow02.vmt");
+	}
 	
 	// Fix for problems with g_BeaconTimer not being set to INVALID_HANDLE on timer terminating (TIMER_FLAG_NO_MAPCHANGE)
 	if (g_BeaconTimer != INVALID_HANDLE)
@@ -2758,10 +2829,7 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
 								Format(sDataField, sizeof(sDataField), "%d", Knife_Drunk);
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drunk", client);
-								if (g_Offset_PunchAngle != -1)
-								{
-									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								}
+								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
 								Format(sDataField, sizeof(sDataField), "%d", Knife_LowGrav);
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_LowGrav", client);
 								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
@@ -2789,7 +2857,14 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Deagle", client);
 								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
 								Format(sDataField, sizeof(sDataField), "%d", Pistol_P228);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P228", client);
+								if (g_Game == Game_CSS)
+								{
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P228", client);
+								}
+								else if (g_Game == Game_CSGO)
+								{
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P250", client);
+								}
 								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);								
 								Format(sDataField, sizeof(sDataField), "%d", Pistol_Glock);
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Glock", client);
@@ -2801,8 +2876,21 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Dualies", client);
 								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);		
 								Format(sDataField, sizeof(sDataField), "%d", Pistol_USP);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_USP", client);
-								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);	
+								if (g_Game == Game_CSS)
+								{
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_USP", client);
+								}
+								else if (g_Game == Game_CSGO)
+								{
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P2000", client);
+								}
+								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+								if (g_Game == Game_CSGO)
+								{
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_Tec9);
+									Format(sSubTypeName, sizeof(sTypeName), "%T", "Pistol_Tec9", client);
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+								}
 								
 								SetMenuExitBackButton(SubWeaponMenu, true);
 								DisplayMenu(SubWeaponMenu, client, 10);
@@ -2820,10 +2908,24 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_AWP", client);	
 									AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
 									Format(sDataField, sizeof(sDataField), "%d", NSW_Scout);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_Scout", client);	
+									if (g_Game == Game_CSS)
+									{
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_Scout", client);
+									}
+									else if (g_Game == Game_CSGO)
+									{
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SSG08", client);
+									}
 									AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
 									Format(sDataField, sizeof(sDataField), "%d", NSW_SG550);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SG550", client);	
+									if (g_Game == Game_CSS)
+									{
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SG550", client);
+									}
+									else if (g_Game == Game_CSGO)
+									{
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SCAR20", client);
+									}
 									AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
 									Format(sDataField, sizeof(sDataField), "%d", NSW_G3SG1);
 									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_G3SG1", client);	
@@ -3192,7 +3294,7 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 							// check the number of terrorists still alive
 							new Ts, CTs, iNumCTsAvailable;
 							UpdatePlayerCounts(Ts, CTs, iNumCTsAvailable);
-	
+							
 							if (Ts <= gShadow_MaxPrisonersToLR || gShadow_MaxPrisonersToLR == 0)
 							{
 								if (CTs > 0)
@@ -3232,8 +3334,10 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 													}
 													else
 													{
-														// auto start disabled, *** call forward
-														LogError("Hosties Invalid LR");
+														new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
+														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
+														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
+														InitializeGame(iArrayIndex);
 													}
 												}
 												else
@@ -3345,14 +3449,19 @@ public MainAskHandler(Handle:askmenu, MenuAction:action, client, param2)
 							{
 								if (!g_bInLastRequest[client])
 								{
-									// lock in this LR pair
 									new LastRequest:game = g_LRLookup[g_LR_PermissionLookup[client]];
+									
+									// lock in this LR pair
 									new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
 									SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, g_LR_PermissionLookup[client], _:Block_Prisoner);
 									SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Guard);
-									g_bInLastRequest[client] = true;
-									g_bInLastRequest[g_LR_PermissionLookup[client]] = true;
 									InitializeGame(iArrayIndex);
+									
+									if(IsLastRequestAutoStart(game))
+									{
+										g_bInLastRequest[client] = true;
+										g_bInLastRequest[g_LR_PermissionLookup[client]] = true;
+									}
 								}
 								else
 								{
@@ -3451,7 +3560,7 @@ InitializeGame(iPartnersIndex)
 					if (g_BeerGogglesTimer == INVALID_HANDLE)
 					{
 						g_BeerGogglesTimer = CreateTimer(1.0, Timer_BeerGoggles, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-					}							
+					}
 				}
 				case Knife_LowGrav:
 				{
@@ -3506,8 +3615,16 @@ InitializeGame(iPartnersIndex)
 				}
 				case Pistol_P228:
 				{
-					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_p228");
-					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_p228");
+					if (g_Game == Game_CSS)
+					{
+						Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_p228");
+						Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_p228");
+					}
+					else if (g_Game == Game_CSGO)
+					{
+						Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_p250");
+						Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_p250");
+					}
 				}
 				case Pistol_Glock:
 				{
@@ -3526,8 +3643,21 @@ InitializeGame(iPartnersIndex)
 				}
 				case Pistol_USP:
 				{
-					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_usp");
-					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_usp");
+					if(g_Game == Game_CSS)
+					{
+						Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_usp");
+						Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_usp");
+					}
+					else if(g_Game == Game_CSGO)
+					{
+						Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_hkp2000");
+						Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_hkp2000");
+					}
+				}
+				case Pistol_Tec9:
+				{
+					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_tec9");
+					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_tec9");
 				}
 				default:
 				{
@@ -3846,13 +3976,29 @@ InitializeGame(iPartnersIndex)
 					}
 					case NSW_Scout:
 					{
-						NSW_Prisoner = CreateEntityByName("weapon_scout");
-						NSW_Guard = CreateEntityByName("weapon_scout");
+						if (g_Game == Game_CSS)
+						{
+							NSW_Prisoner = CreateEntityByName("weapon_scout");
+							NSW_Guard = CreateEntityByName("weapon_scout");
+						}
+						else if (g_Game == Game_CSGO)
+						{
+							NSW_Prisoner = CreateEntityByName("weapon_ssg08");
+							NSW_Guard = CreateEntityByName("weapon_ssg08");
+						}
 					}
 					case NSW_SG550:
 					{
-						NSW_Prisoner = CreateEntityByName("weapon_sg550");
-						NSW_Guard = CreateEntityByName("weapon_sg550");
+						if (g_Game == Game_CSS)
+						{
+							NSW_Prisoner = CreateEntityByName("weapon_sg550");
+							NSW_Guard = CreateEntityByName("weapon_sg550");
+						}
+						else if (g_Game == Game_CSGO)
+						{
+							NSW_Prisoner = CreateEntityByName("weapon_scar20");
+							NSW_Guard = CreateEntityByName("weapon_scar20");
+						}
 					}
 					case NSW_G3SG1:
 					{
@@ -3862,8 +4008,8 @@ InitializeGame(iPartnersIndex)
 					default:
 					{
 						LogError("hit default NS");
-						NSW_Prisoner = CreateEntityByName("weapon_scout");
-						NSW_Guard = CreateEntityByName("weapon_scout");
+						NSW_Prisoner = CreateEntityByName("weapon_awp");
+						NSW_Guard = CreateEntityByName("weapon_awp");
 					}
 				}
 				
@@ -3976,8 +4122,16 @@ InitializeGame(iPartnersIndex)
 				}
 				case Pistol_P228:
 				{
-					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_p228");
-					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_p228");
+					if (g_Game == Game_CSS)
+					{
+						Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_p228");
+						Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_p228");
+					}
+					else if (g_Game == Game_CSGO)
+					{
+						Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_p250");
+						Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_p250");
+					}
 				}
 				case Pistol_Glock:
 				{
@@ -3996,8 +4150,21 @@ InitializeGame(iPartnersIndex)
 				}
 				case Pistol_USP:
 				{
-					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_usp");
-					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_usp");
+					if (g_Game == Game_CSS)
+					{
+						Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_usp");
+						Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_usp");
+					}
+					else if (g_Game == Game_CSGO)
+					{
+						Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_hkp2000");
+						Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_hkp2000");
+					}
+				}
+				case Pistol_Tec9:
+				{
+					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_tec9");
+					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_tec9");
 				}
 				default:
 				{
@@ -4260,30 +4427,43 @@ InitializeGame(iPartnersIndex)
 			Call_PushCell(iPartnersIndex);
 			new ignore;
 			Call_Finish(_:ignore);
+			
+			if(!IsLastRequestAutoStart(selection))
+			{
+				gH_DArray_LR_Partners2 = gH_DArray_LR_Partners;
+				g_LR_Player_Prisoner = LR_Player_Prisoner;
+				g_LR_Player_Guard = LR_Player_Guard;
+				g_selection = selection;
+				
+				RemoveFromArray(gH_DArray_LR_Partners, iPartnersIndex);
+			}
 		}
 	}
 	
-	// Fire global
-	Call_StartForward(gH_Frwd_LR_StartGlobal);
-	Call_PushCell(LR_Player_Prisoner);
-	Call_PushCell(LR_Player_Guard);
-	// LR type
-	Call_PushCell(selection);
-	new ignore;
-	Call_Finish(_:ignore);
-	
-	// Close datapack
-	if (gH_BuildLR[LR_Player_Prisoner] != INVALID_HANDLE)
+	if(IsLastRequestAutoStart(selection))
 	{
-		CloseHandle(gH_BuildLR[LR_Player_Prisoner]);		
-	}
-	gH_BuildLR[LR_Player_Prisoner] = INVALID_HANDLE;
+		// Fire global
+		Call_StartForward(gH_Frwd_LR_StartGlobal);
+		Call_PushCell(LR_Player_Prisoner);
+		Call_PushCell(LR_Player_Guard);
+		// LR type
+		Call_PushCell(selection);
+		new ignore;
+		Call_Finish(_:ignore);
+		
+		// Close datapack
+		if (gH_BuildLR[LR_Player_Prisoner] != INVALID_HANDLE)
+		{
+			CloseHandle(gH_BuildLR[LR_Player_Prisoner]);		
+		}
+		gH_BuildLR[LR_Player_Prisoner] = INVALID_HANDLE;
 
-	// Beacon players
-	if (gShadow_LR_Beacons && selection != LR_Rebel && selection != LR_RussianRoulette)
-	{
-		AddBeacon(LR_Player_Prisoner);
-		AddBeacon(LR_Player_Guard);
+		// Beacon players
+		if (gShadow_LR_Beacons && selection != LR_Rebel && selection != LR_RussianRoulette)
+		{
+			AddBeacon(LR_Player_Prisoner);
+			AddBeacon(LR_Player_Guard);
+		}
 	}
 }
 
@@ -4780,13 +4960,29 @@ public Action:Timer_Countdown(Handle:timer)
 						}
 						case NSW_Scout:
 						{
-							NSW_Prisoner = CreateEntityByName("weapon_scout");
-							NSW_Guard = CreateEntityByName("weapon_scout");
+							if(g_Game == Game_CSS)
+							{
+								NSW_Prisoner = CreateEntityByName("weapon_scout");
+								NSW_Guard = CreateEntityByName("weapon_scout");
+							}
+							else if(g_Game == Game_CSGO)
+							{
+								NSW_Prisoner = CreateEntityByName("weapon_ssg08");
+								NSW_Guard = CreateEntityByName("weapon_ssg08");
+							}
 						}
 						case NSW_SG550:
 						{
-							NSW_Prisoner = CreateEntityByName("weapon_sg550");
-							NSW_Guard = CreateEntityByName("weapon_sg550");
+							if(g_Game == Game_CSS)
+							{
+								NSW_Prisoner = CreateEntityByName("weapon_sg550");
+								NSW_Guard = CreateEntityByName("weapon_sg550");
+							}
+							else if(g_Game == Game_CSGO)
+							{
+								NSW_Prisoner = CreateEntityByName("weapon_scar20");
+								NSW_Guard = CreateEntityByName("weapon_scar20");
+							}
 						}
 						case NSW_G3SG1:
 						{
@@ -4796,8 +4992,8 @@ public Action:Timer_Countdown(Handle:timer)
 						default:
 						{
 							LogError("hit default NS");
-							NSW_Prisoner = CreateEntityByName("weapon_scout");
-							NSW_Guard = CreateEntityByName("weapon_scout");
+							NSW_Prisoner = CreateEntityByName("weapon_awp");
+							NSW_Guard = CreateEntityByName("weapon_awp");
 						}
 					}
 					
@@ -5281,20 +5477,22 @@ public Action:Timer_GunToss(Handle:timer)
 				}
 				else if (GTp1dropped && GTp1done)
 				{
-					switch (gShadow_LR_GunToss_MarkerMode)
-					{
-						case 0:
+						new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+						switch (gShadow_LR_GunToss_MarkerMode)
 						{
-							decl Float:beamStartP1[3];		
-							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
-							MakeVectorFromPoints(f_SubtractVec, GTdeagle1lastpos, beamStartP1);
-							TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, 10.0, 10.0, 7, 0.0, redColor, 0);							
+							case 0:
+							{
+								decl Float:beamStartP1[3];		
+								new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
+								MakeVectorFromPoints(f_SubtractVec, GTdeagle1lastpos, beamStartP1);
+								TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							}
+							case 1:
+							{
+								TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							}
 						}
-						case 1:
-						{
-							TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, 10.0, 10.0, 7, 0.0, redColor, 0);
-						}
-					}				
+
 					TE_SendToAll();				
 				}
 				
@@ -5320,20 +5518,22 @@ public Action:Timer_GunToss(Handle:timer)
 				}
 				else if (GTp2dropped && GTp2done)
 				{
-					switch (gShadow_LR_GunToss_MarkerMode)
-					{
-						case 0:
+						new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+						switch (gShadow_LR_GunToss_MarkerMode)
 						{
-							decl Float:beamStartP2[3];
-							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
-							MakeVectorFromPoints(f_SubtractVec, GTdeagle2lastpos, beamStartP2);
-							TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, 10.0, 10.0, 7, 0.0, blueColor, 0);
+							case 0:
+							{
+								decl Float:beamStartP2[3];
+								new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
+								MakeVectorFromPoints(f_SubtractVec, GTdeagle2lastpos, beamStartP2);
+								TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							}
+							case 1:
+							{
+								TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							}
 						}
-						case 1:
-						{
-							TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, 10.0, 10.0, 7, 0.0, blueColor, 0);
-						}
-					}
+
 					
 					TE_SendToAll();				
 				}
@@ -5365,12 +5565,27 @@ public Action:Timer_GunToss(Handle:timer)
 					new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
 					if (!gShadow_SendGlobalMsgs)
 					{
-						PrintHintText(LR_Player_Prisoner, "%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
-						PrintHintText(LR_Player_Guard, "%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						if (g_Game == Game_CSS)
+						{
+							PrintHintText(LR_Player_Prisoner, "%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+							PrintHintText(LR_Player_Guard, "%t\n \n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						}
+						else if (g_Game == Game_CSGO)
+						{
+							PrintHintText(LR_Player_Prisoner, "%t\n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+							PrintHintText(LR_Player_Guard, "%t\n%N: %3.1f \n%N: %3.1f", "Distance Meter", LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						}
 					}
 					else
 					{
-						Format(sHintTextGlobal, sizeof(sHintTextGlobal), "%s \n \n %N: %3.1f \n %N: %3.1f", sHintTextGlobal, LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						if (g_Game == Game_CSS)
+						{
+							Format(sHintTextGlobal, sizeof(sHintTextGlobal), "%s \n \n %N: %3.1f \n %N: %3.1f", sHintTextGlobal, LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						}
+						else if (g_Game == Game_CSGO)
+						{
+							Format(sHintTextGlobal, sizeof(sHintTextGlobal), "%s \n %N: %3.1f \n %N: %3.1f", sHintTextGlobal, LR_Player_Prisoner, f_PrisonerDistance, LR_Player_Guard, f_GuardDistance);
+						}
 					}
 				}
 			}
@@ -5546,9 +5761,12 @@ KillAndReward(loser, victor)
 	ForcePlayerSuicide(loser);
 	if (IsClientInGame(victor))
 	{
-		new iFrags = GetEntProp(victor, Prop_Data, "m_iFrags");
-		iFrags += gShadow_LR_VictorPoints;
-		SetEntProp(victor, Prop_Data, "m_iFrags", iFrags);
+		if(g_Game == Game_CSS)
+		{
+			new iFrags = GetEntProp(victor, Prop_Data, "m_iFrags");
+			iFrags += gShadow_LR_VictorPoints;
+			SetEntProp(victor, Prop_Data, "m_iFrags", iFrags);
+		}
 	}
 }
 
