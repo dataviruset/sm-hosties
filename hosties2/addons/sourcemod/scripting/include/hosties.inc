@@ -24,14 +24,22 @@
 #define _Hosties_Included_
 
 // Change to include your own clan tag but leave the '%t' intact
-#define CHAT_BANNER			"\x03[SM] \x01%t"
+#define 	CHAT_BANNER			"\x03[SM] \x01%t"
+#define 	NORMAL_VISION		90
 
 enum GameType
 {
 	Game_Unknown = -1,
 	Game_CSS,
 	Game_CSGO
-}; 
+};
+
+enum FreekillPunishment
+{
+	FP_Slay = 0,
+	FP_Kick,
+	FP_Ban
+};
 
 enum MediaType
 {

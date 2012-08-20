@@ -32,19 +32,18 @@
 #define REQUIRE_PLUGIN
 
 // Compiler directives
-#pragma semicolon 1
+#pragma 	semicolon 					1
 
 // Constants
-#define 	PLUGIN_VERSION				"2.0.5b"
+#define 	PLUGIN_VERSION				"2.1.0b"
 #define 	MAX_DISPLAYNAME_SIZE		64
-#define 	MAX_DATAENTRY_SIZE		5
-#define 	NORMAL_VISION				90
-#define 	SERVERTAG					"SM_Hosties v2"
+#define 	MAX_DATAENTRY_SIZE			5
+#define 	SERVERTAG					"SM Hosties v2.1"
 
 // Note: you cannot safely turn these modules on and off yet. Use cvars to disable functionality.
 
 // Add ability to disable collisions for players
-#define	MODULE_NOBLOCK							1
+#define	MODULE_NOBLOCK						1
 // Add the last request system
 #define	MODULE_LASTREQUEST					1
 // Add a game description override
@@ -54,17 +53,17 @@
 // Add round-end team overlays
 #define	MODULE_TEAMOVERLAYS					1
 // Add !rules command
-#define	MODULE_RULES							1
+#define	MODULE_RULES						1
 // Add !checkplayers command
 #define	MODULE_CHECKPLAYERS					1
 // Add muting system
-#define	MODULE_MUTE								1
+#define	MODULE_MUTE							1
 // Add freekill detection and prevention
 #define	MODULE_FREEKILL						1
 // Add gun safety
-#define	MODULE_GUNSAFETY						1
+#define	MODULE_GUNSAFETY					1
 // Add intelli-respawn
-#define	MODULE_RESPAWN							1
+#define	MODULE_RESPAWN						1
 
 /******************************************************************************
                    !EDIT BELOW THIS COMMENT AT YOUR OWN PERIL!
@@ -72,14 +71,7 @@
 
 // Global vars
 new bool:g_bSBAvailable = false; // SourceBans
-
-// From freekillers.sp
-enum FreekillPunishment
-{
-	FP_Slay = 0,
-	FP_Kick,
-	FP_Ban
-};
+new GameType:g_Game = Game_Unknown;
 
 new Handle:gH_Cvar_Freekill_Sound = INVALID_HANDLE;
 new Handle:gH_Cvar_Freekill_Threshold = INVALID_HANDLE;
@@ -134,7 +126,7 @@ new gA_FreekillsOfCT[MAXPLAYERS+1];
 #endif
 
 // ConVars
-new Handle:gH_Cvar_Add_ServerTag	= INVALID_HANDLE;
+new Handle:gH_Cvar_Add_ServerTag = INVALID_HANDLE;
 new Handle:gH_Cvar_Display_Advert = INVALID_HANDLE;
 
 public Plugin:myinfo =
@@ -237,6 +229,18 @@ public OnAllPluginsLoaded()
 
 public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[], error_max)
 {
+	// Borrowed with love from smac.sp
+	decl String:sGame[64];
+	GetGameFolderName(sGame, sizeof(sGame));
+	if (StrEqual(sGame, "cstrike") || StrEqual(sGame, "cstrike_beta"))
+	{
+		g_Game = Game_CSS;
+	}
+	else if (StrEqual(sGame, "csgo"))
+	{
+		g_Game = Game_CSGO;
+	}
+
 	MarkNativeAsOptional("Steam_SetGameDescription");
 
 	LastRequest_APL();
@@ -266,13 +270,8 @@ public OnLibraryRemoved(const String:name[])
 	}
 	else if (StrEqual(name, "adminmenu"))
 	{
-	
+		gH_TopMenu = GetAdminTopMenu();
 	}
-}
-
-public OnClientConnected(client)
-{
-	
 }
 
 public OnConfigsExecuted()
