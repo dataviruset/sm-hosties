@@ -3846,9 +3846,21 @@ InitializeGame(iPartnersIndex)
 			GetAngleVectors(f_PrisonerAngles, f_SubtractFromPrisoner, NULL_VECTOR, NULL_VECTOR);
 			decl Float:f_GuardDirection[3];
 			f_GuardDirection = f_SubtractFromPrisoner;
-			ScaleVector(f_SubtractFromPrisoner, -70.0);			
+			if (g_Game == Game_CSS)
+			{
+				ScaleVector(f_SubtractFromPrisoner, -70.0);			
+			}
+			else if (g_Game == Game_CSGO)
+			{
+				ScaleVector(f_SubtractFromPrisoner, -115.0);		
+			}
 			MakeVectorFromPoints(f_SubtractFromPrisoner, p1pos, p2pos);
 
+			if (g_Game == Game_CSGO)
+			{
+				p1pos[2] -= 20.0;
+			}
+			
 			// create 'unique' ID for this hot potato
 			new uniqueID = GetRandomInt(1, 31337);
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, uniqueID, _:Block_Global3);
@@ -3878,8 +3890,7 @@ InitializeGame(iPartnersIndex)
 				
 				SetEntPropFloat(LR_Player_Prisoner, Prop_Data, "m_flLaggedMovementValue", gShadow_LR_HotPotato_Speed);				
 			}
-
-
+			
 			TeleportEntity(HPdeagle, p1pos, NULL_VECTOR, NULL_VECTOR);
 			
 			if (gShadow_LR_Beacons)
