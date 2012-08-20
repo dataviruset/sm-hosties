@@ -5478,6 +5478,7 @@ public Action:Timer_GunToss(Handle:timer)
 				else if (GTp1dropped && GTp1done)
 				{
 					new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+					new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
 					switch (gShadow_LR_GunToss_MarkerMode)
 					{
 						case 0:
@@ -5485,11 +5486,11 @@ public Action:Timer_GunToss(Handle:timer)
 							decl Float:beamStartP1[3];		
 							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
 							MakeVectorFromPoints(f_SubtractVec, GTdeagle1lastpos, beamStartP1);
-							TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
 						}
 						case 1:
 						{
-							TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
 						}
 					}
 
@@ -5519,6 +5520,7 @@ public Action:Timer_GunToss(Handle:timer)
 				else if (GTp2dropped && GTp2done)
 				{
 					new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+					new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
 					switch (gShadow_LR_GunToss_MarkerMode)
 					{
 						case 0:
@@ -5526,11 +5528,11 @@ public Action:Timer_GunToss(Handle:timer)
 							decl Float:beamStartP2[3];
 							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
 							MakeVectorFromPoints(f_SubtractVec, GTdeagle2lastpos, beamStartP2);
-							TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
 						}
 						case 1:
 						{
-							TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
 						}
 					}
 					
