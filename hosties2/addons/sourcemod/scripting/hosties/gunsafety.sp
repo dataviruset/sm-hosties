@@ -171,6 +171,24 @@ GunSafety_Menus(Handle:h_TopMenu, TopMenuObject:obj_Hosties)
 	AddToTopMenu(h_TopMenu, "sm_hslay", TopMenuObject_Item, AdminMenu_Slay, obj_Hosties, "sm_slay", ADMFLAG_SLAY);
 	AddToTopMenu(h_TopMenu, "sm_hkick", TopMenuObject_Item, AdminMenu_Kick, obj_Hosties, "sm_kick", ADMFLAG_KICK);
 	AddToTopMenu(h_TopMenu, "sm_hban", TopMenuObject_Item, AdminMenu_Ban, obj_Hosties, "sm_ban", ADMFLAG_BAN);
+	
+	// Remove the other ones
+	/*
+	new TopMenuObject:menu = FindTopMenuCategory(h_TopMenu, "sm_slay");
+	if (menu != INVALID_TOPMENUOBJECT)
+	{
+		RemoveFromTopMenu(h_TopMenu, menu);
+	}
+	menu = FindTopMenuCategory(h_TopMenu, "sm_kick");
+	if (menu != INVALID_TOPMENUOBJECT)
+	{
+		RemoveFromTopMenu(h_TopMenu, menu);
+	}
+	menu = FindTopMenuCategory(h_TopMenu, "sm_ban");
+	if (menu != INVALID_TOPMENUOBJECT)
+	{
+		RemoveFromTopMenu(h_TopMenu, menu);
+	}*/
 }
 
 // from slay.sp
