@@ -2888,7 +2888,7 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 								if (g_Game == Game_CSGO)
 								{
 									Format(sDataField, sizeof(sDataField), "%d", Pistol_Tec9);
-									Format(sSubTypeName, sizeof(sTypeName), "%T", "Pistol_Tec9", client);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Tec9", client);
 									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
 								}
 								
@@ -5477,21 +5477,21 @@ public Action:Timer_GunToss(Handle:timer)
 				}
 				else if (GTp1dropped && GTp1done)
 				{
-						new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
-						switch (gShadow_LR_GunToss_MarkerMode)
+					new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+					switch (gShadow_LR_GunToss_MarkerMode)
+					{
+						case 0:
 						{
-							case 0:
-							{
-								decl Float:beamStartP1[3];		
-								new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
-								MakeVectorFromPoints(f_SubtractVec, GTdeagle1lastpos, beamStartP1);
-								TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
-							}
-							case 1:
-							{
-								TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
-							}
+							decl Float:beamStartP1[3];		
+							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
+							MakeVectorFromPoints(f_SubtractVec, GTdeagle1lastpos, beamStartP1);
+							TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
 						}
+						case 1:
+						{
+							TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+						}
+					}
 
 					TE_SendToAll();				
 				}
@@ -5518,22 +5518,21 @@ public Action:Timer_GunToss(Handle:timer)
 				}
 				else if (GTp2dropped && GTp2done)
 				{
-						new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
-						switch (gShadow_LR_GunToss_MarkerMode)
+					new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+					switch (gShadow_LR_GunToss_MarkerMode)
+					{
+						case 0:
 						{
-							case 0:
-							{
-								decl Float:beamStartP2[3];
-								new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
-								MakeVectorFromPoints(f_SubtractVec, GTdeagle2lastpos, beamStartP2);
-								TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
-							}
-							case 1:
-							{
-								TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
-							}
+							decl Float:beamStartP2[3];
+							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
+							MakeVectorFromPoints(f_SubtractVec, GTdeagle2lastpos, beamStartP2);
+							TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
 						}
-
+						case 1:
+						{
+							TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, 0.1, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+						}
+					}
 					
 					TE_SendToAll();				
 				}
