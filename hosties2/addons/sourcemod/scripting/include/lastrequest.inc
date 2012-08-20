@@ -168,7 +168,15 @@ native ProcessAllLastRequests(FuncProcessLR:ProcessLR, iLastRequestIndex);
  */
 native ChangeRebelStatus(client, status);
 
-native InitializeLR();
+ /**
+ * Starts the lr if autostart is false.
+ *
+ * @param prisoner				Prisoner Index
+ * @noreturn
+ * @error						Invalid parameters
+ */
+native InitializeLR(prisoner);
+
 
 stock SetThirdPerson(client)
 {
