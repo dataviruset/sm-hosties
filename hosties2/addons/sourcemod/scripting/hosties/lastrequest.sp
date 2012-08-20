@@ -745,59 +745,57 @@ public Native_LR_RemoveFromList(Handle:h_Plugin, iNumParameters)
 
 public Native_LR_Initialize(Handle:h_Plugin, iNumParameters)
 {
-	new LR_Player_Prisoner = 0;
-	for(new i = 1 ; i <= MAXPLAYERS;i++)
+	if(iNumParameters == 1)
 	{
-		if(IsClientInGame(i))
+		new LR_Player_Prisoner = 0;
+		if(GetClientTeam(GetNativeCell(1)) == 2)
 		{
-			if(i == GetNativeCell(1))
+			LR_Player_Prisoner = GetNativeCell(1);
+		}
+		if(LR_Player_Prisoner != 0)
+		{
+			if(!IsLastRequestAutoStart(g_selection[LR_Player_Prisoner]))
 			{
-				if(GetClientTeam(i) == 2)
+				gH_DArray_LR_Partners = gH_DArray_LR_Partners2[LR_Player_Prisoner];
+				new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, g_selection[LR_Player_Prisoner]);
+				SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, LR_Player_Prisoner, _:Block_Prisoner);
+				SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, g_LR_Player_Guard[LR_Player_Prisoner], _:Block_Guard);
+
+				g_bInLastRequest[LR_Player_Prisoner] = true;
+				g_bInLastRequest[g_LR_Player_Guard[LR_Player_Prisoner]] = true;
+
+				// Fire global
+				Call_StartForward(gH_Frwd_LR_StartGlobal);
+				Call_PushCell(LR_Player_Prisoner);
+				Call_PushCell(g_LR_Player_Guard[LR_Player_Prisoner]);
+				// LR type
+				Call_PushCell(g_selection[LR_Player_Prisoner]);
+				new ignore;
+				Call_Finish(_:ignore);
+				
+				// Close datapack
+				if (gH_BuildLR[LR_Player_Prisoner] != INVALID_HANDLE)
 				{
-					LR_Player_Prisoner = i;
+					CloseHandle(gH_BuildLR[LR_Player_Prisoner]);		
+				}
+				gH_BuildLR[LR_Player_Prisoner] = INVALID_HANDLE;
+				
+				// Beacon players
+				if (gShadow_LR_Beacons)
+				{
+					AddBeacon(LR_Player_Prisoner);
+					AddBeacon(g_LR_Player_Guard[LR_Player_Prisoner]);
 				}
 			}
 		}
-	}
-	if(LR_Player_Prisoner != 0)
-	{
-		if(!IsLastRequestAutoStart(g_selection[LR_Player_Prisoner]))
+		else
 		{
-			gH_DArray_LR_Partners = gH_DArray_LR_Partners2[LR_Player_Prisoner];
-			new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, g_selection[LR_Player_Prisoner]);
-			SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, LR_Player_Prisoner, _:Block_Prisoner);
-			SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, g_LR_Player_Guard[LR_Player_Prisoner], _:Block_Guard);
-
-			g_bInLastRequest[LR_Player_Prisoner] = true;
-			g_bInLastRequest[g_LR_Player_Guard[LR_Player_Prisoner]] = true;
-
-			// Fire global
-			Call_StartForward(gH_Frwd_LR_StartGlobal);
-			Call_PushCell(LR_Player_Prisoner);
-			Call_PushCell(g_LR_Player_Guard[LR_Player_Prisoner]);
-			// LR type
-			Call_PushCell(g_selection[LR_Player_Prisoner]);
-			new ignore;
-			Call_Finish(_:ignore);
-			
-			// Close datapack
-			if (gH_BuildLR[LR_Player_Prisoner] != INVALID_HANDLE)
-			{
-				CloseHandle(gH_BuildLR[LR_Player_Prisoner]);		
-			}
-			gH_BuildLR[LR_Player_Prisoner] = INVALID_HANDLE;
-			
-			// Beacon players
-			if (gShadow_LR_Beacons)
-			{
-				AddBeacon(LR_Player_Prisoner);
-				AddBeacon(g_LR_Player_Guard[LR_Player_Prisoner]);
-			}
+			ThrowNativeError(SP_ERROR_NATIVE, "InitializeLR Failure (Invalid client index).");
 		}
 	}
 	else
 	{
-		SetFailState("InitializeLR Failure (Invalid client index).");
+		ThrowNativeError(SP_ERROR_NATIVE, "InitializeLR Failure (Wrong number of parameters).");
 	}
 }
 
