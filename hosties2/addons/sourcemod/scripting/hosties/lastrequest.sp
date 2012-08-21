@@ -235,7 +235,6 @@ new gShadow_LR_VictorPoints = -1;
 // Autostart
 new LastRequest:g_selection[MAXPLAYERS + 1];
 new g_LR_Player_Guard[MAXPLAYERS + 1];
-new Handle:gH_DArray_LR_Partners2[MAXPLAYERS + 1] = INVALID_HANDLE;
 
 // Custom types local to the plugin
 enum NoScopeWeapon
@@ -756,7 +755,6 @@ public Native_LR_Initialize(Handle:h_Plugin, iNumParameters)
 		{
 			if(!IsLastRequestAutoStart(g_selection[LR_Player_Prisoner]))
 			{
-				gH_DArray_LR_Partners = gH_DArray_LR_Partners2[LR_Player_Prisoner];
 				new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, g_selection[LR_Player_Prisoner]);
 				SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, LR_Player_Prisoner, _:Block_Prisoner);
 				SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, g_LR_Player_Guard[LR_Player_Prisoner], _:Block_Guard);
@@ -4459,7 +4457,6 @@ InitializeGame(iPartnersIndex)
 			
 			if(!IsLastRequestAutoStart(selection))
 			{
-				gH_DArray_LR_Partners2[LR_Player_Prisoner] = gH_DArray_LR_Partners;
 				g_LR_Player_Guard[LR_Player_Prisoner] = LR_Player_Guard;
 				g_selection[LR_Player_Prisoner] = selection;
 				
