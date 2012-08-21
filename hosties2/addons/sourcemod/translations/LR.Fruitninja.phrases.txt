@@ -6,7 +6,7 @@
 	}
 	"LR FruitNinja Start"
 	{
-		"#format"	"{1:N}, {2:N}"
+		"#format"	"{1:N},{2:N}"
 		"en"		"{1} chose to have FruitNinja with {2}."
 	}
 	"Tie and Slay"
@@ -36,12 +36,12 @@
 	}
 	"Fruit Ninja Winner"
 	{
-		"#format"	"{1:s}, {2:i}, {3:s}, {4:i}, {5:s}, {6:i}"
+		"#format"	"{1:s},{2:i},{3:s},{4:i},{5:s},{6:i}"
 		"en"		"{1}: {2}\n{3}: {4}\nThe winner of the FruitNinja is {5} with {6} sliced fruit!"
 	}
 	"Fruit Ninja Score"
 	{
-		"#format"	"{1:s}, {2:i}, {3:s}, {4:i}, {5:i}"
+		"#format"	"{1:s},{2:i},{3:s},{4:i},{5:i}"
 		"en"		"{1}: {2}\n{3}: {4}\nTime left to slice fruit: {5} seconds"
 	}
 }
