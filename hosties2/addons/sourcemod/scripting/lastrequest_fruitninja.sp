@@ -68,8 +68,8 @@ new LR_Player_Guard;
 new Float:TFruitSpawnOrigin[3];
 new Float:CTFruitSpawnOrigin[3];
 new ExtraTimes = 0;
-new FruitNinjaRunning;
-new FruitNinjaMode;
+new FruitNinjaRunning = 0;
+new FruitNinjaMode = 0;
 new FruitNinjaValueChanged = 0;
 new g_Game = 0;
 new FruitNinjaCounter[2];
@@ -264,18 +264,7 @@ public MenuHandler(Handle:menu, MenuAction:action, param1, param2)
 	}
 	if (action == MenuAction_Cancel)
 	{
-		if(gH_FruitNinja != INVALID_HANDLE)
-			CloseHandle(gH_FruitNinja);
-		if(gH_Timer_RopeBeam != INVALID_HANDLE)
-			CloseHandle(gH_Timer_RopeBeam);
-		if(gH_Timer_CircleBeamT != INVALID_HANDLE)
-			CloseHandle(gH_Timer_CircleBeamT);
-		if(gH_Timer_CircleBeamCT != INVALID_HANDLE)
-			CloseHandle(gH_Timer_CircleBeamCT);
-		gH_FruitNinja = INVALID_HANDLE;
-		gH_Timer_RopeBeam = INVALID_HANDLE;
-		gH_Timer_CircleBeamT = INVALID_HANDLE;
-		gH_Timer_CircleBeamCT = INVALID_HANDLE;
+		FruitNinjaRunning = 0;
 	}
 }
 
@@ -312,18 +301,7 @@ public MenuHandler2(Handle:menu, MenuAction:action, param1, param2)
 	}
 	if (action == MenuAction_Cancel)
 	{
-		if(gH_FruitNinja != INVALID_HANDLE)
-			CloseHandle(gH_FruitNinja);
-		if(gH_Timer_RopeBeam != INVALID_HANDLE)
-			CloseHandle(gH_Timer_RopeBeam);
-		if(gH_Timer_CircleBeamT != INVALID_HANDLE)
-			CloseHandle(gH_Timer_CircleBeamT);
-		if(gH_Timer_CircleBeamCT != INVALID_HANDLE)
-			CloseHandle(gH_Timer_CircleBeamCT);
-		gH_FruitNinja = INVALID_HANDLE;
-		gH_Timer_RopeBeam = INVALID_HANDLE;
-		gH_Timer_CircleBeamT = INVALID_HANDLE;
-		gH_Timer_CircleBeamCT = INVALID_HANDLE;
+		FruitNinjaRunning = 0;
 	}
 }
 
@@ -358,8 +336,7 @@ public MenuHandler3(Handle:menu, MenuAction:action, param1, param2)
 					{
 						TeleportEntity( LR_Player_Prisoner, TFruitSpawnOrigin, NULL_VECTOR, NULL_VECTOR );
 						TeleportEntity( LR_Player_Guard, CTFruitSpawnOrigin, NULL_VECTOR, NULL_VECTOR );
-						CloseHandle(gH_Timer_RopeBeam);
-						gH_Timer_RopeBeam = INVALID_HANDLE;
+						FruitNinjaRunning = 1;
 						if(gH_Timer_CircleBeamCT == INVALID_HANDLE)
 							gH_Timer_CircleBeamCT = CreateTimer(0.5, Timer_CircleBeamCT, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 
@@ -377,18 +354,7 @@ public MenuHandler3(Handle:menu, MenuAction:action, param1, param2)
 	}
 	if (action == MenuAction_Cancel)
 	{
-		if(gH_FruitNinja != INVALID_HANDLE)
-			CloseHandle(gH_FruitNinja);
-		if(gH_Timer_RopeBeam != INVALID_HANDLE)
-			CloseHandle(gH_Timer_RopeBeam);
-		if(gH_Timer_CircleBeamT != INVALID_HANDLE)
-			CloseHandle(gH_Timer_CircleBeamT);
-		if(gH_Timer_CircleBeamCT != INVALID_HANDLE)
-			CloseHandle(gH_Timer_CircleBeamCT);
-		gH_FruitNinja = INVALID_HANDLE;
-		gH_Timer_RopeBeam = INVALID_HANDLE;
-		gH_Timer_CircleBeamT = INVALID_HANDLE;
-		gH_Timer_CircleBeamCT = INVALID_HANDLE;
+		FruitNinjaRunning = 0;
 	}
 }
 
@@ -448,35 +414,13 @@ public Handler_DoNothing(Handle:menu, MenuAction:action, param1, param2)
 		CloseHandle(menu);
 }
 
-public SendPanelToAll( String:name[], String:message[] )
-{
-	decl String:title[100];
-	Format(title, 64, "%s:", name);
-	
-	ReplaceString(message, 192, "\\n", "\n");
-	
-	new Handle:mSayPanel = CreatePanel();
-	SetPanelTitle(mSayPanel, title);
-	DrawPanelItem(mSayPanel, "", ITEMDRAW_SPACER);
-	DrawPanelText(mSayPanel, message);
-	DrawPanelItem(mSayPanel, "", ITEMDRAW_SPACER);
-
-	SetPanelCurrentKey(mSayPanel, 20);
-	DrawPanelItem(mSayPanel, "Exit", ITEMDRAW_CONTROL);
-
-	for ( new i = 1; i <= MaxClients; i++ )
-	{
-		if ( IsClientInGame( i ) && !IsFakeClient( i ) )
-		{
-			SendPanelToClient(mSayPanel, i, Handler_DoNothing, 2);
-		}
-	}
-
-	CloseHandle( mSayPanel );
-}
-
 public Action:Timer_RopeBeam(Handle:timer)
 {
+	if ( FruitNinjaRunning != 2 )
+	{
+		gH_Timer_RopeBeam = INVALID_HANDLE;
+		return Plugin_Stop;
+	}
 	if(IsClientInGame(LR_Player_Prisoner) || IsClientInGame(LR_Player_Guard))
 	{
 		new clients[2];
@@ -509,6 +453,11 @@ public Action:Timer_RopeBeam(Handle:timer)
 
 public Action:Timer_CircleBeamT(Handle:timer)
 {
+	if ( ! FruitNinjaRunning )
+	{
+		gH_Timer_CircleBeamT = INVALID_HANDLE;
+		return Plugin_Stop;
+	}
 	decl Float:f_Origin[3];
 	f_Origin[0] = TFruitSpawnOrigin[0];
 	f_Origin[1] = TFruitSpawnOrigin[1];
@@ -522,6 +471,11 @@ public Action:Timer_CircleBeamT(Handle:timer)
 
 public Action:Timer_CircleBeamCT(Handle:timer)
 {
+	if ( ! FruitNinjaRunning )
+	{
+		gH_Timer_CircleBeamCT = INVALID_HANDLE;
+		return Plugin_Stop;
+	}
 	decl Float:f_Origin[3];
 	f_Origin[0] = CTFruitSpawnOrigin[0];
 	f_Origin[1] = CTFruitSpawnOrigin[1];
@@ -554,6 +508,7 @@ public FruitNinja_Start(Handle:LR_Array, iIndexInArray)
 			
 		SetArrayCell(LR_Array, iIndexInArray, 3, _:Block_Global1);
 		
+		FruitNinjaRunning = 2;
 		DisplayMenu(FnSs, LR_Player_Prisoner, 0); // send the modes menu to the prisoner
 	}
 }
@@ -574,6 +529,11 @@ public FruitNinja_AfterMenu(Prisoner, Guard)
 
 public Action:Timer_Countdown(Handle:timer)
 {
+	if ( ! FruitNinjaRunning )
+	{
+		gH_Timer_Countdown = INVALID_HANDLE;
+		return Plugin_Stop;
+	}
 	new numberOfLRsActive = ProcessAllLastRequests(FruitNinja_Countdown, g_LREntryNum);
 	if ((numberOfLRsActive <= 0) || bAllCountdownsCompleted)
 	{
@@ -629,6 +589,10 @@ public OnEntityCreated(entity, const String:classname[])
 
 public Action:ExplodeFruit( Handle:timer, any:entity )
 {
+	if ( FruitNinjaRunning != 2 )
+	{
+		return Plugin_Stop;
+	}
 	if ( IsValidEntity( entity ) )
 	{
 		decl String:strName[50];
@@ -638,6 +602,7 @@ public Action:ExplodeFruit( Handle:timer, any:entity )
 			AcceptEntityInput( entity, "Kill" );
 		}
 	}
+	return Plugin_Handled;
 }
 
 public Action:OnFruitSliced( entity, &attacker, &inflictor, &Float:damage, &damagetype )
@@ -864,6 +829,7 @@ public Action:FruitNinja( Handle:timer )
 {	
 	if ( ! FruitNinjaRunning )
 	{
+		gH_FruitNinja = INVALID_HANDLE;
 		return Plugin_Stop;
 	}
 	
@@ -919,14 +885,11 @@ public Action:FruitNinja( Handle:timer )
 			SetEntProp( LR_Player_Prisoner, Prop_Data, "m_takedamage", 0, 1 );
 			
 			//-----------------------------------------
-			// Send menu
+			// Send hint
 			//-----------------------------------------	
 			
-			new String:message[128];
-			
-			Format( message, sizeof( message ), "%s: %d\n%s: %d\n \nTime left to slice fruit: %d seconds", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], TimeRemaining );
-			
-			SendPanelToAll( "FruitNinja", message );
+			PrintHintText(LR_Player_Prisoner, "%t", "Fruit Ninja Score", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], TimeRemaining );
+			PrintHintText(LR_Player_Guard, "%t", "Fruit Ninja Score", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], TimeRemaining );
 			
 			//-----------------------------------------
 			// Spawn random fruit for LR_Player_Guard
@@ -1006,7 +969,7 @@ public Action:FruitNinja( Handle:timer )
 			SetEntProp( LR_Player_Prisoner, Prop_Data, "m_takedamage", 0, 1 );
 			
 			//-----------------------------------------
-			// Send menu
+			// Send hint
 			//-----------------------------------------	
 			
 			PrintHintText(LR_Player_Prisoner, "%t", "Fruit Ninja Score", LR_Player_Guard_Name, FruitNinjaCounter[0], LR_Player_Prisoner_Name, FruitNinjaCounter[1], TimeRemaining );
@@ -1106,17 +1069,5 @@ public FruitNinja_Stop(Type, Prisoner, Guard)
 		
 		ExtraTimes = 0;
 		FruitNinjaRunning = 0;
-		if(gH_FruitNinja != INVALID_HANDLE)
-			CloseHandle(gH_FruitNinja);
-		if(gH_Timer_RopeBeam != INVALID_HANDLE)
-			CloseHandle(gH_Timer_RopeBeam);
-		if(gH_Timer_CircleBeamT != INVALID_HANDLE)
-			CloseHandle(gH_Timer_CircleBeamT);
-		if(gH_Timer_CircleBeamCT != INVALID_HANDLE)
-			CloseHandle(gH_Timer_CircleBeamCT);
-		gH_FruitNinja = INVALID_HANDLE;
-		gH_Timer_RopeBeam = INVALID_HANDLE;
-		gH_Timer_CircleBeamT = INVALID_HANDLE;
-		gH_Timer_CircleBeamCT = INVALID_HANDLE;
 	}
 }
