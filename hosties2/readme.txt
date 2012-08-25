@@ -1,5 +1,5 @@
 [CS:S] SM Hosties v2
-by: databomb & dataviruset
+by: databomb, dataviruset and DorCoMaNdO
 
 Description:
 
@@ -8,28 +8,29 @@ It opens up a new API for plugin developers to ask questions like if a player is
 
 Features:
 
-34 Last Request Games
-	Shotgun Wars (optional, needs lastrequest_shotgunwars plugin)
-	Drunken Boxing
-	Most Jumps
-	Farthest Jump
-	Brink of Death
-	Race
-	Russian Roulette
-	Rebel
-	Low-Grav Knife Fight
-	Hi-Speed Knife Fight
-	Third Person Knife Fight
-	Drugged Knife Fight
-	Vintage (Normal) Knife Fight
-	Rock Paper Scissors
-	NoScope with any scoped weapon (4 choices)
-	Dodgeball
-	Hot Potato
-	Chicken Fight
-	Shot4Shot with any pistol (6 choices)
-	Mag4Mag with any pistol (6 choices)
-	Gun Toss
+35 Last Request Games
+    Shotgun Wars (optional, needs lastrequest_shotgunwars plugin)
+    Fruit Ninja (optional, needs lastrequest_fruitninja plugin)
+    Drunken Boxing
+    Most Jumps
+    Farthest Jump
+    Brink of Death
+    Race
+    Russian Roulette
+    Rebel
+    Low-Grav Knife Fight
+    Hi-Speed Knife Fight
+    Third Person Knife Fight
+    Drugged Knife Fight
+    Vintage (Normal) Knife Fight
+    Rock Paper Scissors
+    NoScope with any scoped weapon (4 choices)
+    Dodgeball
+    Hot Potato
+    Chicken Fight
+    Shot4Shot with any pistol (6 choices for CS:S, 7 for CS:GO)
+    Mag4Mag with any pistol (6 choices for CS:S, 7 for CS:GO)
+    Gun Toss
 Check Players Command
 Freekill Detection & Prevention
 Game Description Override
@@ -43,7 +44,11 @@ Hosties API (For developers):
 
 For integration there are two natives provided: IsClientRebel and IsClientInLastRequest.
 For adding custom LRs there are three natives provided: AddLastRequestToList, RemoveLastRequestFromList, and ProcessAllLastRequests.
-Feel free to have a look at lastrequest_shotgunwars.sp as it can be used as a reference to last request scripting.
+Feel free to have a look at lastrequest_shotgunwars.sp and lastrequest_fruitninja.sp as they can be used as a reference to last request scripting.
+ChangeRebelStatus is new in v2.1.0.
+
+DorCoMaNdO developed an autostart feature which enables developers to add custom menus (on knife fight or Shot4Shot). Learn how by checking this example code:
+http://pastebin.com/1Ka9nRVS
 
 General Chat Commands:
 !rules
@@ -54,20 +59,30 @@ Admin Commands:
 !stoplr (also: !abortlr and !cancellr): Requires slay admin flag and will abort any and all active last requests.
 
 Requirements:
-SourceMod 1.4.0+
-SDK Hooks 2.0+
+SourceMod 1.4.0+ (1.5.0+ for CS:GO -- http://www.sourcemod.net/snapshots.php)
+SDK Hooks 2.0+ (2.2+ for CS:GO -- https://forums.alliedmods.net/showthread.php?p=1721652#post1721652)
 
-Fresh Install Instructions:
+Automatic Install Instructions:
+The easiest way to install SM_Hosties v2 is this:
 
+    Be sure that your server meets the requirements for SM_Hosties v2 (see above)
+    Scroll down a bit on this page and download the ZIP file attached to this post (or from the mirror)
+    Extract all files from the ZIP file into the cstrike folder of your server (all directories should match up with the folders in the ZIP file)
+    Restart your server or let it change map
+    Done!
+
+Manual Install Instructions:
 NOTE: Do not compile any individual file such as lastrequest.sp in the hosties/ directory, compiling sm_hosties.sp will include these files.
 If you'd like only lastrequest.sp then that is a separate discussion.
 
-Copy all files in the hosties/ directory to addons/sourcemod/scripting/hosties/
-Copy all files in the translation/ directory to addons/sourcemod/translations/
-Copy the hosties.inc and lastrequest.inc files to addons/sourcemod/scripting/include/
-Copy lastrequest_shotgunwars.sp and sm_hosties.sp to addons/sourcemod/scripting/
-Compile sm_hosties and lastrequest_shotgunwars and move SMX files to addons/sourcemod/plugins/
-Run plugin for the first time and configure all settings in cfg/sourcemod/sm_hosties.cfg
+    Copy all files in the scripting/hosties/ directory to addons/sourcemod/scripting/hosties/
+    Copy all files in the translation/ directory to addons/sourcemod/translations/
+    Copy the hosties.inc and lastrequest.inc files to addons/sourcemod/scripting/include/
+    Copy lastrequest_shotgunwars.sp, lastrequest_fruitninja.sp and sm_hosties.sp to addons/sourcemod/scripting/
+    If you are going to compile lastrequest_fruitninja, check that you have SMLIB in the include folder (all versions of SM_Hosties don't have it bundled), otherwise download it and put the include files in the addons/sourcemod/scripting/include/ folder.
+    Compile sm_hosties, lastrequest_shotgunwars and lastrequest_fruitninja and move SMX files to addons/sourcemod/plugins/
+    Run plugin for the first time and configure all settings in cfg/sourcemod/sm_hosties2.cfg
+
 
 Upgrade Instructions:
 
