@@ -98,6 +98,7 @@ public __pl_lastrequest_SetNTVOptional()
 	MarkNativeAsOptional("ProcessAllLastRequests");
 	MarkNativeAsOptional("ChangeRebelStatus");
 	MarkNativeAsOptional("InitializeLR");
+	MarkNativeAsOptional("CleanupLR");
 }
 
 functag FuncLastRequest public(type, prisoner, guard);
@@ -168,15 +169,24 @@ native ProcessAllLastRequests(FuncProcessLR:ProcessLR, iLastRequestIndex);
  */
 native ChangeRebelStatus(client, status);
 
- /**
+/**
  * Starts the lr if autostart is false.
  *
  * @param prisoner				Prisoner Index
  * @noreturn
- * @error						Invalid parameters
+ * @error						Invalid parameters or wrong client index
  */
 native InitializeLR(prisoner);
 
+/**
+ * Cleanup the data about the autostart LR for a client.
+ * (All the data stored by using the Prisoner's client index)
+ *
+ * @param prisoner				Prisoner Index
+ * @noreturn
+ * @error						Invalid parameters or wrong client index
+ */
+native CleanupLR(prisoner);
 
 stock SetThirdPerson(client)
 {
