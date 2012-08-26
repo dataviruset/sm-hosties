@@ -3372,55 +3372,55 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 											{
 												if (!g_bInLastRequest[ClientIdxOfCT])
 												{
-													new LastRequest:game = g_LRLookup[client];
-													if ((game == LR_HotPotato || game == LR_RussianRoulette) && IsClientTooNearObstacle(client))
+													new Guard = 0;
+													for(new i = 1 ; i <= MaxClients;i++)
 													{
-														PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
-													}
-													// player isn't on ground
-													else if ((game == LR_JumpContest) && !(GetEntityFlags(client) & FL_ONGROUND|FL_INWATER))
-													{
-														PrintToChat(client, CHAT_BANNER, "Must Be On Ground");
-													}
-													// make sure they're not ducked
-													else if ((game == LR_JumpContest) && (GetEntityFlags(client) & FL_DUCKING))
-													{
-														PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
-													}
-													else if (IsLastRequestAutoStart(game))
-													{
-														// lock in this LR pair
-														new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
-														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
-														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
-														g_bInLastRequest[client] = true;
-														g_bInLastRequest[ClientIdxOfCT] = true;
-														InitializeGame(iArrayIndex);
-													}
-													else
-													{
-														new Guard = 0;
-														for(new i = 1 ; i <= MaxClients;i++)
+														if(g_LR_Player_Guard[i] != 0)
 														{
-															if(g_LR_Player_Guard[i] != 0)
+															if(g_LR_Player_Guard[i] == ClientIdxOfCT)
 															{
-																if(g_LR_Player_Guard[i] == ClientIdxOfCT)
-																{
-																	Guard++;
-																}
+																Guard++;
 															}
 														}
-														if(Guard == 0)
+													}
+													if(!Guard)
+													{
+														new LastRequest:game = g_LRLookup[client];
+														if ((game == LR_HotPotato || game == LR_RussianRoulette) && IsClientTooNearObstacle(client))
+														{
+															PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
+														}
+														// player isn't on ground
+														else if ((game == LR_JumpContest) && !(GetEntityFlags(client) & FL_ONGROUND|FL_INWATER))
+														{
+															PrintToChat(client, CHAT_BANNER, "Must Be On Ground");
+														}
+														// make sure they're not ducked
+														else if ((game == LR_JumpContest) && (GetEntityFlags(client) & FL_DUCKING))
+														{
+															PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
+														}
+														else if (IsLastRequestAutoStart(game))
+														{
+															// lock in this LR pair
+															new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
+															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
+															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
+															g_bInLastRequest[client] = true;
+															g_bInLastRequest[ClientIdxOfCT] = true;
+															InitializeGame(iArrayIndex);
+														}
+														else
 														{
 															new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
 															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
 															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
 															InitializeGame(iArrayIndex);
 														}
-														else
-														{
-															PrintToChat(client, CHAT_BANNER, "CT in LR");
-														}
+													}
+													else
+													{
+														PrintToChat(client, CHAT_BANNER, "CT in LR");
 													}
 												}
 												else
