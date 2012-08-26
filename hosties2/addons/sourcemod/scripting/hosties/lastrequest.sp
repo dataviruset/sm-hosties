@@ -1428,7 +1428,7 @@ CleanupLastRequest(loser, arrayIndex)
 			new ignore;
 			Call_Finish(_:ignore);
 			
-			if(!IsLastRequestAutoStart[type])
+			if(!IsLastRequestAutoStart(type))
 			{
 				g_LR_Player_Guard[LR_Player_Prisoner] = 0;
 			}
@@ -1923,18 +1923,23 @@ public Action:OnWeaponDecideUse(client, weapon)
 		for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
 		{
 			new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
-
+			new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+			new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+			
 			if (type == LR_HotPotato)
 			{
-				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
-				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
 				new HPdeagle = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global4);
 				
 				// check if someone else picked up the hot potato
 				if (client != LR_Player_Guard && client != LR_Player_Prisoner && weapon == HPdeagle)
 				{
 					return Plugin_Handled;
-				}				
+				}
+				// prevent them from picking up any other pistol
+				else if ((client == LR_Player_Guard || client == LR_Player_Prisoner) && weapon != HPdeagle)
+				{
+					return Plugin_Handled;			
+				}
 			}
 			else if (type == LR_GunToss)
 			{
@@ -1944,6 +1949,25 @@ public Action:OnWeaponDecideUse(client, weapon)
 				new GTdeagle2 = EntRefToEntIndex(GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData));
 				
 				if ((weapon == GTdeagle1 && !GTp1done) || (weapon == GTdeagle2 && !GTp2done))
+				{
+					return Plugin_Handled;
+				}
+			}
+			// block crashing situations on CS:GO
+			else if (type == LR_KnifeFight && g_Game == Game_CSGO)
+			{
+				decl String:weapon_name[32];
+				GetEdictClassname(weapon, weapon_name, sizeof(weapon_name));
+				
+				// block any weapon pickup during the LR except knife
+				if ((client == LR_Player_Guard || client == LR_Player_Prisoner) && !StrEqual(weapon_name, "weapon_knife"))
+				{
+					return Plugin_Handled;
+				}
+			}
+			else if (type == LR_ChickenFight && g_Game == Game_CSGO)
+			{
+				if (client == LR_Player_Guard || client == LR_Player_Prisoner)
 				{
 					return Plugin_Handled;
 				}
@@ -2017,24 +2041,6 @@ public Action:OnWeaponEquip(client, weapon)
 								PrintToChat(LR_Player_Prisoner, CHAT_BANNER, "Hot Potato Pickup", client);
 								PrintToChat(LR_Player_Guard, CHAT_BANNER, "Hot Potato Pickup", client);
 							}
-						}
-					}
-					else
-					{
-						// prevent them from picking up any other pistol
-						decl String:weapon_name[32];
-						GetEdictClassname(weapon, weapon_name, sizeof(weapon_name));
-						if (StrEqual(weapon_name, "weapon_p228") || 
-							StrEqual(weapon_name, "weapon_deagle") ||
-							StrEqual(weapon_name, "weapon_elite") ||
-							StrEqual(weapon_name, "weapon_fiveseven") ||
-							StrEqual(weapon_name, "weapon_glock") ||
-							StrEqual(weapon_name, "weapon_p250") ||
-							StrEqual(weapon_name, "weapon_hkp2000") ||
-							StrEqual(weapon_name, "weapon_tec9") ||
-							StrEqual(weapon_name, "weapon_usp"))
-						{
-							return Plugin_Handled;
 						}
 					}
 				}
@@ -5694,9 +5700,9 @@ public Action:Timer_GunToss(Handle:timer)
 
 DecideRebelsFate(rebeller, LRIndex, victim=0)
 {
-	new iClientWeapon = GetEntDataEnt2(rebeller, g_Offset_ActiveWeapon);
 	decl String:sWeaponName[32];
-	if (IsValidEntity(iClientWeapon))
+	new iClientWeapon = GetEntDataEnt2(rebeller, g_Offset_ActiveWeapon);
+	if (IsValidEdict(iClientWeapon))
 	{
 		GetEdictClassname(iClientWeapon, sWeaponName, sizeof(sWeaponName));
 		ReplaceString(sWeaponName, sizeof(sWeaponName), "weapon_", "");
