@@ -234,7 +234,7 @@ new gShadow_LR_VictorPoints = -1;
 
 // Autostart
 new LastRequest:g_selection[MAXPLAYERS + 1];
-new g_LR_Player_Guard[MAXPLAYERS + 1];
+new g_LR_Player_Guard[MAXPLAYERS + 1] = 0;
 
 // Custom types local to the plugin
 enum NoScopeWeapon
@@ -668,6 +668,7 @@ LastRequest_APL()
 	CreateNative("ProcessAllLastRequests", Native_ProcessLRs);
 	CreateNative("ChangeRebelStatus", Native_ChangeRebelStatus);
 	CreateNative("InitializeLR", Native_LR_Initialize);
+	CreateNative("CleanupLR", Native_LR_Cleanup);
 	
 	RegPluginLibrary("lastrequest");
 }
@@ -747,11 +748,14 @@ public Native_LR_Initialize(Handle:h_Plugin, iNumParameters)
 	if(iNumParameters == 1)
 	{
 		new LR_Player_Prisoner = 0;
-		if(GetClientTeam(GetNativeCell(1)) == 2)
+		if(GetNativeCell(1) != 0)
 		{
-			LR_Player_Prisoner = GetNativeCell(1);
+			if(GetClientTeam(GetNativeCell(1)) == 2)
+			{
+				LR_Player_Prisoner = GetNativeCell(1);
+			}
 		}
-		if(LR_Player_Prisoner != 0)
+		if(LR_Player_Prisoner != 0 && g_LR_Player_Guard[LR_Player_Prisoner] != 0)
 		{
 			if(!IsLastRequestAutoStart(g_selection[LR_Player_Prisoner]))
 			{
@@ -788,12 +792,42 @@ public Native_LR_Initialize(Handle:h_Plugin, iNumParameters)
 		}
 		else
 		{
-			ThrowNativeError(SP_ERROR_NATIVE, "InitializeLR Failure (Invalid client index).");
+			ThrowNativeError(SP_ERROR_NATIVE, "InitializeLR Failure (Invalid client(s) index).");
 		}
 	}
 	else
 	{
 		ThrowNativeError(SP_ERROR_NATIVE, "InitializeLR Failure (Wrong number of parameters).");
+	}
+}
+
+public Native_LR_Cleanup(Handle:h_Plugin, iNumParameters)
+{
+	if(iNumParameters == 1)
+	{
+		new LR_Player_Prisoner = 0;
+		if(GetNativeCell(1) != 0)
+		{
+			if(GetClientTeam(GetNativeCell(1)) == 2 && !g_bInLastRequest[GetNativeCell(1)])
+			{
+				LR_Player_Prisoner = GetNativeCell(1);
+			}
+		}
+		if(LR_Player_Prisoner != 0)
+		{
+			if(!IsLastRequestAutoStart(g_selection[LR_Player_Prisoner]))
+			{
+				g_LR_Player_Guard[LR_Player_Prisoner] = 0;
+			}
+		}
+		else
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "CleanupLR Failure (Invalid client index or player is already in LR).");
+		}
+	}
+	else
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "CleanupLR Failure (Wrong number of parameters).");
 	}
 }
 
@@ -858,6 +892,10 @@ Local_IsClientInLR(client)
 
 public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
+	for(new i = 1 ; i <= MaxClients;i++)
+	{
+		g_LR_Player_Guard[i] = 0;
+	}
 	g_bAnnouncedThisRound = false;
 	
 	// Set variable to know that the round has started
@@ -1389,6 +1427,11 @@ CleanupLastRequest(loser, arrayIndex)
 			Call_PushCell(LR_Player_Guard);
 			new ignore;
 			Call_Finish(_:ignore);
+			
+			if(!IsLastRequestAutoStart[type])
+			{
+				g_LR_Player_Guard[LR_Player_Prisoner] = 0;
+			}
 		}
 	}	
 }
@@ -2737,7 +2780,7 @@ public Action:Command_LastRequest(client, args)
 								}
 								else
 								{
-									PrintToChat(client, "No CTs Are Available");
+									PrintToChat(client, CHAT_BANNER,"No CTs Are Available");
 								}
 							}
 							else
@@ -3350,10 +3393,28 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 													}
 													else
 													{
-														new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
-														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
-														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
-														InitializeGame(iArrayIndex);
+														new Guard = 0;
+														for(new i = 1 ; i <= MaxClients;i++)
+														{
+															if(g_LR_Player_Guard[i] != 0)
+															{
+																if(g_LR_Player_Guard[i] == ClientIdxOfCT)
+																{
+																	Guard++;
+																}
+															}
+														}
+														if(Guard == 0)
+														{
+															new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
+															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
+															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
+															InitializeGame(iArrayIndex);
+														}
+														else
+														{
+															PrintToChat(client, CHAT_BANNER, "CT in LR");
+														}
 													}
 												}
 												else
@@ -3397,7 +3458,7 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 									}
 									else
 									{
-										PrintToChat(client, "LR No CTs Available");
+										PrintToChat(client, CHAT_BANNER, "LR No CTs Available");
 									}
 								}
 								else
@@ -3846,11 +3907,11 @@ InitializeGame(iPartnersIndex)
 			f_GuardDirection = f_SubtractFromPrisoner;
 			if (g_Game == Game_CSS)
 			{
-				ScaleVector(f_SubtractFromPrisoner, -70.0);			
+				ScaleVector(f_SubtractFromPrisoner, -70.0);
 			}
 			else if (g_Game == Game_CSGO)
 			{
-				ScaleVector(f_SubtractFromPrisoner, -115.0);		
+				ScaleVector(f_SubtractFromPrisoner, -115.0);
 			}
 			MakeVectorFromPoints(f_SubtractFromPrisoner, p1pos, p2pos);
 
@@ -3888,7 +3949,6 @@ InitializeGame(iPartnersIndex)
 				
 				SetEntPropFloat(LR_Player_Prisoner, Prop_Data, "m_flLaggedMovementValue", gShadow_LR_HotPotato_Speed);				
 			}
-			
 			TeleportEntity(HPdeagle, p1pos, NULL_VECTOR, NULL_VECTOR);
 			
 			if (gShadow_LR_Beacons)
