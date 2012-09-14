@@ -35,10 +35,10 @@
 #pragma 	semicolon 					1
 
 // Constants
-#define 	PLUGIN_VERSION				"2.1.1b"
+#define 	PLUGIN_VERSION				"2.1.0b"
 #define 	MAX_DISPLAYNAME_SIZE		64
 #define 	MAX_DATAENTRY_SIZE			5
-#define 	SERVERTAG					"SM Hosties v2"
+#define 	SERVERTAG					"SM Hosties v2.1"
 
 // Note: you cannot safely turn these modules on and off yet. Use cvars to disable functionality.
 
@@ -64,6 +64,8 @@
 #define	MODULE_GUNSAFETY					1
 // Add intelli-respawn
 #define	MODULE_RESPAWN						1
+// Add control system
+#define	MODULE_CONTROL						1
 
 /******************************************************************************
                    !EDIT BELOW THIS COMMENT AT YOUR OWN PERIL!
@@ -124,6 +126,9 @@ new gA_FreekillsOfCT[MAXPLAYERS+1];
 #if (MODULE_RESPAWN == 1)
 #include "hosties/respawn.sp"
 #endif
+#if (MODULE_CONTROL == 1)
+#include "hosties/control.sp"
+#endif
 
 // ConVars
 new Handle:gH_Cvar_Add_ServerTag = INVALID_HANDLE;
@@ -132,7 +137,7 @@ new Handle:gH_Cvar_Display_Advert = INVALID_HANDLE;
 public Plugin:myinfo =
 {
 	name = "SM_Hosties v2",
-	author = "databomb & dataviruset",
+	author = "databomb & dataviruset & comando",
 	description = "Hosties/jailbreak plugin for SourceMod",
 	version = PLUGIN_VERSION,
 	url = "http://forums.alliedmods.net/showthread.php?t=108810"
@@ -188,6 +193,9 @@ public OnPluginStart()
 	#if (MODULE_RESPAWN == 1)
 	Respawn_OnPluginStart();
 	#endif
+	#if (MODULE_CONTROL == 1)
+	Control_OnPluginStart();
+	#endif
 	
 	AutoExecConfig(true, "sm_hosties2");
 }
@@ -199,6 +207,9 @@ public OnMapStart()
 	#endif
 	#if (MODULE_LASTREQUEST == 1)
 	LastRequest_OnMapStart();
+	#endif
+	#if (MODULE_CONTROL == 1)
+	Control_OnMapStart();
 	#endif
 }
 
