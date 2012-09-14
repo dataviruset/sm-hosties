@@ -892,10 +892,6 @@ Local_IsClientInLR(client)
 
 public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	for(new i = 1 ; i <= MaxClients;i++)
-	{
-		g_LR_Player_Guard[i] = 0;
-	}
 	g_bAnnouncedThisRound = false;
 	
 	// Set variable to know that the round has started
@@ -921,6 +917,7 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 	{
 		g_bIsARebel[idx] = false;
 		g_bInLastRequest[idx] = false;
+		g_LR_Player_Guard[idx] = 0;
 	}
 }
 
@@ -3372,55 +3369,37 @@ public MainPlayerHandler(Handle:playermenu, MenuAction:action, client, iButtonCh
 											{
 												if (!g_bInLastRequest[ClientIdxOfCT])
 												{
-													new Guard = 0;
-													for(new i = 1 ; i <= MaxClients;i++)
+													new LastRequest:game = g_LRLookup[client];
+													if ((game == LR_HotPotato || game == LR_RussianRoulette) && IsClientTooNearObstacle(client))
 													{
-														if(g_LR_Player_Guard[i] != 0)
-														{
-															if(g_LR_Player_Guard[i] == ClientIdxOfCT)
-															{
-																Guard++;
-															}
-														}
+														PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
 													}
-													if(!Guard)
+													// player isn't on ground
+													else if ((game == LR_JumpContest) && !(GetEntityFlags(client) & FL_ONGROUND|FL_INWATER))
 													{
-														new LastRequest:game = g_LRLookup[client];
-														if ((game == LR_HotPotato || game == LR_RussianRoulette) && IsClientTooNearObstacle(client))
-														{
-															PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
-														}
-														// player isn't on ground
-														else if ((game == LR_JumpContest) && !(GetEntityFlags(client) & FL_ONGROUND|FL_INWATER))
-														{
-															PrintToChat(client, CHAT_BANNER, "Must Be On Ground");
-														}
-														// make sure they're not ducked
-														else if ((game == LR_JumpContest) && (GetEntityFlags(client) & FL_DUCKING))
-														{
-															PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
-														}
-														else if (IsLastRequestAutoStart(game))
-														{
-															// lock in this LR pair
-															new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
-															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
-															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
-															g_bInLastRequest[client] = true;
-															g_bInLastRequest[ClientIdxOfCT] = true;
-															InitializeGame(iArrayIndex);
-														}
-														else
-														{
-															new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
-															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
-															SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
-															InitializeGame(iArrayIndex);
-														}
+														PrintToChat(client, CHAT_BANNER, "Must Be On Ground");
+													}
+													// make sure they're not ducked
+													else if ((game == LR_JumpContest) && (GetEntityFlags(client) & FL_DUCKING))
+													{
+														PrintToChat(client, CHAT_BANNER, "Too Near Obstruction");
+													}
+													else if (IsLastRequestAutoStart(game))
+													{
+														// lock in this LR pair
+														new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
+														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
+														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
+														g_bInLastRequest[client] = true;
+														g_bInLastRequest[ClientIdxOfCT] = true;
+														InitializeGame(iArrayIndex);
 													}
 													else
 													{
-														PrintToChat(client, CHAT_BANNER, "CT in LR");
+														new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, game);
+														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
+														SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, ClientIdxOfCT, _:Block_Guard);
+														InitializeGame(iArrayIndex);
 													}
 												}
 												else
@@ -5877,6 +5856,13 @@ UpdatePlayerCounts(&Prisoners, &Guards, &iNumGuardsAvailable)
 				Guards++;
 				if (!g_bInLastRequest[i])
 				{
+					for(new idx = 1; idx <= MaxClients; idx++) // TODO: Less dum way?
+					{
+						if(g_LR_Player_Guard[idx] == i)
+						{
+							iNumGuardsAvailable--;
+						}
+					}
 					iNumGuardsAvailable++;
 				}
 			}

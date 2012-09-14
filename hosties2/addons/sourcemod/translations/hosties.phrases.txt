@@ -211,10 +211,6 @@
 	{
 		"en"		"The target player is not alive or in the wrong team for LR."
 	}
-	"CT in LR"
-	{
-		"en"		"The guard selected is already in another LR."
-	}
 	"Declined LR Request"
 	{
 		"#format"	"{1:N}"
