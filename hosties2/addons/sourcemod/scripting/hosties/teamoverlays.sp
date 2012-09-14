@@ -1,6 +1,6 @@
 /*
  * SourceMod Hosties Project
- * by: databomb & dataviruset
+ * by: SourceMod Hosties Dev Team
  *
  * This file is part of the SM Hosties project.
  *

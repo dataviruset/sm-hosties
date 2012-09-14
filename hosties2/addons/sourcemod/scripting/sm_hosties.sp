@@ -1,6 +1,6 @@
 /*
  * SourceMod Hosties Project
- * by: databomb & dataviruset
+ * by: SourceMod Hosties Dev Team
  *
  * This file is part of the SM Hosties project.
  *
@@ -35,7 +35,7 @@
 #pragma 	semicolon 					1
 
 // Constants
-#define 	PLUGIN_VERSION				"2.1.5b"
+#define 	PLUGIN_VERSION				"2.1.2b"
 #define 	MAX_DISPLAYNAME_SIZE		64
 #define 	MAX_DATAENTRY_SIZE			5
 #define 	SERVERTAG					"SM Hosties v2.1"
