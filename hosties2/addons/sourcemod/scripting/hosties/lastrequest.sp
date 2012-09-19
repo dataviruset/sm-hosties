@@ -5128,7 +5128,7 @@ public Action:Timer_Countdown(Handle:timer)
 						else
 						{
 							decl String:sCommand[PLATFORM_MAX_PATH];
-							for (new idx = 1; idx <= MaxClients; idx++)
+							for (new idx2 = 1; idx2 <= MaxClients; idx2++)
 							{
 								if (IsClientInGame(idx))
 								{
