@@ -22,15 +22,33 @@
 #include <cstrike>
 #include <hosties>
 
-#define MENU_SIMON	"##simonsays##"
-#define MENU_FIRST	"##firstreaction##"
-#define MENU_LAST		"##lastreaction##"
-#define MENU_JUMP		"##jump##"
-#define MENU_CROUCH	"##crouch##"
-#define MENU_NONE		"##none##"
-#define MENU_FOLLOW	"##followme##"
-#define MENU_GOTO		"##goto##"
-#define MENU_FREE		"##freeday##"
+// Menus
+#define MENU_SIMON			"##simonsays##"
+#define MENU_FIRST			"##firstreaction##"
+#define MENU_LAST				"##lastreaction##"
+#define MENU_JUMP				"##jump##"
+#define MENU_CROUCH			"##crouch##"
+#define MENU_NONE				"##none##"
+#define MENU_FOLLOW			"##followme##"
+#define MENU_GOTO				"##goto##"
+#define MENU_FREE				"##freeday##"
+
+// Actions IDs
+#define ACTION_ID_JUMP		0
+#define ACTION_ID_CROUCH	1
+#define ACTION_ID_FOLLOW	2
+#define ACTION_ID_GOTO		3
+#define ACTION_ID_FOLLOW	4
+#define ACTION_ID_FREE		5
+
+#define ACTION_COUNT			6
+
+// Tasks IDs
+#define TASK_ID_SIMON		0
+#define TASK_ID_FIRST		1
+#define TASK_ID_LAST			2
+
+#define TASK_COUNT			3
 
 new bool:g_bController[MAXPLAYERS + 1] = false;
 new bool:g_bInControl[MAXPLAYERS + 1] = false;
@@ -43,6 +61,8 @@ new bool:g_bCanStop = false;
 new Float:g_fDelay = 0.0;
 new g_iState = 0;
 new Handle:gH_ControllerMenu = INVALID_HANDLE;
+new String:g_sActionSound[ACTION_COUNT][PLATFORM_MAX_PATH] = {"sm_hosties/control/jump.mp3", "sm_hosties/control/crouch.mp3"};
+new String:g_sTaskSound[TASK_COUNT][PLATFORM_MAX_PATH] = {"sm_hosties/control/simon.mp3", "sm_hosties/control/first.mp3", "sm_hosties/control/last.mp3"};
 
 Control_OnPluginStart()
 {
@@ -344,7 +364,7 @@ public Control_PlayAction(String:Act[])
 {
 	if(StrEqual(Act, "Jump"))
 	{
-		
+		EmitSoundToAll(g_sActionSound[ACTION_ID_JUMP]);
 	}
 }
 
@@ -363,6 +383,22 @@ Control_OnMapStart()
 		HaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
 		LaserSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 		LaserHalo = PrecacheModel("materials/sprites/light_glow02.vmt");
+	}
+	
+	for(new i = 0; i < ACTION_COUNT; i++)
+	{
+		if(!StrEqual(g_sActionSound[i], "", false))
+		{
+			PrecacheSound(g_sActionSound[i]);
+		}
+	}
+	
+	for(new i = 0; i < TASK_COUNT; i++)
+	{
+		if(!StrEqual(g_sTaskSound[i], "", false))
+		{
+			PrecacheSound(g_sTaskSound[i]);
+		}
 	}
 }
 
