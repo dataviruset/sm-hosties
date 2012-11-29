@@ -203,7 +203,7 @@ new gShadow_LR_GunToss_StartMode = -1;
 new gShadow_LR_GunToss_ShowMeter = -1;
 new bool:gShadow_LR_Race_AirPoints = false;
 new bool:gShadow_LR_Race_NotifyCTs = false;
-new bool:gShadow_Announce_CT_FreeHit = false;
+new gShadow_Announce_CT_FreeHit = 0;
 new bool:gShadow_Announce_LR = false;
 new bool:gShadow_Announce_Rebel = false;
 new bool:gShadow_Announce_RebelDown = false;
@@ -526,8 +526,8 @@ LastRequest_OnPluginStart()
 	gShadow_LR_KnifeFight_HiSpeed = 2.2;
 	gH_Cvar_LR_KnifeFight_Drunk = CreateConVar("sm_hosties_lr_kf_drunk", "4", "The multiplier used for how drunk the player will be during the drunken boxing knife fight.", FCVAR_PLUGIN, true, 0.0);
 	gShadow_LR_KnifeFight_Drunk = 4;
-	gH_Cvar_Announce_CT_FreeHit = CreateConVar("sm_hosties_announce_attack", "1", "Enable or disable announcements when a CT attacks a non-rebelling T: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gShadow_Announce_CT_FreeHit = true;
+	gH_Cvar_Announce_CT_FreeHit = CreateConVar("sm_hosties_announce_attack", "1", "Enable or disable announcements when a CT attacks a non-rebelling T: 0 - disable, 1 - console, 2 - chat, 3 - both", FCVAR_PLUGIN, true, 0.0, true, 3.0);
+	gShadow_Announce_CT_FreeHit = 1;
 	gH_Cvar_Announce_LR = CreateConVar("sm_hosties_announce_lr", "1", "Enable or disable chat announcements when Last Requests starts to be available: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	gShadow_Announce_LR = true;
 	gH_Cvar_Announce_Rebel = CreateConVar("sm_hosties_announce_rebel", "0", "Enable or disable chat announcements when a terrorist becomes a rebel: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
@@ -1196,7 +1196,14 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 					{
 						if (IsClientInGame(idx))
 						{
-							PrintToConsole(idx, CHAT_BANNER, "CT Attack T Gun", attacker, target);
+							if(gShadow_Announce_CT_FreeHit != 2)
+							{
+								PrintToConsole(idx, CHAT_BANNER, "CT Attack T Gun", attacker, target);
+							}
+							if(gShadow_Announce_CT_FreeHit >= 2)
+							{
+								PrintToChat(idx, CHAT_BANNER, "CT Attack T Gun", attacker, target);
+							}
 						}
 					}
 				}
@@ -1207,7 +1214,14 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 				{
 					if (IsClientInGame(idx))
 					{
-						PrintToConsole(idx, CHAT_BANNER, "Freeattack", attacker, target);
+						if(gShadow_Announce_CT_FreeHit != 2)
+						{
+							PrintToConsole(idx, CHAT_BANNER, "Freeattack", attacker, target);
+						}
+						if(gShadow_Announce_CT_FreeHit >= 2)
+						{
+							PrintToChat(idx, CHAT_BANNER, "Freeattack", attacker, target);
+						}
 					}
 				}
 			}
@@ -2327,7 +2341,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_RebelAction = GetConVarInt(gH_Cvar_RebelAction);
 	gShadow_RebelHandling = GetConVarInt(gH_Cvar_RebelHandling);
 	gShadow_ColorRebels = GetConVarInt(gH_Cvar_ColorRebels);
-	gShadow_Announce_CT_FreeHit = bool:GetConVarInt(gH_Cvar_Announce_CT_FreeHit);
+	gShadow_Announce_CT_FreeHit = GetConVarInt(gH_Cvar_Announce_CT_FreeHit);
 	gShadow_Announce_LR = bool:GetConVarInt(gH_Cvar_Announce_LR);
 	gShadow_Announce_Rebel = bool:GetConVarInt(gH_Cvar_Announce_Rebel);
 	gShadow_Announce_RebelDown = bool:GetConVarInt(gH_Cvar_Announce_RebelDown);		
@@ -2437,7 +2451,7 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	}
 	else if (cvar == gH_Cvar_Announce_CT_FreeHit)
 	{
-		gShadow_Announce_CT_FreeHit = bool:StringToInt(newValue);
+		gShadow_Announce_CT_FreeHit = StringToInt(newValue);
 	}
 	else if (cvar == gH_Cvar_Announce_LR)
 	{
