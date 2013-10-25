@@ -50,14 +50,14 @@
 #define TASK_COUNT			3
 
 new bool:g_bController[MAXPLAYERS + 1] = false;
-//new bool:g_bInControl[MAXPLAYERS + 1] = false;
-//new bool:g_bActComplete[MAXPLAYERS + 1] = false;
+new bool:g_bInControl[MAXPLAYERS + 1] = false;
+new bool:g_bActComplete[MAXPLAYERS + 1] = false;
 new bool:g_bHasController = false;
-//new bool:g_bCanControl = false;
-//new bool:g_bInSimonSays = false;
-//new bool:g_bInAction = false;
-//new bool:g_bCanStop = false;
-//new Float:g_fDelay = 0.0;
+new bool:g_bCanControl = false;
+new bool:g_bInSimonSays = false;
+new bool:g_bInAction = false;
+new bool:g_bCanStop = false;
+new Float:g_fDelay = 0.0;
 new g_iState = 0;
 new Handle:gH_ControllerMenu = INVALID_HANDLE;
 new String:g_sActionSound[ACTION_COUNT][PLATFORM_MAX_PATH] = {"sm_hosties/control/jump.mp3", "sm_hosties/control/crouch.mp3", "sm_hosties/control/follow.mp3", "sm_hosties/control/go.mp3", "sm_hosties/control/freeday.mp3"};

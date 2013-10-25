@@ -65,7 +65,7 @@
 // Add intelli-respawn
 #define	MODULE_RESPAWN						1
 // Add control system
-#define	MODULE_CONTROL						1
+#define	MODULE_CONTROL						0
 
 /******************************************************************************
                    !EDIT BELOW THIS COMMENT AT YOUR OWN PERIL!
