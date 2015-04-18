@@ -3915,6 +3915,7 @@ InitializeGame(iPartnersIndex)
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, HPdeagle, _:Block_Global4);
 			DispatchSpawn(HPdeagle);
 			EquipPlayerWeapon(potatoClient, HPdeagle);
+			SetEntPropEnt(potatoClient, Prop_Send, "m_hActiveWeapon", HPdeagle);
 
 			// set ammo (Clip2) 0
 			SetEntData(potatoClient, g_Offset_Ammo+(1*4), 0);
@@ -4006,6 +4007,11 @@ InitializeGame(iPartnersIndex)
 			// give flashbangs
 			new flash1 = CreateEntityByName("weapon_flashbang");
 			new flash2 = CreateEntityByName("weapon_flashbang");
+			if (g_Game == Game_CSGO)
+			{
+				SetEntProp(flash1, Prop_Send, "m_iItemDefinitionIndex", 43);
+				SetEntProp(flash2, Prop_Send, "m_iItemDefinitionIndex", 43);
+			}
 			DispatchSpawn(flash1);
 			DispatchSpawn(flash2);
 			EquipPlayerWeapon(LR_Player_Prisoner, flash1);
@@ -4089,6 +4095,11 @@ InitializeGame(iPartnersIndex)
 					{
 						NSW_Prisoner = CreateEntityByName("weapon_awp");
 						NSW_Guard = CreateEntityByName("weapon_awp");
+						if (g_Game == Game_CSGO)
+						{
+							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 9);
+							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 9);
+						}
 					}
 					case NSW_Scout:
 					{
@@ -4101,6 +4112,8 @@ InitializeGame(iPartnersIndex)
 						{
 							NSW_Prisoner = CreateEntityByName("weapon_ssg08");
 							NSW_Guard = CreateEntityByName("weapon_ssg08");
+							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 40);
+							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 40);
 						}
 					}
 					case NSW_SG550:
@@ -4114,18 +4127,30 @@ InitializeGame(iPartnersIndex)
 						{
 							NSW_Prisoner = CreateEntityByName("weapon_scar20");
 							NSW_Guard = CreateEntityByName("weapon_scar20");
+							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 38);
+							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 38);
 						}
 					}
 					case NSW_G3SG1:
 					{
 						NSW_Prisoner = CreateEntityByName("weapon_g3sg1");
 						NSW_Guard = CreateEntityByName("weapon_g3sg1");
+						if (g_Game == Game_CSGO)
+						{
+							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 11);
+							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 11);
+						}
 					}
 					default:
 					{
 						LogError("hit default NS");
 						NSW_Prisoner = CreateEntityByName("weapon_awp");
 						NSW_Guard = CreateEntityByName("weapon_awp");
+						if (g_Game == Game_CSGO)
+						{
+							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 9);
+							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 9);
+						}
 					}
 				}
 				
@@ -4133,6 +4158,8 @@ InitializeGame(iPartnersIndex)
 				DispatchSpawn(NSW_Guard);
 				EquipPlayerWeapon(LR_Player_Prisoner, NSW_Prisoner);
 				EquipPlayerWeapon(LR_Player_Guard, NSW_Guard);
+				SetEntPropEnt(LR_Player_Prisoner, Prop_Send, "m_hActiveWeapon", NSW_Prisoner);
+				SetEntPropEnt(LR_Player_Guard, Prop_Send, "m_hActiveWeapon", NSW_Guard);
 				SetEntData(NSW_Prisoner, g_Offset_Clip1, 99);
 				SetEntData(NSW_Guard, g_Offset_Clip1, 99);		
 				
@@ -5000,6 +5027,10 @@ public Action:Timer_RemoveFlashbang(Handle:timer, any:entity)
 		if ((client != -1) && IsClientInGame(client) && IsPlayerAlive(client) && Local_IsClientInLR(client))
 		{
 			new flash = CreateEntityByName("weapon_flashbang");
+			if (g_Game == Game_CSGO)
+			{
+				SetEntProp(flash, Prop_Send, "m_iItemDefinitionIndex", 43);
+			}
 			DispatchSpawn(flash);
 			EquipPlayerWeapon(client, flash);		
 		}
@@ -5086,6 +5117,11 @@ public Action:Timer_Countdown(Handle:timer)
 						{
 							NSW_Prisoner = CreateEntityByName("weapon_awp");
 							NSW_Guard = CreateEntityByName("weapon_awp");
+							if (g_Game == Game_CSGO)
+							{
+								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 9);
+								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 9);
+							}
 						}
 						case NSW_Scout:
 						{
@@ -5098,6 +5134,8 @@ public Action:Timer_Countdown(Handle:timer)
 							{
 								NSW_Prisoner = CreateEntityByName("weapon_ssg08");
 								NSW_Guard = CreateEntityByName("weapon_ssg08");
+								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 40);
+								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 40);
 							}
 						}
 						case NSW_SG550:
@@ -5111,18 +5149,30 @@ public Action:Timer_Countdown(Handle:timer)
 							{
 								NSW_Prisoner = CreateEntityByName("weapon_scar20");
 								NSW_Guard = CreateEntityByName("weapon_scar20");
+								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 38);
+								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 38);
 							}
 						}
 						case NSW_G3SG1:
 						{
 							NSW_Prisoner = CreateEntityByName("weapon_g3sg1");
 							NSW_Guard = CreateEntityByName("weapon_g3sg1");
+							if (g_Game == Game_CSGO)
+							{
+								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 11);
+								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 11);
+							}
 						}
 						default:
 						{
 							LogError("hit default NS");
 							NSW_Prisoner = CreateEntityByName("weapon_awp");
 							NSW_Guard = CreateEntityByName("weapon_awp");
+							if (g_Game == Game_CSGO)
+							{
+								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 9);
+								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 9);
+							}
 						}
 					}
 					
@@ -5130,6 +5180,8 @@ public Action:Timer_Countdown(Handle:timer)
 					DispatchSpawn(NSW_Guard);
 					EquipPlayerWeapon(LR_Player_Prisoner, NSW_Prisoner);
 					EquipPlayerWeapon(LR_Player_Guard, NSW_Guard);
+					SetEntPropEnt(LR_Player_Prisoner, Prop_Send, "m_hActiveWeapon", NSW_Prisoner);
+					SetEntPropEnt(LR_Player_Guard, Prop_Send, "m_hActiveWeapon", NSW_Guard);
 					SetEntData(NSW_Prisoner, g_Offset_Clip1, 99);
 					SetEntData(NSW_Guard, g_Offset_Clip1, 99);		
 					
