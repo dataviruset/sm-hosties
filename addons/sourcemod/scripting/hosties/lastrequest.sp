@@ -1409,7 +1409,10 @@ CleanupLastRequest(loser, arrayIndex)
 			if (IsClientInGame(winner) && IsPlayerAlive(winner))
 			{
 				StripAllWeapons(winner);
-				SetEntData(winner, g_Offset_Ammo + (_:12 * 4), 0, _, true);
+				if(g_Game != Game_CSGO)
+				{
+					SetEntData(winner, g_Offset_Ammo+(_:12*4), 0, _, true);
+				}
 				
 				SetEntData(winner, g_Offset_Health, 100);
 				GivePlayerItem(winner, "weapon_knife");
@@ -1711,6 +1714,18 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 									SetEntData(M4M_Prisoner_Weapon, g_Offset_Clip1, gShadow_LR_M4M_MagCapacity);
 									SetArrayCell(gH_DArray_LR_Partners, idx, LR_Player_Prisoner, _:Block_Global1);
 								}
+								
+								if(g_Game == Game_CSGO)
+								{
+									SetEntProp(M4M_Guard_Weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+									SetEntProp(M4M_Prisoner_Weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+								}
+								else
+								{
+									new iAmmoType = GetEntProp(M4M_Prisoner_Weapon, Prop_Send, "m_iPrimaryAmmoType");
+									SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+									SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+								}
 							}
 						}
 					}			
@@ -1750,8 +1765,20 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 						SetEntData(Prisoner_Weapon, g_Offset_Clip1, 1);
 					}
 					
+					if(g_Game == Game_CSGO)
+					{
+						SetEntProp(Guard_Weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+						SetEntProp(Prisoner_Weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+					}
+					else
+					{
+						new iAmmoType = GetEntProp(Prisoner_Weapon, Prop_Send, "m_iPrimaryAmmoType");
+						SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+						SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+					}
+					
 					ChangeEdictState(Prisoner_Weapon, g_Offset_Clip1);
-					ChangeEdictState(Guard_Weapon, g_Offset_Clip1);					
+					ChangeEdictState(Guard_Weapon, g_Offset_Clip1);
 				}
 			}
 			else if (type == LR_Shot4Shot)
@@ -1822,8 +1849,20 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 								{
 									// modify deagle 1s ammo
 									SetEntData(Prisoner_S4S_Pistol, g_Offset_Clip1, 1);
-								}		    	
-
+								}
+								
+								if(g_Game == Game_CSGO)
+								{
+									SetEntProp(Guard_S4S_Pistol, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+									SetEntProp(Prisoner_S4S_Pistol, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+								}
+								else
+								{
+									new iAmmoType = GetEntProp(Prisoner_S4S_Pistol, Prop_Send, "m_iPrimaryAmmoType");
+									SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+									SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+								}
+								
 								// propogate the ammo immediately! (thanks psychonic)
 								ChangeEdictState(Prisoner_S4S_Pistol, g_Offset_Clip1);
 								ChangeEdictState(Guard_S4S_Pistol, g_Offset_Clip1);
@@ -3814,9 +3853,17 @@ InitializeGame(iPartnersIndex)
 			}
 
 			// set secondary ammo to 0
-			new iAmmoType = GetEntProp(Pistol_Prisoner, Prop_Send, "m_iPrimaryAmmoType");
-			SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
-			SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+			if(g_Game == Game_CSGO)
+			{
+				SetEntProp(Pistol_Guard, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+				SetEntProp(Pistol_Prisoner, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+			}
+			else
+			{
+				new iAmmoType = GetEntProp(Pistol_Prisoner, Prop_Send, "m_iPrimaryAmmoType");
+				SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+				SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+			}
 
 			// set HP
 			SetEntData(LR_Player_Prisoner, g_Offset_Health, 100);
@@ -3864,8 +3911,16 @@ InitializeGame(iPartnersIndex)
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, Guard_GunEntRef, _:Block_GuardData);
 
 			// set ammo (Clip2) 0 -- we don't need any extra ammo...
-			SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(1*4), 0);
-			SetEntData(LR_Player_Guard, g_Offset_Ammo+(1*4), 0);
+			if(g_Game == Game_CSGO)
+			{
+				SetEntProp(GTdeagle1, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+				SetEntProp(GTdeagle2, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+			}
+			else
+			{
+				SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(1*4), 0);
+				SetEntData(LR_Player_Guard, g_Offset_Ammo+(1*4), 0);
+			}
 
 			if (gShadow_LR_GunToss_StartMode > 0)
 			{
@@ -3918,7 +3973,14 @@ InitializeGame(iPartnersIndex)
 			SetEntPropEnt(potatoClient, Prop_Send, "m_hActiveWeapon", HPdeagle);
 
 			// set ammo (Clip2) 0
-			SetEntData(potatoClient, g_Offset_Ammo+(1*4), 0);
+			if(g_Game == Game_CSGO)
+			{
+				SetEntProp(HPdeagle, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+			}
+			else
+			{
+				SetEntData(potatoClient, g_Offset_Ammo+(1*4), 0);
+			}
 			// set ammo (Clip1) 0
 			SetEntData(HPdeagle, g_Offset_Clip1, 0);
 
@@ -3961,9 +4023,10 @@ InitializeGame(iPartnersIndex)
 			if (gShadow_LR_HotPotato_Mode == 2)
 			{
 				SetEntityMoveType(LR_Player_Prisoner, MOVETYPE_NONE);
-				SetEntityMoveType(LR_Player_Guard, MOVETYPE_NONE);			
+				SetEntityMoveType(LR_Player_Guard, MOVETYPE_NONE);
 				ScaleVector(f_GuardDirection, -1.0);
-				TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, NULL_VECTOR);
+				TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, Float:{0.0, 0.0, 0.0});
+				TeleportEntity(LR_Player_Prisoner, NULL_VECTOR, NULL_VECTOR, Float:{0.0, 0.0, 0.0});
 			}
 			else
 			{
@@ -3995,8 +4058,11 @@ InitializeGame(iPartnersIndex)
 			StripAllWeapons(LR_Player_Guard);
 
 			// bug fix...
-			SetEntData(LR_Player_Prisoner, g_Offset_Ammo + (_:12 * 4), 0, _, true);
-			SetEntData(LR_Player_Guard, g_Offset_Ammo + (_:12 * 4), 0, _, true);
+			if(g_Game != Game_CSGO)
+			{
+				SetEntData(LR_Player_Prisoner, g_Offset_Ammo + (_:12 * 4), 0, _, true);
+				SetEntData(LR_Player_Guard, g_Offset_Ammo + (_:12 * 4), 0, _, true);
+			}
 
 			// set HP
 			SetEntData(LR_Player_Prisoner, g_Offset_Health, 1);
@@ -4233,7 +4299,14 @@ InitializeGame(iPartnersIndex)
 
 			// set primary and secondary ammo
 			SetEntData(RebelDeagle, g_Offset_Clip1, 7);
-			SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(1*4), 42);
+			if(g_Game == Game_CSGO)
+			{
+				SetEntProp(RebelDeagle, Prop_Send, "m_iPrimaryReserveAmmoCount", 42);
+			}
+			else
+			{
+				SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(1*4), 42);
+			}
 
 			// find number of alive CTs
 			new numCTsAlive = 0;
@@ -4376,9 +4449,17 @@ InitializeGame(iPartnersIndex)
 			SetEntData(LR_Player_Prisoner, g_Offset_Health, 100);
 			SetEntData(LR_Player_Guard, g_Offset_Health, 100);
 
-			new iAmmoType = GetEntProp(Pistol_Prisoner, Prop_Send, "m_iPrimaryAmmoType");
-			SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
-			SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+			if(g_Game == Game_CSGO)
+			{
+				SetEntProp(Pistol_Guard, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+				SetEntProp(Pistol_Prisoner, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+			}
+			else
+			{
+				new iAmmoType = GetEntProp(Pistol_Prisoner, Prop_Send, "m_iPrimaryAmmoType");
+				SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+				SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+			}
 		}
 		case LR_Race:
 		{
@@ -4409,8 +4490,8 @@ InitializeGame(iPartnersIndex)
 			WritePackFloat(ThisDataPack, f_EndLocation[1]);
 			WritePackFloat(ThisDataPack, f_EndLocation[2]);
 			
-			TeleportEntity(LR_Player_Prisoner, f_StartLocation, NULL_VECTOR, NULL_VECTOR);
-			TeleportEntity(LR_Player_Guard, f_StartLocation, NULL_VECTOR, NULL_VECTOR);
+			TeleportEntity(LR_Player_Prisoner, f_StartLocation, NULL_VECTOR, Float:{0.0, 0.0, 0.0});
+			TeleportEntity(LR_Player_Guard, f_StartLocation, NULL_VECTOR, Float:{0.0, 0.0, 0.0});
 			
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, 3, _:Block_Global1);
 			// fire timer for race begin countdown
@@ -4440,7 +4521,8 @@ InitializeGame(iPartnersIndex)
 			SetEntityMoveType(LR_Player_Prisoner, MOVETYPE_NONE);
 			SetEntityMoveType(LR_Player_Guard, MOVETYPE_NONE);			
 			ScaleVector(f_GuardDirection, -1.0);			
-			TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, NULL_VECTOR);
+			TeleportEntity(LR_Player_Guard, p2pos, f_GuardDirection, Float:{0.0, 0.0, 0.0});
+			TeleportEntity(LR_Player_Prisoner, NULL_VECTOR, NULL_VECTOR, Float:{0.0, 0.0, 0.0});
 
 			new Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_deagle");
 			new Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_deagle");
@@ -4482,9 +4564,17 @@ InitializeGame(iPartnersIndex)
 			}
 
 			// set secondary ammo to 0
-			new iAmmoType = GetEntProp(Pistol_Prisoner, Prop_Send, "m_iPrimaryAmmoType");
-			SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
-			SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+			if(g_Game == Game_CSGO)
+			{
+				SetEntProp(Pistol_Guard, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+				SetEntProp(Pistol_Prisoner, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+			}
+			else
+			{
+				new iAmmoType = GetEntProp(Pistol_Prisoner, Prop_Send, "m_iPrimaryAmmoType");
+				SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+				SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+			}
 
 			// set HP
 			SetEntData(LR_Player_Prisoner, g_Offset_Health, 100);
