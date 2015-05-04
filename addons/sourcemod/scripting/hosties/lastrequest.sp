@@ -311,10 +311,13 @@ LastRequest_OnPluginStart()
 	{
 		SetFailState("Unable to find offset for clip.");
 	}
-	g_Offset_Ammo = FindSendPropInfo("CCSPlayer", "m_iAmmo");
-	if (g_Offset_Ammo == -1)
+	if (g_Game != Game_CSGO)
 	{
-		SetFailState("Unable to find offset for ammo.");
+		g_Offset_Ammo = FindSendPropInfo("CCSPlayer", "m_iAmmo");
+		if (g_Offset_Ammo == -1)
+		{
+			SetFailState("Unable to find offset for ammo.");
+		}
 	}
 	g_Offset_FOV = FindSendPropOffs("CBasePlayer", "m_iFOV");
 	if (g_Offset_FOV == -1)
