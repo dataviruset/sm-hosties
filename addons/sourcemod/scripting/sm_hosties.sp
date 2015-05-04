@@ -251,6 +251,10 @@ public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[],
 	{
 		g_Game = Game_CSGO;
 	}
+	else
+	{
+		SetFailState("Game is not supported.");
+	}
 
 	MarkNativeAsOptional("Steam_SetGameDescription");
 
