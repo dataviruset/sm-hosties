@@ -59,8 +59,11 @@ Admin Commands:
 !stoplr (also: !abortlr and !cancellr): Requires slay admin flag and will abort any and all active last requests.
 
 Requirements:
-SourceMod 1.4.0+ (1.5.0+ for CS:GO -- http://www.sourcemod.net/snapshots.php)
-SDK Hooks 2.0+ (2.2+ for CS:GO -- https://forums.alliedmods.net/showthread.php?p=1721652#post1721652)
+SourceMod 1.5.0+
+
+Uses natives from these plugins if found:
+SteamTools
+SourceBans
 
 Automatic Install Instructions:
 The easiest way to install SM_Hosties v2 is this:
