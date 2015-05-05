@@ -370,20 +370,20 @@ public Action:Command_HostiesAdmin(client, args)
 	return Plugin_Handled;
 }
 
-public HostiesCategoryHandler(Handle:h_TopMenu, TopMenuAction:action, TopMenuObject:object, param, String:buffer[], maxlength)
+public HostiesCategoryHandler(Handle:h_TopMenu, TopMenuAction:action, TopMenuObject:item, param, String:buffer[], maxlength)
 {
 	switch (action)
 	{
 		case (TopMenuAction_DisplayTitle):
 		{
-			if (object == gM_Hosties)
+			if (item == gM_Hosties)
 			{
 				Format(buffer, maxlength, "Hosties:");
 			}
 		}
 		case (TopMenuAction_DisplayOption):
 		{
-			if (object == gM_Hosties)
+			if (item == gM_Hosties)
 			{
 				Format(buffer, maxlength, "Hosties");
 			}

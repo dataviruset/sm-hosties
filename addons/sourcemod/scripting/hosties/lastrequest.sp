@@ -650,7 +650,7 @@ LastRequest_Menus(Handle:h_TopMenu, TopMenuObject:obj_Hosties)
 	AddToTopMenu(h_TopMenu, "sm_stoplr", TopMenuObject_Item, AdminMenu_StopLR, obj_Hosties, "sm_stoplr", ADMFLAG_SLAY);
 }
 
-public AdminMenu_StopLR(Handle:h_TopMenu, TopMenuAction:action, TopMenuObject:object, client, String:buffer[], maxlength)
+public AdminMenu_StopLR(Handle:h_TopMenu, TopMenuAction:action, TopMenuObject:item, client, String:buffer[], maxlength)
 {
 	if (action == TopMenuAction_DisplayOption)
 	{
