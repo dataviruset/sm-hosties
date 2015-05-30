@@ -376,6 +376,7 @@ LastRequest_OnPluginStart()
 	HookEvent("weapon_zoom", LastRequest_WeaponZoom, EventHookMode_Pre);
 	HookEvent("weapon_fire", LastRequest_WeaponFire);
 	HookEvent("player_jump", LastRequest_PlayerJump);
+	HookEvent("player_spawn", LastRequest_PlayerSpawn);
 	
 	// Make global arrays
 	gH_DArray_LastRequests = CreateArray(2);
@@ -921,6 +922,7 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 		g_bIsARebel[idx] = false;
 		g_bInLastRequest[idx] = false;
 		g_LR_Player_Guard[idx] = 0;
+		SetCorrectPlayerColor(idx);
 	}
 }
 
@@ -6087,4 +6089,27 @@ UpdatePlayerCounts(&Prisoners, &Guards, &iNumGuardsAvailable)
 			}
 		}
 	}
+}
+
+SetCorrectPlayerColor(client)
+{
+	if (!IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return;
+	}
+
+	if (g_bIsARebel[client] && gShadow_ColorRebels)
+	{
+		SetEntityRenderColor(client, gShadow_ColorRebels_Red, gShadow_ColorRebels_Green, gShadow_ColorRebels_Blue, 255);
+	}
+	else
+	{
+		SetEntityRenderColor(client, 255, 255, 255, 255);
+	}
+}
+
+public LastRequest_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	SetCorrectPlayerColor(client);
 }
