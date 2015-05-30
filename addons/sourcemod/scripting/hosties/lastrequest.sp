@@ -2869,7 +2869,7 @@ public Action:Command_LastRequest(client, args)
 								}
 								else
 								{
-									PrintToChat(client, CHAT_BANNER,"No CTs Are Available");
+									PrintToChat(client, CHAT_BANNER, "LR No CTs Available");
 								}
 							}
 							else
@@ -5289,10 +5289,10 @@ public Action:Timer_Countdown(Handle:timer)
 							decl String:sCommand[PLATFORM_MAX_PATH];
 							for (new idx2 = 1; idx2 <= MaxClients; idx2++)
 							{
-								if (IsClientInGame(idx))
+								if (IsClientInGame(idx2))
 								{
 									Format(sCommand, sizeof(sCommand), "play *%s", gShadow_LR_NoScope_Sound);
-									ClientCommand(idx, sCommand);
+									ClientCommand(idx2, sCommand);
 								}
 							}
 						}
