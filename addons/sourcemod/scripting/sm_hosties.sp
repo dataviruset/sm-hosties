@@ -26,7 +26,7 @@
 
 #undef REQUIRE_PLUGIN
 #undef REQUIRE_EXTENSIONS
-#tryinclude <steamtools>
+#tryinclude <SteamWorks>
 #tryinclude <sourcebans>
 #define REQUIRE_EXTENSIONS
 #define REQUIRE_PLUGIN
@@ -256,7 +256,7 @@ public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[],
 		SetFailState("Game is not supported.");
 	}
 
-	MarkNativeAsOptional("Steam_SetGameDescription");
+	MarkNativeAsOptional("SteamWorks_SetGameDescription");
 
 	LastRequest_APL();
 	
