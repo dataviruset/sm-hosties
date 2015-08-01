@@ -23,6 +23,7 @@
 #include <adminmenu>
 #include <sdkhooks>
 #include <hosties>
+#include <emitsoundany>
 
 #undef REQUIRE_PLUGIN
 #undef REQUIRE_EXTENSIONS
