@@ -240,14 +240,11 @@ public OnAllPluginsLoaded()
 
 public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[], error_max)
 {
-	// Borrowed with love from smac.sp
-	decl String:sGame[64];
-	GetGameFolderName(sGame, sizeof(sGame));
-	if (StrEqual(sGame, "cstrike") || StrEqual(sGame, "cstrike_beta"))
+	if (GetEngineVersion() == Engine_CSS)
 	{
 		g_Game = Game_CSS;
 	}
-	else if (StrEqual(sGame, "csgo"))
+	else if (GetEngineVersion() == Engine_CSGO)
 	{
 		g_Game = Game_CSGO;
 	}
