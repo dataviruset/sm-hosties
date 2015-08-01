@@ -83,7 +83,7 @@ Rules_OnConfigsExecuted()
 	ParseTheRulesFile();
 }
 
-void:ParseTheRulesFile()
+void ParseTheRulesFile()
 {
 	ClearArray(gH_DArray_Rules);
 	
