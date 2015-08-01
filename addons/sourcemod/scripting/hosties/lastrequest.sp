@@ -5745,87 +5745,93 @@ public Action:Timer_GunToss(Handle:timer)
 				GTp2jumppos[1] = ReadPackFloat(PositionDataPack);
 				GTp2jumppos[2] = ReadPackFloat(PositionDataPack);
 			
-				GetEntPropVector(GTdeagle1, Prop_Data, "m_vecOrigin", GTdeagle1pos);
-				if (GTp1dropped && !GTp1done)
+				if(IsValidEntity(GTdeagle1))
 				{
-					if (GetVectorDistance(GTdeagle1lastpos, GTdeagle1pos) < 3.00)
+					GetEntPropVector(GTdeagle1, Prop_Data, "m_vecOrigin", GTdeagle1pos);
+					if (GTp1dropped && !GTp1done)
 					{
-						GTp1done = true;
-						SetArrayCell(gH_DArray_LR_Partners, idx, GTp1done, _:Block_Global3);
-					}
-					else
-					{
-						GTdeagle1lastpos[0] = GTdeagle1pos[0];
-						GTdeagle1lastpos[1] = GTdeagle1pos[1];
-						GTdeagle1lastpos[2] = GTdeagle1pos[2];
-						SetPackPosition(PositionDataPack, 0);
-						WritePackFloat(PositionDataPack, GTdeagle1lastpos[0]);
-						WritePackFloat(PositionDataPack, GTdeagle1lastpos[1]);
-						WritePackFloat(PositionDataPack, GTdeagle1lastpos[2]);
-					}
-				}
-				else if (GTp1dropped && GTp1done)
-				{
-					new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
-					new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
-					switch (gShadow_LR_GunToss_MarkerMode)
-					{
-						case 0:
+						if (GetVectorDistance(GTdeagle1lastpos, GTdeagle1pos) < 3.00)
 						{
-							decl Float:beamStartP1[3];		
-							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
-							MakeVectorFromPoints(f_SubtractVec, GTdeagle1lastpos, beamStartP1);
-							TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							GTp1done = true;
+							SetArrayCell(gH_DArray_LR_Partners, idx, GTp1done, _:Block_Global3);
 						}
-						case 1:
+						else
 						{
-							TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							GTdeagle1lastpos[0] = GTdeagle1pos[0];
+							GTdeagle1lastpos[1] = GTdeagle1pos[1];
+							GTdeagle1lastpos[2] = GTdeagle1pos[2];
+							SetPackPosition(PositionDataPack, 0);
+							WritePackFloat(PositionDataPack, GTdeagle1lastpos[0]);
+							WritePackFloat(PositionDataPack, GTdeagle1lastpos[1]);
+							WritePackFloat(PositionDataPack, GTdeagle1lastpos[2]);
 						}
 					}
-
-					TE_SendToAll();				
+					else if (GTp1dropped && GTp1done)
+					{
+						new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+						new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
+						switch (gShadow_LR_GunToss_MarkerMode)
+						{
+							case 0:
+							{
+								decl Float:beamStartP1[3];		
+								new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
+								MakeVectorFromPoints(f_SubtractVec, GTdeagle1lastpos, beamStartP1);
+								TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							}
+							case 1:
+							{
+								TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							}
+						}
+	
+						TE_SendToAll();				
+					}
 				}
 				
-				GetEntPropVector(GTdeagle2, Prop_Data, "m_vecOrigin", GTdeagle2pos);
-				if (GTp2dropped && !GTp2done)
-				{					
-					if (GetVectorDistance(GTdeagle2lastpos, GTdeagle2pos) < 3.00)
-					{
-						GTp2done = true;
-						SetArrayCell(gH_DArray_LR_Partners, idx, GTp2done, _:Block_Global4);						
-					}
-					else
-					{
-						GTdeagle2lastpos[0] = GTdeagle2pos[0];
-						GTdeagle2lastpos[1] = GTdeagle2pos[1];
-						GTdeagle2lastpos[2] = GTdeagle2pos[2];
-
-						SetPackPosition(PositionDataPack, 24);
-						WritePackFloat(PositionDataPack, GTdeagle2lastpos[0]);
-						WritePackFloat(PositionDataPack, GTdeagle2lastpos[1]);
-						WritePackFloat(PositionDataPack, GTdeagle2lastpos[2]);
-					}
-				}
-				else if (GTp2dropped && GTp2done)
+				if(IsValidEntity(GTdeagle2))
 				{
-					new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
-					new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
-					switch (gShadow_LR_GunToss_MarkerMode)
-					{
-						case 0:
+					GetEntPropVector(GTdeagle2, Prop_Data, "m_vecOrigin", GTdeagle2pos);
+					if (GTp2dropped && !GTp2done)
+					{					
+						if (GetVectorDistance(GTdeagle2lastpos, GTdeagle2pos) < 3.00)
 						{
-							decl Float:beamStartP2[3];
-							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
-							MakeVectorFromPoints(f_SubtractVec, GTdeagle2lastpos, beamStartP2);
-							TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							GTp2done = true;
+							SetArrayCell(gH_DArray_LR_Partners, idx, GTp2done, _:Block_Global4);						
 						}
-						case 1:
+						else
 						{
-							TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							GTdeagle2lastpos[0] = GTdeagle2pos[0];
+							GTdeagle2lastpos[1] = GTdeagle2pos[1];
+							GTdeagle2lastpos[2] = GTdeagle2pos[2];
+	
+							SetPackPosition(PositionDataPack, 24);
+							WritePackFloat(PositionDataPack, GTdeagle2lastpos[0]);
+							WritePackFloat(PositionDataPack, GTdeagle2lastpos[1]);
+							WritePackFloat(PositionDataPack, GTdeagle2lastpos[2]);
 						}
 					}
-					
-					TE_SendToAll();				
+					else if (GTp2dropped && GTp2done)
+					{
+						new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+						new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
+						switch (gShadow_LR_GunToss_MarkerMode)
+						{
+							case 0:
+							{
+								decl Float:beamStartP2[3];
+								new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
+								MakeVectorFromPoints(f_SubtractVec, GTdeagle2lastpos, beamStartP2);
+								TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							}
+							case 1:
+							{
+								TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							}
+						}
+						
+						TE_SendToAll();				
+					}
 				}
 				
 				// broadcast distance
