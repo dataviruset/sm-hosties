@@ -35,18 +35,18 @@ new g_iSizeOfCTList;
 
 StartWeapons_OnPluginStart()
 {
-	gH_Cvar_StartWeaponsOn = CreateConVar("sm_hosties_startweapons_on", "1", "Enable or disable configurable payloads for each time on player spawn", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_StartWeaponsOn = CreateConVar("sm_hosties_startweapons_on", "1", "Enable or disable configurable payloads for each time on player spawn", 0, true, 0.0, true, 1.0);
 	gShadow_StartWeaponsOn = true;
-	gH_Cvar_T_Weapons = CreateConVar("sm_hosties_t_start", "weapon_knife", "Comma delimitted list of items to give to Ts at spawn", FCVAR_PLUGIN);
+	gH_Cvar_T_Weapons = CreateConVar("sm_hosties_t_start", "weapon_knife", "Comma delimitted list of items to give to Ts at spawn", 0);
 	Format(gShadow_T_Weapons, sizeof(gShadow_T_Weapons), "weapon_knife");
 	if (g_Game == Game_CSS)
 	{
-		gH_Cvar_CT_Weapons = CreateConVar("sm_hosties_ct_start", "weapon_knife,weapon_m4a1,weapon_usp", "Comma delimitted list of items to give to CTs at spawn", FCVAR_PLUGIN);
+		gH_Cvar_CT_Weapons = CreateConVar("sm_hosties_ct_start", "weapon_knife,weapon_m4a1,weapon_usp", "Comma delimitted list of items to give to CTs at spawn", 0);
 		Format(gShadow_CT_Weapons, sizeof(gShadow_CT_Weapons), "weapon_knife,weapon_m4a1,weapon_usp");
 	}
 	else if (g_Game == Game_CSGO)
 	{
-		gH_Cvar_CT_Weapons = CreateConVar("sm_hosties_ct_start", "weapon_knife,weapon_m4a1,weapon_hkp2000", "Comma delimitted list of items to give to CTs at spawn", FCVAR_PLUGIN);
+		gH_Cvar_CT_Weapons = CreateConVar("sm_hosties_ct_start", "weapon_knife,weapon_m4a1,weapon_hkp2000", "Comma delimitted list of items to give to CTs at spawn", 0);
 		Format(gShadow_CT_Weapons, sizeof(gShadow_CT_Weapons), "weapon_knife,weapon_m4a1,weapon_hkp2000");
 	}
 	UpdateStartWeapons();	
