@@ -130,7 +130,7 @@ stock CacheTheFile(const String:path[], MediaType:filetype)
 	{
 		case type_Sound:
 		{
-			PrecacheSound(path, true);
+			PrecacheSoundAny(path, true);
 			Format(sDownloadPath, PLATFORM_MAX_PATH, "sound/%s", path);
 			AddFileToDownloadsTable(sDownloadPath);
 		}
