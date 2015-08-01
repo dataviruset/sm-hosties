@@ -40,7 +40,7 @@ GameDescription_OnPluginStart()
 	HookConVarChange(gH_Cvar_GameDescriptionTag, GameDescription_CvarChanged);
 	
 	// check for SteamTools
-	if (GetFeatureStatus(FeatureType_Native, "Steam_SetGameDescription") == FeatureStatus_Available)
+	if (GetFeatureStatus(FeatureType_Native, "SteamWorks_SetGameDescription") == FeatureStatus_Available)
 	{
 		g_bSTAvailable = true;
 	}
@@ -58,7 +58,7 @@ public GameDescription_CvarChanged(Handle:cvar, const String:oldValue[], const S
 		
 		if (gShadow_GameDescriptionOn && g_bSTAvailable)
 		{
-			Steam_SetGameDescription(gShadow_GameDescriptionTag);
+			SteamWorks_SetGameDescription(gShadow_GameDescriptionTag);
 		}
 	}
 }
@@ -70,6 +70,6 @@ GameDesc_OnConfigsExecuted()
 	
 	if (gShadow_GameDescriptionOn && g_bSTAvailable)
 	{
-		Steam_SetGameDescription(gShadow_GameDescriptionTag);
+		SteamWorks_SetGameDescription(gShadow_GameDescriptionTag);
 	}
 }
