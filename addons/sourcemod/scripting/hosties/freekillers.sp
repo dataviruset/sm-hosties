@@ -291,7 +291,7 @@ TakeActionOnFreekiller(attacker)
 		// check for -1 for backward compatibility
 		if ((strlen(gShadow_Freekill_Sound) > 0) && !StrEqual(gShadow_Freekill_Sound, "-1"))
 		{
-			EmitSoundToAll(gShadow_Freekill_Sound);
+			EmitSoundToAllAny(gShadow_Freekill_Sound);
 		}
 	}
 }
