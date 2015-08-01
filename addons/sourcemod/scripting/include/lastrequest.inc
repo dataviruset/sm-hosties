@@ -148,7 +148,7 @@ native AddLastRequestToList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR
  * @noreturn						
  * @error                     	Last request not found.
  */
-native void:RemoveLastRequestFromList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR_Name[]);
+native void RemoveLastRequestFromList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR_Name[]);
 
 /**
  * Provides iteration for all active last requests.
