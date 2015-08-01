@@ -88,7 +88,18 @@ public StartWeapons_Spawn(Handle:event, const String:name[], bool:dontBroadcast)
 			{
 				for (new CTidx = 0; CTidx < g_iSizeOfCTList; CTidx++)
 				{
-					GivePlayerItem(client, gs_CT_WeaponList[CTidx]);
+					decl String:sWeapon[64];
+					
+					if(GetEngineVersion() == Engine_CSGO && StrEqual(gs_CT_WeaponList[CTidx], "weapon_usp", false))
+					{
+						Format(sWeapon, sizeof(sWeapon), "weapon_hkp2000");
+					}
+					else
+					{
+						Format(sWeapon, sizeof(sWeapon), gs_CT_WeaponList[CTidx]);
+					}
+					
+					GivePlayerItem(client, sWeapon);
 				}
 			}
 		}
