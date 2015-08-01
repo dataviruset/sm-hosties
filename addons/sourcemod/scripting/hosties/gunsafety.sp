@@ -388,7 +388,7 @@ PrepareBan(client, target, time, const String:reason[])
 	}
 
 	decl String:authid[64], String:name[32];
-	GetClientAuthString(target, authid, sizeof(authid));
+	GetClientAuthId(target, AuthId_Steam2, authid, sizeof(authid));
 	GetClientName(target, name, sizeof(name));
 	
 	if (!time)
