@@ -1052,22 +1052,7 @@ public LastRequest_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 				
 				if ((strlen(gShadow_LR_Sound) > 0) && !StrEqual(gShadow_LR_Sound, "-1"))
 				{
-					if (g_Game == Game_CSS)
-					{
-						EmitSoundToAll(gShadow_LR_Sound);
-					}
-					else
-					{
-						decl String:sCommand[PLATFORM_MAX_PATH];
-						for (new idx = 1; idx <= MaxClients; idx++)
-						{
-							if (IsClientInGame(idx))
-							{
-								Format(sCommand, sizeof(sCommand), "play *%s", gShadow_LR_Sound);
-								ClientCommand(idx, sCommand);
-							}
-						}
-					}
+					EmitSoundToAllAny(gShadow_LR_Sound);
 				}
 			}
 			
@@ -1234,22 +1219,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 		if ((gShadow_Freekill_Sound_Mode == 0) && (strlen(gShadow_Freekill_Sound) > 0) \
 			&& !StrEqual(gShadow_Freekill_Sound, "-1") && (!bPrisonerHasGun))
 		{
-			if (g_Game == Game_CSS)
-			{
-				EmitSoundToAll(gShadow_Freekill_Sound);
-			}
-			else
-			{
-				decl String:sCommand[PLATFORM_MAX_PATH];
-				for (new idx = 1; idx <= MaxClients; idx++)
-				{
-					if (IsClientInGame(idx))
-					{
-						Format(sCommand, sizeof(sCommand), "play *%s", gShadow_Freekill_Sound);
-						ClientCommand(idx, sCommand);
-					}
-				}
-			}
+			EmitSoundToAllAny(gShadow_Freekill_Sound);
 		}
 	}
 }
@@ -4234,22 +4204,7 @@ InitializeGame(iPartnersIndex)
 				
 				if ((strlen(gShadow_LR_NoScope_Sound) > 0) && !StrEqual(gShadow_LR_NoScope_Sound, "-1"))
 				{
-					if (g_Game == Game_CSS)
-					{
-						EmitSoundToAll(gShadow_LR_NoScope_Sound);
-					}
-					else
-					{
-						decl String:sCommand[PLATFORM_MAX_PATH];
-						for (new idx = 1; idx <= MaxClients; idx++)
-						{
-							if (IsClientInGame(idx))
-							{
-								Format(sCommand, sizeof(sCommand), "play *%s", gShadow_LR_NoScope_Sound);
-								ClientCommand(idx, sCommand);
-							}
-						}
-					}
+					EmitSoundToAllAny(gShadow_LR_NoScope_Sound);
 				}			
 			}
 		}
@@ -4983,7 +4938,7 @@ public Action:Timer_Beacon(Handle:timer)
 					TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 10, 0.6, 10.0, 0.5, yellowColor, 10, 0);
 					TE_SendToAll();
 				}
-				EmitAmbientSound(gShadow_LR_Beacon_Sound, f_Origin, iEntityIndex, SNDLEVEL_RAIDSIREN);	
+				EmitAmbientSoundAny(gShadow_LR_Beacon_Sound, f_Origin, iEntityIndex, SNDLEVEL_RAIDSIREN);	
 			}
 			else
 			{
@@ -5280,22 +5235,7 @@ public Action:Timer_Countdown(Handle:timer)
 					
 					if ((strlen(gShadow_LR_NoScope_Sound) > 0) && !StrEqual(gShadow_LR_NoScope_Sound, "-1"))
 					{
-						if (g_Game == Game_CSS)
-						{
-							EmitSoundToAll(gShadow_LR_NoScope_Sound);
-						}
-						else
-						{
-							decl String:sCommand[PLATFORM_MAX_PATH];
-							for (new idx2 = 1; idx2 <= MaxClients; idx2++)
-							{
-								if (IsClientInGame(idx2))
-								{
-									Format(sCommand, sizeof(sCommand), "play *%s", gShadow_LR_NoScope_Sound);
-									ClientCommand(idx2, sCommand);
-								}
-							}
-						}
+						EmitSoundToAllAny(gShadow_LR_NoScope_Sound);
 					}
 				}
 				case LR_JumpContest:
