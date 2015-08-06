@@ -388,7 +388,13 @@ PrepareBan(client, target, time, const String:reason[])
 	}
 
 	decl String:authid[64], String:name[32];
+	
+#if SOURCEMOD_V_MINOR < 6
 	GetClientAuthString(target, authid, sizeof(authid));
+#else
+	GetClientAuthId(target, AuthId_Engine, authid, sizeof(authid));
+#endif
+
 	GetClientName(target, name, sizeof(name));
 	
 	if (!time)

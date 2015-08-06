@@ -4995,7 +4995,7 @@ public Action:Timer_Beacon(Handle:timer)
 	return Plugin_Continue;
 }
 
-void:AddBeacon(entityIndex)
+AddBeacon(entityIndex)
 {
 	if (IsValidEntity(entityIndex))
 	{
@@ -5007,7 +5007,7 @@ void:AddBeacon(entityIndex)
 	}
 }
 
-void:RemoveBeacon(entityIndex)
+RemoveBeacon(entityIndex)
 {
 	new iBeaconIndex = FindValueInArray(gH_DArray_Beacons, entityIndex);
 	if (iBeaconIndex != -1)
@@ -5050,7 +5050,7 @@ stock Trail_Attach(client, LRIndex)
 	return 0;
 }
 
-stock void:Trail_Remove(client, LRIndex)
+stock Trail_Remove(client, LRIndex)
 {
 	new ent = g_iClientSpriteEntIndex[client];
 	if (ent != 0)
