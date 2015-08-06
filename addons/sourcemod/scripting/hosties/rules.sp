@@ -34,16 +34,16 @@ new Handle:gH_DArray_Rules = INVALID_HANDLE;
 
 Rules_OnPluginStart()
 {
-	gH_Cvar_RulesOn = CreateConVar("sm_hosties_rules_enable", "1", "Enable or disable rules showing up at !rules command (if you need to disable the command registration on plugin startup, add a file in your sourcemod/configs/ named hosties_rulesdisable.ini with any content): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_RulesOn = CreateConVar("sm_hosties_rules_enable", "1", "Enable or disable rules showing up at !rules command (if you need to disable the command registration on plugin startup, add a file in your sourcemod/configs/ named hosties_rulesdisable.ini with any content): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_RulesOn = true;
 	
-	gH_Cvar_Announce_Rules = CreateConVar("sm_hosties_announce_rules", "1", "Enable or disable rule announcements in the beginning of every round ('please follow the rules listed in !rules'): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Announce_Rules = CreateConVar("sm_hosties_announce_rules", "1", "Enable or disable rule announcements in the beginning of every round ('please follow the rules listed in !rules'): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_Announce_Rules = true;
 	
-	gH_Cvar_Rules_Mode = CreateConVar("sm_hosties_rules_mode", "1", "1 - Panel Mode, 2 - Website", FCVAR_PLUGIN, true, 1.0, true, 2.0);
+	gH_Cvar_Rules_Mode = CreateConVar("sm_hosties_rules_mode", "1", "1 - Panel Mode, 2 - Website", 0, true, 1.0, true, 2.0);
 	gShadow_Rules_Mode = 2;
 	
-	gH_Cvar_Rules_Website = CreateConVar("sm_hosties_rules_website", "http://www.youtube.com/watch?v=oHg5SJYRHA0", "The website for the rules page.", FCVAR_PLUGIN);
+	gH_Cvar_Rules_Website = CreateConVar("sm_hosties_rules_website", "http://www.youtube.com/watch?v=oHg5SJYRHA0", "The website for the rules page.", 0);
 	Format(gShadow_Rules_Website, sizeof(gShadow_Rules_Website), "http://www.youtube.com/watch?v=oHg5SJYRHA0");
 	
 	HookConVarChange(gH_Cvar_RulesOn, Rules_CvarChanged);
@@ -83,7 +83,7 @@ Rules_OnConfigsExecuted()
 	ParseTheRulesFile();
 }
 
-void:ParseTheRulesFile()
+void ParseTheRulesFile()
 {
 	ClearArray(gH_DArray_Rules);
 	

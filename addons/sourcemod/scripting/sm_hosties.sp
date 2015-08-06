@@ -23,10 +23,11 @@
 #include <adminmenu>
 #include <sdkhooks>
 #include <hosties>
+#include <emitsoundany>
 
 #undef REQUIRE_PLUGIN
 #undef REQUIRE_EXTENSIONS
-#tryinclude <steamtools>
+#tryinclude <SteamWorks>
 #tryinclude <sourcebans>
 #define REQUIRE_EXTENSIONS
 #define REQUIRE_PLUGIN
@@ -153,10 +154,10 @@ public OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 
 	// Create ConVars
-	gH_Cvar_Add_ServerTag = CreateConVar("sm_hosties_add_servertag", "1", "Enable or disable automatic adding of SM_Hosties in sv_tags (visible from the server browser in CS:S): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	gH_Cvar_Display_Advert = CreateConVar("sm_hosties_display_advert", "1", "Enable or disable the display of the Powered by SM Hosties message at the start of each round.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Add_ServerTag = CreateConVar("sm_hosties_add_servertag", "1", "Enable or disable automatic adding of SM_Hosties in sv_tags (visible from the server browser in CS:S): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
+	gH_Cvar_Display_Advert = CreateConVar("sm_hosties_display_advert", "1", "Enable or disable the display of the Powered by SM Hosties message at the start of each round.", 0, true, 0.0, true, 1.0);
 	
-	CreateConVar("sm_hosties_version", PLUGIN_VERSION, "SM_Hosties plugin version (unchangeable)", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("sm_hosties_version", PLUGIN_VERSION, "SM_Hosties plugin version (unchangeable)", 0|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	
 	RegAdminCmd("sm_hostiesadmin", Command_HostiesAdmin, ADMFLAG_SLAY);
 	
@@ -240,14 +241,11 @@ public OnAllPluginsLoaded()
 
 public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[], error_max)
 {
-	// Borrowed with love from smac.sp
-	decl String:sGame[64];
-	GetGameFolderName(sGame, sizeof(sGame));
-	if (StrEqual(sGame, "cstrike") || StrEqual(sGame, "cstrike_beta"))
+	if (GetEngineVersion() == Engine_CSS)
 	{
 		g_Game = Game_CSS;
 	}
-	else if (StrEqual(sGame, "csgo"))
+	else if (GetEngineVersion() == Engine_CSGO)
 	{
 		g_Game = Game_CSGO;
 	}
@@ -256,7 +254,7 @@ public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[],
 		SetFailState("Game is not supported.");
 	}
 
-	MarkNativeAsOptional("Steam_SetGameDescription");
+	MarkNativeAsOptional("SteamWorks_SetGameDescription");
 
 	LastRequest_APL();
 	

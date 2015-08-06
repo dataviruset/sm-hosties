@@ -363,7 +363,7 @@ public Control_PlayAction(String:Act[])
 {
 	if(StrEqual(Act, "Jump"))
 	{
-		EmitSoundToAll(g_sActionSound[ACTION_ID_JUMP]);
+		EmitSoundToAllAny(g_sActionSound[ACTION_ID_JUMP]);
 	}
 }
 
@@ -388,7 +388,7 @@ Control_OnMapStart()
 	{
 		if(!StrEqual(g_sActionSound[i], "", false))
 		{
-			PrecacheSound(g_sActionSound[i]);
+			PrecacheSoundAny(g_sActionSound[i]);
 		}
 	}
 	
@@ -396,7 +396,7 @@ Control_OnMapStart()
 	{
 		if(!StrEqual(g_sTaskSound[i], "", false))
 		{
-			PrecacheSound(g_sTaskSound[i]);
+			PrecacheSoundAny(g_sTaskSound[i]);
 		}
 	}
 }
