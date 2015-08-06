@@ -140,7 +140,7 @@ stock UnmuteAll()
 	}
 }
 
-void:MutePrisoners_CalcImmunity()
+MutePrisoners_CalcImmunity()
 {
 	if (StrEqual(gShadow_MuteImmune, "0"))
 	{

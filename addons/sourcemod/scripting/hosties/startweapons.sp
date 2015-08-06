@@ -113,7 +113,7 @@ public StartWeapons_CvarChanged(Handle:cvar, const String:oldValue[], const Stri
 	}
 }
 
-void:UpdateStartWeapons()
+UpdateStartWeapons()
 {
 	g_iSizeOfTList = ExplodeString(gShadow_T_Weapons, ",", gs_T_WeaponList, sizeof(gs_T_WeaponList), sizeof(gs_T_WeaponList[]));
 	g_iSizeOfCTList = ExplodeString(gShadow_CT_Weapons, ",", gs_CT_WeaponList, sizeof(gs_CT_WeaponList), sizeof(gs_CT_WeaponList[]));
