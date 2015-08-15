@@ -1,4 +1,4 @@
-[CS:S] SM Hosties v2
+[CS:S/CS:GO] SM Hosties v2
 by: databomb, dataviruset and DorCoMaNdO
 
 Description:
@@ -8,9 +8,7 @@ It opens up a new API for plugin developers to ask questions like if a player is
 
 Features:
 
-35 Last Request Games
-    Shotgun Wars (optional, needs lastrequest_shotgunwars plugin)
-    Fruit Ninja (optional, needs lastrequest_fruitninja plugin)
+33 Last Request Games included as default
     Drunken Boxing
     Most Jumps
     Farthest Jump
@@ -31,6 +29,7 @@ Features:
     Shot4Shot with any pistol (6 choices for CS:S, 7 for CS:GO)
     Mag4Mag with any pistol (6 choices for CS:S, 7 for CS:GO)
     Gun Toss
+Third-party plugins for Custom Lastrequests
 Check Players Command
 Freekill Detection & Prevention
 Game Description Override
@@ -61,9 +60,12 @@ Admin Commands:
 Requirements:
 SourceMod 1.7.0+
 
+Needed for successful compilation:
+EmitSoundAny - https://forums.alliedmods.net/showthread.php?t=237045
+
 Uses natives from these plugins if found:
-SteamTools
-SourceBans
+SteamWorks - https://forums.alliedmods.net/showthread.php?t=229556
+SourceBans - https://forums.alliedmods.net/forumdisplay.php?f=152
 
 Automatic Install Instructions:
 The easiest way to install SM_Hosties v2 is this:
@@ -72,6 +74,7 @@ The easiest way to install SM_Hosties v2 is this:
     Scroll down a bit on this page and download the ZIP file attached to this post (or from the mirror)
     Extract all files from the ZIP file into the cstrike folder of your server (all directories should match up with the folders in the ZIP file)
     Restart your server or let it change map
+    Configure settings in cfg/sourcemod/sm_hosties2.cfg
     Done!
 
 Manual Install Instructions:
@@ -81,10 +84,11 @@ If you'd like only lastrequest.sp then that is a separate discussion.
     Copy all files in the scripting/hosties/ directory to addons/sourcemod/scripting/hosties/
     Copy all files in the translation/ directory to addons/sourcemod/translations/
     Copy the hosties.inc and lastrequest.inc files to addons/sourcemod/scripting/include/
+    Download sourcebans.inc, emitsoundany.inc and SteamWorks.inc from the links above and put them in addons/sourcemod/scripting/include/
     Copy lastrequest_shotgunwars.sp, lastrequest_fruitninja.sp and sm_hosties.sp to addons/sourcemod/scripting/
     If you are going to compile lastrequest_fruitninja, check that you have SMLIB in the include folder (all versions of SM_Hosties don't have it bundled), otherwise download it and put the include files in the addons/sourcemod/scripting/include/ folder.
     Compile sm_hosties, lastrequest_shotgunwars and lastrequest_fruitninja and move SMX files to addons/sourcemod/plugins/
-    Run plugin for the first time and configure all settings in cfg/sourcemod/sm_hosties2.cfg
+    Run plugin for the first time and configure settings in cfg/sourcemod/sm_hosties2.cfg
 
 
 Upgrade Instructions:
@@ -116,6 +120,8 @@ MomemtumMori - Hosting the SVN for SM_Hosties v2 while under development
 Berni - For helping with hull traces
 dvander - Pointing out some architectural flaws with the Hosties API
 Crosshair - Inspiration
+CoMaNdO - Helping out with the development of SM_Hosties 2.1.0+ and the support for CS:GO
+Bara - Helping out fixing things for 2.2.0
 
 Thanks to the servers willing to run beta versions of this (for all the problems you never had to deal with, thank them):
 Groger, OnlyFriends
