@@ -402,154 +402,154 @@ LastRequest_OnPluginStart()
 	gH_Frwd_LR_StartGlobal = CreateGlobalForward("OnStartLR", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	
 	// Register cvars
-	gH_Cvar_LR_Enable = CreateConVar("sm_hosties_lr", "1", "Enable or disable Last Requests (the !lr command): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Enable = CreateConVar("sm_hosties_lr", "1", "Enable or disable Last Requests (the !lr command): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Enable = true;
-	gH_Cvar_LR_MenuTime = CreateConVar("sm_hosties_lr_menutime", "0", "Sets the time the LR menu is displayed (in seconds)", FCVAR_PLUGIN, true, 0.0);
+	gH_Cvar_LR_MenuTime = CreateConVar("sm_hosties_lr_menutime", "0", "Sets the time the LR menu is displayed (in seconds)", 0, true, 0.0);
 	gShadow_LR_MenuTime = 0;
-	gH_Cvar_LR_KillTimeouts = CreateConVar("sm_hosties_lr_killtimeouts", "0", "Kills Ts who timeout the LR menu and controls whether the exit button is displayed: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_KillTimeouts = CreateConVar("sm_hosties_lr_killtimeouts", "0", "Kills Ts who timeout the LR menu and controls whether the exit button is displayed: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_KillTimeouts = false;
-	gH_Cvar_LR_KnifeFight_On = CreateConVar("sm_hosties_lr_kf_enable", "1", "Enable LR Knife Fight: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_KnifeFight_On = CreateConVar("sm_hosties_lr_kf_enable", "1", "Enable LR Knife Fight: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_KnifeFight_On = true;
-	gH_Cvar_LR_Shot4Shot_On = CreateConVar("sm_hosties_lr_s4s_enable", "1", "Enable LR Shot4Shot: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Shot4Shot_On = CreateConVar("sm_hosties_lr_s4s_enable", "1", "Enable LR Shot4Shot: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Shot4Shot_On = true;
-	gH_Cvar_LR_GunToss_On = CreateConVar("sm_hosties_lr_gt_enable", "1", "Enable LR Gun Toss: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_GunToss_On = CreateConVar("sm_hosties_lr_gt_enable", "1", "Enable LR Gun Toss: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_GunToss_On = true;
-	gH_Cvar_LR_ChickenFight_On = CreateConVar("sm_hosties_lr_cf_enable", "1", "Enable LR Chicken Fight: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_ChickenFight_On = CreateConVar("sm_hosties_lr_cf_enable", "1", "Enable LR Chicken Fight: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_ChickenFight_On = true;
-	gH_Cvar_LR_HotPotato_On = CreateConVar("sm_hosties_lr_hp_enable", "1", "Enable LR Hot Potato: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_HotPotato_On = CreateConVar("sm_hosties_lr_hp_enable", "1", "Enable LR Hot Potato: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_HotPotato_On = true;
-	gH_Cvar_LR_Dodgeball_On = CreateConVar("sm_hosties_lr_db_enable", "1", "Enable LR Dodgeball: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Dodgeball_On = CreateConVar("sm_hosties_lr_db_enable", "1", "Enable LR Dodgeball: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Dodgeball_On = true;
-	gH_Cvar_LR_NoScope_On = CreateConVar("sm_hosties_lr_ns_enable", "1", "Enable LR No Scope Battle: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_NoScope_On = CreateConVar("sm_hosties_lr_ns_enable", "1", "Enable LR No Scope Battle: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_NoScope_On = true;
-	gH_Cvar_LR_RockPaperScissors_On = CreateConVar("sm_hosties_lr_rps_enable", "1", "Enable LR Rock Paper Scissors: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_RockPaperScissors_On = CreateConVar("sm_hosties_lr_rps_enable", "1", "Enable LR Rock Paper Scissors: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_RockPaperScissors_On = true;
-	gH_Cvar_LR_Rebel_On = CreateConVar("sm_hosties_lr_rebel_on", "1", "Enables the LR Rebel: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Rebel_On = CreateConVar("sm_hosties_lr_rebel_on", "1", "Enables the LR Rebel: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Rebel_On = true;
-	gH_Cvar_LR_Mag4Mag_On = CreateConVar("sm_hosties_lr_mag4mag_on", "1", "Enables the LR Magazine4Magazine: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Mag4Mag_On = CreateConVar("sm_hosties_lr_mag4mag_on", "1", "Enables the LR Magazine4Magazine: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Mag4Mag_On = true;
-	gH_Cvar_LR_Race_On = CreateConVar("sm_hosties_lr_race_on", "1", "Enables the LR Race: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Race_On = CreateConVar("sm_hosties_lr_race_on", "1", "Enables the LR Race: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Race_On = true;
-	gH_Cvar_LR_RussianRoulette_On = CreateConVar("sm_hosties_lr_russianroulette_on", "1", "Enables the LR Russian Roulette: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_RussianRoulette_On = CreateConVar("sm_hosties_lr_russianroulette_on", "1", "Enables the LR Russian Roulette: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_RussianRoulette_On = true;
-	gH_Cvar_LR_JumpContest_On = CreateConVar("sm_hosties_lr_jumpcontest_on", "1", "Enables the LR Jumping Contest: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);	
+	gH_Cvar_LR_JumpContest_On = CreateConVar("sm_hosties_lr_jumpcontest_on", "1", "Enables the LR Jumping Contest: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);	
 	gShadow_LR_JumpContest_On = true;
 
-	gH_Cvar_LR_HotPotato_Mode = CreateConVar("sm_hosties_lr_hp_teleport", "2", "Teleport CT to T on hot potato contest start: 0 - disable, 1 - enable, 2 - enable and freeze", FCVAR_PLUGIN, true, 0.0, true, 2.0);
+	gH_Cvar_LR_HotPotato_Mode = CreateConVar("sm_hosties_lr_hp_teleport", "2", "Teleport CT to T on hot potato contest start: 0 - disable, 1 - enable, 2 - enable and freeze", 0, true, 0.0, true, 2.0);
 	gShadow_LR_HotPotato_Mode = 2;
-	gH_Cvar_SendGlobalMsgs = CreateConVar("sm_hosties_lr_send_global_msgs", "0", "Specifies if non-death related LR messages are sent to everyone or just the active participants in that LR. 0: participants, 1: everyone", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_SendGlobalMsgs = CreateConVar("sm_hosties_lr_send_global_msgs", "0", "Specifies if non-death related LR messages are sent to everyone or just the active participants in that LR. 0: participants, 1: everyone", 0, true, 0.0, true, 1.0);
 	gShadow_SendGlobalMsgs = 0;
-	gH_Cvar_MaxPrisonersToLR = CreateConVar("sm_hosties_lr_ts_max", "2", "The maximum number of terrorists left to enable LR: 0 - LR is always enabled, >0 - maximum number of Ts", FCVAR_PLUGIN, true, 0.0, true, 63.0);
+	gH_Cvar_MaxPrisonersToLR = CreateConVar("sm_hosties_lr_ts_max", "2", "The maximum number of terrorists left to enable LR: 0 - LR is always enabled, >0 - maximum number of Ts", 0, true, 0.0, true, 63.0);
 	gShadow_MaxPrisonersToLR = 1;
-	gH_Cvar_RebelAction = CreateConVar("sm_hosties_lr_rebel_action", "2", "Decides what to do with those who rebel/interfere during an LR. 1 - Abort, 2 - Slay.", FCVAR_PLUGIN, true, 1.0, true, 2.0);
+	gH_Cvar_RebelAction = CreateConVar("sm_hosties_lr_rebel_action", "2", "Decides what to do with those who rebel/interfere during an LR. 1 - Abort, 2 - Slay.", 0, true, 1.0, true, 2.0);
 	gShadow_RebelAction = 2;
-	gH_Cvar_RebelHandling = CreateConVar("sm_hosties_lr_rebel_mode", "1", "LR-mode for rebelling terrorists: 0 - Rebelling Ts can never have a LR, 1 - Rebelling Ts must let the CT decide if a LR is OK, 2 - Rebelling Ts can have a LR just like other Ts", FCVAR_PLUGIN, true, 0.0);
+	gH_Cvar_RebelHandling = CreateConVar("sm_hosties_lr_rebel_mode", "1", "LR-mode for rebelling terrorists: 0 - Rebelling Ts can never have a LR, 1 - Rebelling Ts must let the CT decide if a LR is OK, 2 - Rebelling Ts can have a LR just like other Ts", 0, true, 0.0);
 	gShadow_RebelHandling = 1;
-	gH_Cvar_RebelOnImpact = CreateConVar("sm_hosties_lr_rebel_impact", "0", "Sets terrorists to rebels for firing a bullet. 0 - Disabled, 1 - Enabled.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_RebelOnImpact = CreateConVar("sm_hosties_lr_rebel_impact", "0", "Sets terrorists to rebels for firing a bullet. 0 - Disabled, 1 - Enabled.", 0, true, 0.0, true, 1.0);
 	gShadow_RebelOnImpact = 0;
-	gH_Cvar_ColorRebels = CreateConVar("sm_hosties_rebel_color", "0", "Turns on coloring rebels", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_ColorRebels = CreateConVar("sm_hosties_rebel_color", "0", "Turns on coloring rebels", 0, true, 0.0, true, 1.0);
 	gShadow_ColorRebels = 0;
-	gH_Cvar_ColorRebels_Red = CreateConVar("sm_hosties_rebel_red", "255", "What color to turn a rebel into (set R, G and B values to 255 to disable) (Rgb): x - red value", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	gH_Cvar_ColorRebels_Red = CreateConVar("sm_hosties_rebel_red", "255", "What color to turn a rebel into (set R, G and B values to 255 to disable) (Rgb): x - red value", 0, true, 0.0, true, 255.0);
 	gShadow_ColorRebels_Red = 255;
-	gH_Cvar_ColorRebels_Green = CreateConVar("sm_hosties_rebel_green", "0", "What color to turn a rebel into (rGb): x - green value", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	gH_Cvar_ColorRebels_Green = CreateConVar("sm_hosties_rebel_green", "0", "What color to turn a rebel into (rGb): x - green value", 0, true, 0.0, true, 255.0);
 	gShadow_ColorRebels_Green = 0;
-	gH_Cvar_ColorRebels_Blue = CreateConVar("sm_hosties_rebel_blue", "0", "What color to turn a rebel into (rgB): x - blue value", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	gH_Cvar_ColorRebels_Blue = CreateConVar("sm_hosties_rebel_blue", "0", "What color to turn a rebel into (rgB): x - blue value", 0, true, 0.0, true, 255.0);
 	gShadow_ColorRebels_Blue = 0;
-	gH_Cvar_LR_Beacons = CreateConVar("sm_hosties_lr_beacon", "1", "Beacon players on LR or not: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Beacons = CreateConVar("sm_hosties_lr_beacon", "1", "Beacon players on LR or not: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Beacons = true;
-	gH_Cvar_LR_HelpBeams = CreateConVar("sm_hosties_lr_beams", "1", "Displays connecting beams between LR contestants: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_HelpBeams = CreateConVar("sm_hosties_lr_beams", "1", "Displays connecting beams between LR contestants: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_HelpBeams = true;
-	gH_Cvar_LR_HelpBeams_Distance = CreateConVar("sm_hosties_lr_beams_distance", "0.0", "Controls how close LR partners must be before the connecting beams will disappear: 0 - always on, >0 the distance in game units", FCVAR_PLUGIN, true, 0.0);
+	gH_Cvar_LR_HelpBeams_Distance = CreateConVar("sm_hosties_lr_beams_distance", "0.0", "Controls how close LR partners must be before the connecting beams will disappear: 0 - always on, >0 the distance in game units", 0, true, 0.0);
 	gShadow_LR_HelpBeams_Distance = 0.0;
-	gH_Cvar_LR_Beacon_Interval = CreateConVar("sm_hosties_lr_beacon_interval", "1.0", "The interval in seconds of which the beacon 'beeps' on LR", FCVAR_PLUGIN, true, 0.1);
+	gH_Cvar_LR_Beacon_Interval = CreateConVar("sm_hosties_lr_beacon_interval", "1.0", "The interval in seconds of which the beacon 'beeps' on LR", 0, true, 0.1);
 	gShadow_LR_Beacon_Interval = 1.0;
-	gH_Cvar_LR_ChickenFight_Slay = CreateConVar("sm_hosties_lr_cf_slay", "1", "Slay the loser of a Chicken Fight instantly? 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_ChickenFight_Slay = CreateConVar("sm_hosties_lr_cf_slay", "1", "Slay the loser of a Chicken Fight instantly? 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_ChickenFight_Slay = true;
-	gH_Cvar_LR_ChickenFight_C_Blue = CreateConVar("sm_hosties_lr_cf_loser_blue", "0", "What color to turn the loser of a chicken fight into (rgB): x - blue value", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	gH_Cvar_LR_ChickenFight_C_Blue = CreateConVar("sm_hosties_lr_cf_loser_blue", "0", "What color to turn the loser of a chicken fight into (rgB): x - blue value", 0, true, 0.0, true, 255.0);
 	gShadow_LR_ChickenFight_C_Blue = 0;
-	gH_Cvar_LR_ChickenFight_C_Green = CreateConVar("sm_hosties_lr_cf_loser_green", "255", "What color to turn the loser of a chicken fight into (rGb): x - green value", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	gH_Cvar_LR_ChickenFight_C_Green = CreateConVar("sm_hosties_lr_cf_loser_green", "255", "What color to turn the loser of a chicken fight into (rGb): x - green value", 0, true, 0.0, true, 255.0);
 	gShadow_LR_ChickenFight_C_Green = 255;
-	gH_Cvar_LR_ChickenFight_C_Red = CreateConVar("sm_hosties_lr_cf_loser_red", "255", "What color to turn the loser of a chicken fight into (only if sm_hosties_lr_cf_slay == 0, set R, G and B values to 255 to disable) (Rgb): x - red value", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	gH_Cvar_LR_ChickenFight_C_Red = CreateConVar("sm_hosties_lr_cf_loser_red", "255", "What color to turn the loser of a chicken fight into (only if sm_hosties_lr_cf_slay == 0, set R, G and B values to 255 to disable) (Rgb): x - red value", 0, true, 0.0, true, 255.0);
 	gShadow_LR_ChickenFight_C_Red = 255;
-	gH_Cvar_LR_Dodgeball_CheatCheck = CreateConVar("sm_hosties_lr_db_cheatcheck", "1", "Enable health-checker in LR Dodgeball to prevent contestant cheating (healing themselves): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Dodgeball_CheatCheck = CreateConVar("sm_hosties_lr_db_cheatcheck", "1", "Enable health-checker in LR Dodgeball to prevent contestant cheating (healing themselves): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Dodgeball_CheatCheck = true;
-	gH_Cvar_LR_Dodgeball_SpawnTime = CreateConVar("sm_hosties_lr_db_flash_duration", "1.4", "The amount of time after a thrown flash before a new flash is given to a contestant: float value - delay in seconds", FCVAR_PLUGIN, true, 0.7, true, 6.0);
+	gH_Cvar_LR_Dodgeball_SpawnTime = CreateConVar("sm_hosties_lr_db_flash_duration", "1.4", "The amount of time after a thrown flash before a new flash is given to a contestant: float value - delay in seconds", 0, true, 0.7, true, 6.0);
 	gShadow_LR_Dodgeball_SpawnTime = 1.4;
-	gH_Cvar_LR_Dodgeball_Gravity = CreateConVar("sm_hosties_lr_db_gravity", "0.6", "What gravity multiplier the dodgeball contestants will get: <1.0 - less/lower, >1.0 - more/higher", FCVAR_PLUGIN, true, 0.1, true, 2.0);
+	gH_Cvar_LR_Dodgeball_Gravity = CreateConVar("sm_hosties_lr_db_gravity", "0.6", "What gravity multiplier the dodgeball contestants will get: <1.0 - less/lower, >1.0 - more/higher", 0, true, 0.1, true, 2.0);
 	gShadow_LR_Dodgeball_Gravity = 0.6;
-	gH_Cvar_LR_HotPotato_MaxTime = CreateConVar("sm_hosties_lr_hp_maxtime", "20.0", "Maximum time in seconds the Hot Potato contest will last for (time is randomized): float value - time", FCVAR_PLUGIN, true, 8.0, true, 120.0);
+	gH_Cvar_LR_HotPotato_MaxTime = CreateConVar("sm_hosties_lr_hp_maxtime", "20.0", "Maximum time in seconds the Hot Potato contest will last for (time is randomized): float value - time", 0, true, 8.0, true, 120.0);
 	gShadow_LR_HotPotato_MaxTime = 20.0;
-	gH_Cvar_LR_HotPotato_MinTime = CreateConVar("sm_hosties_lr_hp_mintime", "10.0", "Minimum time in seconds the Hot Potato contest will last for (time is randomized): float value - time", FCVAR_PLUGIN, true, 0.0, true, 45.0);
+	gH_Cvar_LR_HotPotato_MinTime = CreateConVar("sm_hosties_lr_hp_mintime", "10.0", "Minimum time in seconds the Hot Potato contest will last for (time is randomized): float value - time", 0, true, 0.0, true, 45.0);
 	gShadow_LR_HotPotato_MinTime = 10.0;
-	gH_Cvar_LR_HotPotato_Speed = CreateConVar("sm_hosties_lr_hp_speed_multipl", "1.5", "What speed multiplier a hot potato contestant who has the deagle is gonna get: <1.0 - slower, >1.0 - faster", FCVAR_PLUGIN, true, 0.8, true, 3.0);
+	gH_Cvar_LR_HotPotato_Speed = CreateConVar("sm_hosties_lr_hp_speed_multipl", "1.5", "What speed multiplier a hot potato contestant who has the deagle is gonna get: <1.0 - slower, >1.0 - faster", 0, true, 0.8, true, 3.0);
 	gShadow_LR_HotPotato_Speed = 1.5;
-	gH_Cvar_LR_S4S_DoubleShot = CreateConVar("sm_hosties_lr_s4s_dblsht_action", "1", "What to do with someone who fires 2 shots in a row in Shot4Shot: 0 - nothing (ignore completely), 1 - Follow rebel punishment cvars", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_S4S_DoubleShot = CreateConVar("sm_hosties_lr_s4s_dblsht_action", "1", "What to do with someone who fires 2 shots in a row in Shot4Shot: 0 - nothing (ignore completely), 1 - Follow rebel punishment cvars", 0, true, 0.0, true, 1.0);
 	gShadow_LR_S4S_DoubleShot = false;
-	gH_Cvar_LR_NoScope_Sound = CreateConVar("sm_hosties_noscope_sound", "sm_hosties/noscopestart1.mp3", "What sound to play when a No Scope Battle starts, relative to the sound-folder: -1 - disable, path - path to sound file", FCVAR_PLUGIN);
+	gH_Cvar_LR_NoScope_Sound = CreateConVar("sm_hosties_noscope_sound", "sm_hosties/noscopestart1.mp3", "What sound to play when a No Scope Battle starts, relative to the sound-folder: -1 - disable, path - path to sound file", 0);
 	Format(gShadow_LR_NoScope_Sound, sizeof(gShadow_LR_NoScope_Sound ), "sm_hosties/noscopestart1.mp3");
-	gH_Cvar_LR_Sound = CreateConVar("sm_hosties_lr_sound", "sm_hosties/lr1.mp3", "What sound to play when LR gets available, relative to the sound-folder (also requires sm_hosties_announce_lr to be 1): -1 - disable, path - path to sound file", FCVAR_PLUGIN);
+	gH_Cvar_LR_Sound = CreateConVar("sm_hosties_lr_sound", "sm_hosties/lr1.mp3", "What sound to play when LR gets available, relative to the sound-folder (also requires sm_hosties_announce_lr to be 1): -1 - disable, path - path to sound file", 0);
 	Format(gShadow_LR_Sound, sizeof(gShadow_LR_Sound), "sm_hosties/lr1.mp3");
-	gH_Cvar_LR_Beacon_Sound = CreateConVar("sm_hosties_beacon_sound", "buttons/blip1.wav", "What sound to play each second a beacon is 'ping'ed.", FCVAR_PLUGIN);
+	gH_Cvar_LR_Beacon_Sound = CreateConVar("sm_hosties_beacon_sound", "buttons/blip1.wav", "What sound to play each second a beacon is 'ping'ed.", 0);
 	Format(gShadow_LR_Beacon_Sound, sizeof(gShadow_LR_Beacon_Sound), "buttons/blip1.wav");
-	gH_Cvar_LR_NoScope_Weapon = CreateConVar("sm_hosties_lr_ns_weapon", "2", "Weapon to use in a No Scope Battle: 0 - AWP, 1 - scout, 2 - let the terrorist choose, 3 - SG550, 4 - G3SG1", FCVAR_PLUGIN, true, 0.0, true, 2.0);
+	gH_Cvar_LR_NoScope_Weapon = CreateConVar("sm_hosties_lr_ns_weapon", "2", "Weapon to use in a No Scope Battle: 0 - AWP, 1 - scout, 2 - let the terrorist choose, 3 - SG550, 4 - G3SG1", 0, true, 0.0, true, 2.0);
 	gShadow_LR_NoScope_Weapon = 2;
-	gH_Cvar_LR_NonContKiller_Action = CreateConVar("sm_hosties_lr_p_killed_action", "1", "What to do when a LR-player gets killed by a player not in LR during LR: 0 - just abort LR, 1 - abort LR and slay the attacker", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_NonContKiller_Action = CreateConVar("sm_hosties_lr_p_killed_action", "1", "What to do when a LR-player gets killed by a player not in LR during LR: 0 - just abort LR, 1 - abort LR and slay the attacker", 0, true, 0.0, true, 1.0);
 	gShadow_LR_NonContKiller_Action = true;
-	gH_Cvar_LR_GunToss_MarkerMode = CreateConVar("sm_hosties_lr_gt_markers", "0", "Deagle marking (requires sm_hosties_lr_gt_mode 1): 0 - markers straight up where the deagles land, 1 - markers starting where the deagle was dropped ending at the deagle landing point", FCVAR_PLUGIN);
+	gH_Cvar_LR_GunToss_MarkerMode = CreateConVar("sm_hosties_lr_gt_markers", "0", "Deagle marking (requires sm_hosties_lr_gt_mode 1): 0 - markers straight up where the deagles land, 1 - markers starting where the deagle was dropped ending at the deagle landing point", 0);
 	gShadow_LR_GunToss_MarkerMode = 0;
-	gH_Cvar_LR_GunToss_StartMode = CreateConVar("sm_hosties_lr_gt_mode", "1", "How Gun Toss will be played: 0 - no double-dropping checking, deagle gets 7 ammo at start, 1 - double dropping check, deagle gets 7 ammo on drop, colouring of deagles, deagle markers", FCVAR_PLUGIN);
+	gH_Cvar_LR_GunToss_StartMode = CreateConVar("sm_hosties_lr_gt_mode", "1", "How Gun Toss will be played: 0 - no double-dropping checking, deagle gets 7 ammo at start, 1 - double dropping check, deagle gets 7 ammo on drop, colouring of deagles, deagle markers", 0);
 	gShadow_LR_GunToss_StartMode = 1;
-	gH_Cvar_LR_GunToss_ShowMeter = CreateConVar("sm_hosties_lr_gt_meter", "1", "Displays a distance meter: 0 - do not display, 1 - display", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_GunToss_ShowMeter = CreateConVar("sm_hosties_lr_gt_meter", "1", "Displays a distance meter: 0 - do not display, 1 - display", 0, true, 0.0, true, 1.0);
 	gShadow_LR_GunToss_ShowMeter = 1;
-	gH_Cvar_LR_Delay_Enable_Time = CreateConVar("sm_hosties_lr_enable_delay", "0.0", "Delay in seconds before a last request can be started: 0.0 - instantly, >0.0 - (float value) delay in seconds", FCVAR_PLUGIN, true, 0.0);
+	gH_Cvar_LR_Delay_Enable_Time = CreateConVar("sm_hosties_lr_enable_delay", "0.0", "Delay in seconds before a last request can be started: 0.0 - instantly, >0.0 - (float value) delay in seconds", 0, true, 0.0);
 	gShadow_LR_Delay_Enable_Time = 0.0;
-	gH_Cvar_LR_Damage = CreateConVar("sm_hosties_lr_damage", "0", "Enables that players can not attack players in LR and players in LR can not attack players outside LR: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Damage = CreateConVar("sm_hosties_lr_damage", "0", "Enables that players can not attack players in LR and players in LR can not attack players outside LR: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Damage = false; 	
-	gH_Cvar_LR_NoScope_Delay = CreateConVar("sm_hosties_lr_ns_delay", "3", "Delay in seconds before a No Scope Battle begins (to prepare the contestants...)", FCVAR_PLUGIN, true, 0.0);
+	gH_Cvar_LR_NoScope_Delay = CreateConVar("sm_hosties_lr_ns_delay", "3", "Delay in seconds before a No Scope Battle begins (to prepare the contestants...)", 0, true, 0.0);
 	gShadow_LR_NoScope_Delay = 3;
-	gH_Cvar_LR_ChickenFight_Rebel = CreateConVar("sm_hosties_lr_cf_cheat_action", "1", "What to do with a chicken fighter who attacks the other player with another weapon than knife: 0 - abort LR, 1 - slay player", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_ChickenFight_Rebel = CreateConVar("sm_hosties_lr_cf_cheat_action", "1", "What to do with a chicken fighter who attacks the other player with another weapon than knife: 0 - abort LR, 1 - slay player", 0, true, 0.0, true, 1.0);
 	gShadow_LR_ChickenFight_Rebel = 1;
-	gH_Cvar_LR_HotPotato_Rebel = CreateConVar("sm_hosties_lr_hp_cheat_action", "1", "What to do with a hot potato contestant who attacks the other player: 0 - abort LR, 1 - slay player", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_HotPotato_Rebel = CreateConVar("sm_hosties_lr_hp_cheat_action", "1", "What to do with a hot potato contestant who attacks the other player: 0 - abort LR, 1 - slay player", 0, true, 0.0, true, 1.0);
 	gShadow_LR_HotPotato_Rebel = 1;
-	gH_Cvar_LR_KnifeFight_Rebel = CreateConVar("sm_hosties_lr_kf_cheat_action", "1", "What to do with a knife fighter who attacks the other player with another weapon than knife: 0 - abort LR, 1 - slay player", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_KnifeFight_Rebel = CreateConVar("sm_hosties_lr_kf_cheat_action", "1", "What to do with a knife fighter who attacks the other player with another weapon than knife: 0 - abort LR, 1 - slay player", 0, true, 0.0, true, 1.0);
 	gShadow_LR_KnifeFight_Rebel = 1;
-	gH_Cvar_LR_Race_AirPoints = CreateConVar("sm_hosties_lr_race_airpoints", "0", "Allow prisoners to set race points in the air.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Race_AirPoints = CreateConVar("sm_hosties_lr_race_airpoints", "0", "Allow prisoners to set race points in the air.", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Race_AirPoints = false;
-	gH_Cvar_LR_Race_NotifyCTs = CreateConVar("sm_hosties_lr_race_tell_cts", "1", "Tells all CTs when a T has selected the race option from the LR menu", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_Race_NotifyCTs = CreateConVar("sm_hosties_lr_race_tell_cts", "1", "Tells all CTs when a T has selected the race option from the LR menu", 0, true, 0.0, true, 1.0);
 	gShadow_LR_Race_NotifyCTs = false;
-	gH_Cvar_LR_Rebel_MaxTs = CreateConVar("sm_hosties_lr_rebel_ts", "1", "If the Rebel LR option is enabled, specifies the maximum number of alive terrorists needed for the option to appear in the LR menu.", FCVAR_PLUGIN, true, 1.0);
+	gH_Cvar_LR_Rebel_MaxTs = CreateConVar("sm_hosties_lr_rebel_ts", "1", "If the Rebel LR option is enabled, specifies the maximum number of alive terrorists needed for the option to appear in the LR menu.", 0, true, 1.0);
 	gShadow_LR_Rebel_MaxTs = 1;
-	gH_Cvar_LR_Rebel_MinCTs = CreateConVar("sm_hosties_lr_rebel_cts", "1", "If the Rebel LR option is enabled, specifies how minimum number of alive counter-terrorists needed for the option to appear in the LR menu.", FCVAR_PLUGIN, true, 1.0);
+	gH_Cvar_LR_Rebel_MinCTs = CreateConVar("sm_hosties_lr_rebel_cts", "1", "If the Rebel LR option is enabled, specifies how minimum number of alive counter-terrorists needed for the option to appear in the LR menu.", 0, true, 1.0);
 	gShadow_LR_Rebel_MinCTs = 1;
-	gH_Cvar_LR_M4M_MagCapacity = CreateConVar("sm_hosties_lr_m4m_capacity", "7", "The number of bullets in each magazine given to Mag4Mag LR contestants", FCVAR_PLUGIN, true, 2.0);
+	gH_Cvar_LR_M4M_MagCapacity = CreateConVar("sm_hosties_lr_m4m_capacity", "7", "The number of bullets in each magazine given to Mag4Mag LR contestants", 0, true, 2.0);
 	gShadow_LR_M4M_MagCapacity = 7;
-	gH_Cvar_LR_KnifeFight_LowGrav = CreateConVar("sm_hosties_lr_kf_gravity", "0.6", "The multiplier used for the low-gravity knife fight.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_KnifeFight_LowGrav = CreateConVar("sm_hosties_lr_kf_gravity", "0.6", "The multiplier used for the low-gravity knife fight.", 0, true, 0.0, true, 1.0);
 	gShadow_LR_KnifeFight_LowGrav = 0.6;
-	gH_Cvar_LR_KnifeFight_HiSpeed = CreateConVar("sm_hosties_lr_kf_speed", "2.2", "The multiplier used for the high-speed knife fight.", FCVAR_PLUGIN, true, 1.1);
+	gH_Cvar_LR_KnifeFight_HiSpeed = CreateConVar("sm_hosties_lr_kf_speed", "2.2", "The multiplier used for the high-speed knife fight.", 0, true, 1.1);
 	gShadow_LR_KnifeFight_HiSpeed = 2.2;
-	gH_Cvar_LR_KnifeFight_Drunk = CreateConVar("sm_hosties_lr_kf_drunk", "4", "The multiplier used for how drunk the player will be during the drunken boxing knife fight.", FCVAR_PLUGIN, true, 0.0);
+	gH_Cvar_LR_KnifeFight_Drunk = CreateConVar("sm_hosties_lr_kf_drunk", "4", "The multiplier used for how drunk the player will be during the drunken boxing knife fight.", 0, true, 0.0);
 	gShadow_LR_KnifeFight_Drunk = 4;
-	gH_Cvar_Announce_CT_FreeHit = CreateConVar("sm_hosties_announce_attack", "1", "Enable or disable announcements when a CT attacks a non-rebelling T: 0 - disable, 1 - console, 2 - chat, 3 - both", FCVAR_PLUGIN, true, 0.0, true, 3.0);
+	gH_Cvar_Announce_CT_FreeHit = CreateConVar("sm_hosties_announce_attack", "1", "Enable or disable announcements when a CT attacks a non-rebelling T: 0 - disable, 1 - console, 2 - chat, 3 - both", 0, true, 0.0, true, 3.0);
 	gShadow_Announce_CT_FreeHit = 1;
-	gH_Cvar_Announce_LR = CreateConVar("sm_hosties_announce_lr", "1", "Enable or disable chat announcements when Last Requests starts to be available: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Announce_LR = CreateConVar("sm_hosties_announce_lr", "1", "Enable or disable chat announcements when Last Requests starts to be available: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_Announce_LR = true;
-	gH_Cvar_Announce_Rebel = CreateConVar("sm_hosties_announce_rebel", "0", "Enable or disable chat announcements when a terrorist becomes a rebel: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Announce_Rebel = CreateConVar("sm_hosties_announce_rebel", "0", "Enable or disable chat announcements when a terrorist becomes a rebel: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_Announce_Rebel = false;
-	gH_Cvar_Announce_RebelDown = CreateConVar("sm_hosties_announce_rebel_down", "0", "Enable or disable chat announcements when a rebel is killed: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Announce_RebelDown = CreateConVar("sm_hosties_announce_rebel_down", "0", "Enable or disable chat announcements when a rebel is killed: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_Announce_RebelDown = false;
-	gH_Cvar_Announce_Weapon_Attack = CreateConVar("sm_hosties_announce_wpn_attack", "0", "Enable or disable an announcement telling that a non-rebelling T has a weapon when he gets attacked by a CT (also requires sm_hosties_announce_attack 1): 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Announce_Weapon_Attack = CreateConVar("sm_hosties_announce_wpn_attack", "0", "Enable or disable an announcement telling that a non-rebelling T has a weapon when he gets attacked by a CT (also requires sm_hosties_announce_attack 1): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_Announce_Weapon_Attack = false;
-	gH_Cvar_Announce_Shot4Shot = CreateConVar("sm_hosties_lr_s4s_shot_taken", "1", "Enable announcements in Shot4Shot or Mag4Mag when a contestant empties their gun: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Announce_Shot4Shot = CreateConVar("sm_hosties_lr_s4s_shot_taken", "1", "Enable announcements in Shot4Shot or Mag4Mag when a contestant empties their gun: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_Announce_Shot4Shot = false;
-	gH_Cvar_Announce_Delay_Enable = CreateConVar("sm_hosties_announce_lr_delay", "1", "Enable or disable chat announcements to tell that last request delaying is activated and how long the delay is: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Announce_Delay_Enable = CreateConVar("sm_hosties_announce_lr_delay", "1", "Enable or disable chat announcements to tell that last request delaying is activated and how long the delay is: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_Announce_Delay_Enable = false;
-	gH_Cvar_Announce_HotPotato_Eqp = CreateConVar("sm_hosties_lr_hp_pickupannounce", "0", "Enable announcement when a Hot Potato contestant picks up the hot potato: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_Announce_HotPotato_Eqp = CreateConVar("sm_hosties_lr_hp_pickupannounce", "0", "Enable announcement when a Hot Potato contestant picks up the hot potato: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_Announce_HotPotato_Eqp = false;
-	gH_Cvar_LR_AutoDisplay = CreateConVar("sm_hosties_lr_autodisplay", "0", "Automatically display the LR menu to non-rebelers when they become elgible for LR: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_AutoDisplay = CreateConVar("sm_hosties_lr_autodisplay", "0", "Automatically display the LR menu to non-rebelers when they become elgible for LR: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_AutoDisplay = false;
-	gH_Cvar_LR_BlockSuicide = CreateConVar("sm_hosties_lr_blocksuicide", "0", "Blocks LR participants from commiting suicide to avoid deaths: 0 - disable, 1 - enable", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	gH_Cvar_LR_BlockSuicide = CreateConVar("sm_hosties_lr_blocksuicide", "0", "Blocks LR participants from commiting suicide to avoid deaths: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_BlockSuicide = false;
-	gH_Cvar_LR_VictorPoints = CreateConVar("sm_hosties_lr_victorpoints", "1", "Amount of frags to reward victor in an LR where other player automatically dies", FCVAR_PLUGIN, true, 0.0);
+	gH_Cvar_LR_VictorPoints = CreateConVar("sm_hosties_lr_victorpoints", "1", "Amount of frags to reward victor in an LR where other player automatically dies", 0, true, 0.0);
 	gShadow_LR_VictorPoints = 1;
 	
 	// Listen for changes
@@ -1052,22 +1052,7 @@ public LastRequest_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 				
 				if ((strlen(gShadow_LR_Sound) > 0) && !StrEqual(gShadow_LR_Sound, "-1"))
 				{
-					if (g_Game == Game_CSS)
-					{
-						EmitSoundToAll(gShadow_LR_Sound);
-					}
-					else
-					{
-						decl String:sCommand[PLATFORM_MAX_PATH];
-						for (new idx = 1; idx <= MaxClients; idx++)
-						{
-							if (IsClientInGame(idx))
-							{
-								Format(sCommand, sizeof(sCommand), "play *%s", gShadow_LR_Sound);
-								ClientCommand(idx, sCommand);
-							}
-						}
-					}
+					EmitSoundToAllAny(gShadow_LR_Sound);
 				}
 			}
 			
@@ -1234,22 +1219,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 		if ((gShadow_Freekill_Sound_Mode == 0) && (strlen(gShadow_Freekill_Sound) > 0) \
 			&& !StrEqual(gShadow_Freekill_Sound, "-1") && (!bPrisonerHasGun))
 		{
-			if (g_Game == Game_CSS)
-			{
-				EmitSoundToAll(gShadow_Freekill_Sound);
-			}
-			else
-			{
-				decl String:sCommand[PLATFORM_MAX_PATH];
-				for (new idx = 1; idx <= MaxClients; idx++)
-				{
-					if (IsClientInGame(idx))
-					{
-						Format(sCommand, sizeof(sCommand), "play *%s", gShadow_Freekill_Sound);
-						ClientCommand(idx, sCommand);
-					}
-				}
-			}
+			EmitSoundToAllAny(gShadow_Freekill_Sound);
 		}
 	}
 }
@@ -4234,22 +4204,7 @@ InitializeGame(iPartnersIndex)
 				
 				if ((strlen(gShadow_LR_NoScope_Sound) > 0) && !StrEqual(gShadow_LR_NoScope_Sound, "-1"))
 				{
-					if (g_Game == Game_CSS)
-					{
-						EmitSoundToAll(gShadow_LR_NoScope_Sound);
-					}
-					else
-					{
-						decl String:sCommand[PLATFORM_MAX_PATH];
-						for (new idx = 1; idx <= MaxClients; idx++)
-						{
-							if (IsClientInGame(idx))
-							{
-								Format(sCommand, sizeof(sCommand), "play *%s", gShadow_LR_NoScope_Sound);
-								ClientCommand(idx, sCommand);
-							}
-						}
-					}
+					EmitSoundToAllAny(gShadow_LR_NoScope_Sound);
 				}			
 			}
 		}
@@ -4983,7 +4938,7 @@ public Action:Timer_Beacon(Handle:timer)
 					TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 10, 0.6, 10.0, 0.5, yellowColor, 10, 0);
 					TE_SendToAll();
 				}
-				EmitAmbientSound(gShadow_LR_Beacon_Sound, f_Origin, iEntityIndex, SNDLEVEL_RAIDSIREN);	
+				EmitAmbientSoundAny(gShadow_LR_Beacon_Sound, f_Origin, iEntityIndex, SNDLEVEL_RAIDSIREN);	
 			}
 			else
 			{
@@ -4995,7 +4950,7 @@ public Action:Timer_Beacon(Handle:timer)
 	return Plugin_Continue;
 }
 
-void:AddBeacon(entityIndex)
+void AddBeacon(entityIndex)
 {
 	if (IsValidEntity(entityIndex))
 	{
@@ -5007,7 +4962,7 @@ void:AddBeacon(entityIndex)
 	}
 }
 
-void:RemoveBeacon(entityIndex)
+void RemoveBeacon(entityIndex)
 {
 	new iBeaconIndex = FindValueInArray(gH_DArray_Beacons, entityIndex);
 	if (iBeaconIndex != -1)
@@ -5050,7 +5005,7 @@ stock Trail_Attach(client, LRIndex)
 	return 0;
 }
 
-stock void:Trail_Remove(client, LRIndex)
+stock void Trail_Remove(client, LRIndex)
 {
 	new ent = g_iClientSpriteEntIndex[client];
 	if (ent != 0)
@@ -5744,88 +5699,94 @@ public Action:Timer_GunToss(Handle:timer)
 				GTp2jumppos[0] = ReadPackFloat(PositionDataPack);
 				GTp2jumppos[1] = ReadPackFloat(PositionDataPack);
 				GTp2jumppos[2] = ReadPackFloat(PositionDataPack);
-			
-				GetEntPropVector(GTdeagle1, Prop_Data, "m_vecOrigin", GTdeagle1pos);
-				if (GTp1dropped && !GTp1done)
+				
+				if(IsValidEntity(GTdeagle1))
 				{
-					if (GetVectorDistance(GTdeagle1lastpos, GTdeagle1pos) < 3.00)
+					GetEntPropVector(GTdeagle1, Prop_Data, "m_vecOrigin", GTdeagle1pos);
+					if (GTp1dropped && !GTp1done)
 					{
-						GTp1done = true;
-						SetArrayCell(gH_DArray_LR_Partners, idx, GTp1done, _:Block_Global3);
-					}
-					else
-					{
-						GTdeagle1lastpos[0] = GTdeagle1pos[0];
-						GTdeagle1lastpos[1] = GTdeagle1pos[1];
-						GTdeagle1lastpos[2] = GTdeagle1pos[2];
-						SetPackPosition(PositionDataPack, 0);
-						WritePackFloat(PositionDataPack, GTdeagle1lastpos[0]);
-						WritePackFloat(PositionDataPack, GTdeagle1lastpos[1]);
-						WritePackFloat(PositionDataPack, GTdeagle1lastpos[2]);
-					}
-				}
-				else if (GTp1dropped && GTp1done)
-				{
-					new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
-					new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
-					switch (gShadow_LR_GunToss_MarkerMode)
-					{
-						case 0:
+						if (GetVectorDistance(GTdeagle1lastpos, GTdeagle1pos) < 3.00)
 						{
-							decl Float:beamStartP1[3];		
-							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
-							MakeVectorFromPoints(f_SubtractVec, GTdeagle1lastpos, beamStartP1);
-							TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							GTp1done = true;
+							SetArrayCell(gH_DArray_LR_Partners, idx, GTp1done, _:Block_Global3);
 						}
-						case 1:
+						else
 						{
-							TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							GTdeagle1lastpos[0] = GTdeagle1pos[0];
+							GTdeagle1lastpos[1] = GTdeagle1pos[1];
+							GTdeagle1lastpos[2] = GTdeagle1pos[2];
+							SetPackPosition(PositionDataPack, 0);
+							WritePackFloat(PositionDataPack, GTdeagle1lastpos[0]);
+							WritePackFloat(PositionDataPack, GTdeagle1lastpos[1]);
+							WritePackFloat(PositionDataPack, GTdeagle1lastpos[2]);
 						}
 					}
-
-					TE_SendToAll();				
+					else if (GTp1dropped && GTp1done)
+					{
+						new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+						new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
+						switch (gShadow_LR_GunToss_MarkerMode)
+						{
+							case 0:
+							{
+								decl Float:beamStartP1[3];		
+								new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
+								MakeVectorFromPoints(f_SubtractVec, GTdeagle1lastpos, beamStartP1);
+								TE_SetupBeamPoints(beamStartP1, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							}
+							case 1:
+							{
+								TE_SetupBeamPoints(GTp1droppos, GTdeagle1lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, redColor, 0);
+							}
+						}
+	
+						TE_SendToAll();				
+					}
 				}
 				
-				GetEntPropVector(GTdeagle2, Prop_Data, "m_vecOrigin", GTdeagle2pos);
-				if (GTp2dropped && !GTp2done)
-				{					
-					if (GetVectorDistance(GTdeagle2lastpos, GTdeagle2pos) < 3.00)
-					{
-						GTp2done = true;
-						SetArrayCell(gH_DArray_LR_Partners, idx, GTp2done, _:Block_Global4);						
-					}
-					else
-					{
-						GTdeagle2lastpos[0] = GTdeagle2pos[0];
-						GTdeagle2lastpos[1] = GTdeagle2pos[1];
-						GTdeagle2lastpos[2] = GTdeagle2pos[2];
-
-						SetPackPosition(PositionDataPack, 24);
-						WritePackFloat(PositionDataPack, GTdeagle2lastpos[0]);
-						WritePackFloat(PositionDataPack, GTdeagle2lastpos[1]);
-						WritePackFloat(PositionDataPack, GTdeagle2lastpos[2]);
-					}
-				}
-				else if (GTp2dropped && GTp2done)
+				if(IsValidEntity(GTdeagle2))
 				{
-					new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
-					new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
-					switch (gShadow_LR_GunToss_MarkerMode)
-					{
-						case 0:
+					GetEntPropVector(GTdeagle2, Prop_Data, "m_vecOrigin", GTdeagle2pos);
+					if (GTp2dropped && !GTp2done)
+					{					
+						if (GetVectorDistance(GTdeagle2lastpos, GTdeagle2pos) < 3.00)
 						{
-							decl Float:beamStartP2[3];
-							new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
-							MakeVectorFromPoints(f_SubtractVec, GTdeagle2lastpos, beamStartP2);
-							TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							GTp2done = true;
+							SetArrayCell(gH_DArray_LR_Partners, idx, GTp2done, _:Block_Global4);						
 						}
-						case 1:
+						else
 						{
-							TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							GTdeagle2lastpos[0] = GTdeagle2pos[0];
+							GTdeagle2lastpos[1] = GTdeagle2pos[1];
+							GTdeagle2lastpos[2] = GTdeagle2pos[2];
+	
+							SetPackPosition(PositionDataPack, 24);
+							WritePackFloat(PositionDataPack, GTdeagle2lastpos[0]);
+							WritePackFloat(PositionDataPack, GTdeagle2lastpos[1]);
+							WritePackFloat(PositionDataPack, GTdeagle2lastpos[2]);
 						}
 					}
-					
-					TE_SendToAll();				
+					else if (GTp2dropped && GTp2done)
+					{
+						new Float:fBeamWidth = (g_Game == Game_CSS ? 10.0 : 2.0);
+						new Float:fRefreshRate = (g_Game == Game_CSS ? 0.1 : 1.0);
+						switch (gShadow_LR_GunToss_MarkerMode)
+						{
+							case 0:
+							{
+								decl Float:beamStartP2[3];
+								new Float:f_SubtractVec[3] = {0.0, 0.0, -30.0};
+								MakeVectorFromPoints(f_SubtractVec, GTdeagle2lastpos, beamStartP2);
+								TE_SetupBeamPoints(beamStartP2, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							}
+							case 1:
+							{
+								TE_SetupBeamPoints(GTp2droppos, GTdeagle2lastpos, BeamSprite, 0, 0, 0, fRefreshRate, fBeamWidth, fBeamWidth, 7, 0.0, blueColor, 0);
+							}
+						}
+						
+						TE_SendToAll();				
+					}
 				}
 				
 				// broadcast distance

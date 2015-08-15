@@ -59,7 +59,7 @@ Admin Commands:
 !stoplr (also: !abortlr and !cancellr): Requires slay admin flag and will abort any and all active last requests.
 
 Requirements:
-SourceMod 1.5.0+
+SourceMod 1.7.0+
 
 Uses natives from these plugins if found:
 SteamTools
