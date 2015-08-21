@@ -24,6 +24,7 @@
 #include <sdkhooks>
 #include <hosties>
 #include <emitsoundany>
+#include <multicolors>
 
 #undef REQUIRE_PLUGIN
 #undef REQUIRE_EXTENSIONS
@@ -334,7 +335,7 @@ public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 	if (GetConVarInt(gH_Cvar_Display_Advert))
 	{
 		// Print out a messages about SM_Hosties 
-		PrintToChatAll(CHAT_BANNER, "Powered By Hosties");
+		CPrintToChatAll(CHAT_BANNER, "Powered By Hosties");
 	}
 }
 

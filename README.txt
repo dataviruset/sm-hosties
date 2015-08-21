@@ -62,6 +62,7 @@ SourceMod 1.7.0+
 
 Needed for successful compilation:
 EmitSoundAny - https://forums.alliedmods.net/showthread.php?t=237045
+MultiColors - https://forums.alliedmods.net/showthread.php?t=247770
 
 Uses natives from these plugins if found:
 SteamWorks - https://forums.alliedmods.net/showthread.php?t=229556

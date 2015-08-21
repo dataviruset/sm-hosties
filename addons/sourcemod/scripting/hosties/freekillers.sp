@@ -251,13 +251,13 @@ TakeActionOnFreekiller(attacker)
 				case FP_Slay:
 				{
 					ForcePlayerSuicide(attacker);
-					PrintToChatAll(CHAT_BANNER, "Freekill Slay", attacker);
+					CPrintToChatAll(CHAT_BANNER, "Freekill Slay", attacker);
 					gA_FreekillsOfCT[attacker] = 0;
 				}
 				case FP_Kick:
 				{
 					KickClient(attacker, "%t", "Freekill Kick Reason");
-					PrintToChatAll(CHAT_BANNER, "Freekill Kick", attacker);
+					CPrintToChatAll(CHAT_BANNER, "Freekill Kick", attacker);
 					LogMessage("%N was kicked for killing too many non-rebelling terrorists.", attacker);
 				}
 				case FP_Ban:
@@ -271,7 +271,7 @@ TakeActionOnFreekiller(attacker)
 						decl String:ban_message[128];
 						Format(ban_message, sizeof(ban_message), "%T", "Freekill Ban Reason", attacker);
 						BanClient(attacker, gShadow_Freekill_BanLength, BANFLAG_AUTO, "SM_Hosties: Freekilling", ban_message);
-						PrintToChatAll(CHAT_BANNER, "Freekill Ban", attacker);
+						CPrintToChatAll(CHAT_BANNER, "Freekill Ban", attacker);
 					}
 				}
 			}

@@ -65,7 +65,7 @@ public Action:Command_CheckPlayers(client, args)
 
 			if (realrebelscount < 1)
 			{
-				PrintToChat(client, CHAT_BANNER, "No Rebels ATM");
+				CPrintToChat(client, CHAT_BANNER, "No Rebels ATM");
 			}
 			else
 			{
@@ -89,7 +89,7 @@ public Action:Command_CheckPlayers(client, args)
 	}
 	else
 	{
-		ReplyToCommand(client, CHAT_BANNER, "CheckPlayers CMD Disabled");
+		CReplyToCommand(client, CHAT_BANNER, "CheckPlayers CMD Disabled");
 	}
 
 	return Plugin_Handled;
