@@ -3652,6 +3652,10 @@ InitializeGame(iPartnersIndex)
 		LogToGame("\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, LR_Name, LR_Player_Guard);
 	}
 	
+	//remove armor
+	SetEntData(LR_Player_Prisoner, g_Offset_Armor, 0);
+	SetEntData(LR_Player_Guard, g_Offset_Armor, 0);
+	
 	switch (selection)
 	{
 		case LR_KnifeFight:
