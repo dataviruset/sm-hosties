@@ -24,6 +24,7 @@
 #include <sdkhooks>
 #include <hosties>
 #include <emitsoundany>
+#include <autoexecconfig>
 
 #undef REQUIRE_PLUGIN
 #undef REQUIRE_EXTENSIONS
@@ -152,12 +153,15 @@ public OnPluginStart()
 
 	// Events hooks
 	HookEvent("round_start", Event_RoundStart);
+	
+	AutoExecConfig_SetFile("sm_hosties2");
+	AutoExecConfig_SetCreateFile(true);
 
 	// Create ConVars
-	gH_Cvar_Add_ServerTag = CreateConVar("sm_hosties_add_servertag", "1", "Enable or disable automatic adding of SM_Hosties in sv_tags (visible from the server browser in CS:S): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
-	gH_Cvar_Display_Advert = CreateConVar("sm_hosties_display_advert", "1", "Enable or disable the display of the Powered by SM Hosties message at the start of each round.", 0, true, 0.0, true, 1.0);
+	gH_Cvar_Add_ServerTag = AutoExecConfig_CreateConVar("sm_hosties_add_servertag", "1", "Enable or disable automatic adding of SM_Hosties in sv_tags (visible from the server browser in CS:S): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
+	gH_Cvar_Display_Advert = AutoExecConfig_CreateConVar("sm_hosties_display_advert", "1", "Enable or disable the display of the Powered by SM Hosties message at the start of each round.", 0, true, 0.0, true, 1.0);
 	
-	CreateConVar("sm_hosties_version", PLUGIN_VERSION, "SM_Hosties plugin version (unchangeable)", 0|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_hosties_version", PLUGIN_VERSION, "SM_Hosties plugin version (unchangeable)", 0|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	
 	RegAdminCmd("sm_hostiesadmin", Command_HostiesAdmin, ADMFLAG_SLAY);
 	
@@ -198,7 +202,8 @@ public OnPluginStart()
 	Control_OnPluginStart();
 	#endif
 	
-	AutoExecConfig(true, "sm_hosties2");
+	AutoExecConfig_CleanFile();
+	AutoExecConfig_ExecuteFile();
 }
 
 public OnMapStart()
