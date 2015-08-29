@@ -6012,12 +6012,9 @@ KillAndReward(loser, victor)
 	ForcePlayerSuicide(loser);
 	if (IsClientInGame(victor))
 	{
-		if(g_Game == Game_CSS)
-		{
-			new iFrags = GetEntProp(victor, Prop_Data, "m_iFrags");
-			iFrags += gShadow_LR_VictorPoints;
-			SetEntProp(victor, Prop_Data, "m_iFrags", iFrags);
-		}
+		new iFrags = GetEntProp(victor, Prop_Data, "m_iFrags");
+		iFrags += gShadow_LR_VictorPoints;
+		SetEntProp(victor, Prop_Data, "m_iFrags", iFrags);
 	}
 }
 
