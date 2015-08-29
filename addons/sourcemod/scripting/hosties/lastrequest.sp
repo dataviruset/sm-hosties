@@ -1827,45 +1827,10 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					}
 				}	
 			}			
-			else if (type == LR_NoScope)
-			{
-				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
-				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
-				if (client == LR_Player_Prisoner || client == LR_Player_Guard)
-				{
-					// grab weapon choice
-					new NoScopeWeapon:NS_Selection;
-					NS_Selection = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global2);					
-					switch (NS_Selection)
-					{
-						case NSW_AWP:
-						{
-							CreateTimer(1.8, Timer_ResetZoom, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-						}
-						case NSW_Scout:
-						{
-							CreateTimer(1.3, Timer_ResetZoom, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-						}
-						default:
-						{
-							CreateTimer(0.5, Timer_ResetZoom, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-						}
-					}
-				}
-			}
+
 		}
 	}
 } // end LastRequest_WeaponFire
-
-public Action:Timer_ResetZoom(Handle:timer, any:UserId)
-{
-	new client = GetClientOfUserId(UserId);
-	if (client)
-	{
-		SetEntData(client, g_Offset_FOV, 0, 4, true);
-	}
-	return Plugin_Handled;
-}
 
 public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype, &weapon, Float:damageForce[3], Float:damagePosition[3])
 {
