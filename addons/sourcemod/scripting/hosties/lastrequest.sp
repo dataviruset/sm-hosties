@@ -1478,6 +1478,28 @@ public LastRequest_BulletImpact(Handle:event, const String:name[], bool:dontBroa
 	}
 }
 
+public Action:OnPreThink(client)
+{
+	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
+	if (iArraySize > 0)
+	{
+		for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
+		{
+			new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
+			if (type == LR_NoScope)
+			{
+				new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+				if (client == LR_Player_Prisoner || client == LR_Player_Guard)
+				{
+					new iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+					SetNoScope(iWeapon);
+				}
+			}
+		}
+	}
+}
+
 public LastRequest_PlayerJump(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
@@ -2052,6 +2074,10 @@ public Action:OnWeaponEquip(client, weapon)
 							}
 						}
 					}
+				}
+				else if (type == LR_NoScope)
+				{
+					SetNoScope(weapon);
 				}
 			}
 		}
@@ -2763,6 +2789,7 @@ LastRequest_ClientPutInServer(client)
 	SDKHook(client, SDKHook_WeaponEquip, OnWeaponEquip);
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponDecideUse);
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage); 
+	SDKHook(client, SDKHook_PreThink, OnPreThink);
 }
 
 public Action:Command_LastRequest(client, args)
@@ -6002,6 +6029,21 @@ UpdatePlayerCounts(&Prisoners, &Guards, &iNumGuardsAvailable)
 					iNumGuardsAvailable++;
 				}
 			}
+		}
+	}
+}
+
+stock SetNoScope(weapon)
+{
+	if(IsValidEdict(weapon))
+	{
+		decl String:sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
+		if(StrEqual(sWeapon, "weapon_awp", false) || StrEqual(sWeapon, "weapon_scout", false) || StrEqual(sWeapon, "weapon_ssg08", false) || StrEqual(sWeapon, "weapon_sg550", false) || StrEqual(sWeapon, "weapon_scar20", false) || StrEqual(sWeapon, "weapon_g3sg1", false))
+		{
+			new g_Offset_NextSecAttack = FindSendPropOffs("CBaseCombatWeapon", "m_flNextSecondaryAttack");
+			SetEntDataFloat(weapon, g_Offset_NextSecAttack, GetGameTime() + 9999.9);
 		}
 	}
 }
