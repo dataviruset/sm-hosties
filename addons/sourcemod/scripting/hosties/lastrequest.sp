@@ -637,6 +637,7 @@ LastRequest_OnPluginStart()
 			SDKHook(idx, SDKHook_WeaponEquip, OnWeaponEquip);
 			SDKHook(idx, SDKHook_WeaponCanUse, OnWeaponDecideUse);
 			SDKHook(idx, SDKHook_OnTakeDamage, OnTakeDamage);
+			SDKHook(idx, SDKHook_PreThink, OnPreThink);
 		}
 		g_bIsARebel[idx] = false;
 		g_bInLastRequest[idx] = false;
