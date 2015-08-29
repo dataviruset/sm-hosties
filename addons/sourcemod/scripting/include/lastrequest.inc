@@ -192,10 +192,17 @@ stock SetThirdPerson(client)
 {
 	if (IsValidEntity(client) && IsClientInGame(client))
 	{
-		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 0);
-		SetEntProp(client, Prop_Send, "m_iObserverMode", 1);
-		SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
-		SetEntProp(client, Prop_Send, "m_iFOV", 120);
+		if (g_Game == Game_CSGO)
+		{
+			ClientCommand(client, "thirdperson");
+		}
+		else
+		{
+			SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 0);
+			SetEntProp(client, Prop_Send, "m_iObserverMode", 1);
+			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
+			SetEntProp(client, Prop_Send, "m_iFOV", 120);
+		}
 	}
 }
 
@@ -203,10 +210,17 @@ stock SetFirstPerson(client)
 {
 	if (IsValidEntity(client) && IsClientInGame(client))
 	{
-		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 1);
-		SetEntProp(client, Prop_Send, "m_iObserverMode", 0);
-		SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
-		SetEntProp(client, Prop_Send, "m_iFOV", 90);
+		if (g_Game == Game_CSGO)
+		{
+			ClientCommand(client, "firstperson");
+		}
+		else
+		{
+			SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", client);
+			SetEntProp(client, Prop_Send, "m_iObserverMode", 0);
+			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
+			SetEntProp(client, Prop_Send, "m_iFOV", 90);
+		}
 	}
 }
 
