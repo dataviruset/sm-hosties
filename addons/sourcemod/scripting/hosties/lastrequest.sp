@@ -253,7 +253,10 @@ enum PistolWeapon
 	Pistol_FiveSeven,
 	Pistol_Dualies,
 	Pistol_USP,
-	Pistol_Tec9
+	Pistol_Tec9,
+	Pistol_CZ75,
+	Pistol_USPS,
+	Pistol_Revolver
 };
 
 enum KnifeType
@@ -3008,6 +3011,18 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 									Format(sDataField, sizeof(sDataField), "%d", Pistol_Tec9);
 									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Tec9", client);
 									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+									
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_CZ75);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_CZ75", client);
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+									
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_USPS);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_USPS", client);
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+									
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_Revolver);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Revolver", client);
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
 								}
 								
 								SetMenuExitBackButton(SubWeaponMenu, true);
@@ -3777,6 +3792,21 @@ InitializeGame(iPartnersIndex)
 					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_tec9");
 					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_tec9");
 				}
+				case Pistol_CZ75:
+				{
+					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_cz75a");
+					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_cz75a");
+				}
+				case Pistol_USPS:
+				{
+					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_usp_silencer");
+					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_usp_silencer");
+				}
+				case Pistol_Revolver:
+				{
+					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_revolver");
+					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_revolver");
+				}
 				default:
 				{
 					LogError("hit default S4S");
@@ -4354,6 +4384,21 @@ InitializeGame(iPartnersIndex)
 				{
 					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_tec9");
 					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_tec9");
+				}
+				case Pistol_CZ75:
+				{
+					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_cz75a");
+					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_cz75a");
+				}
+				case Pistol_USPS:
+				{
+					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_usp_silencer");
+					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_usp_silencer");
+				}
+				case Pistol_Revolver:
+				{
+					Pistol_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_revolver");
+					Pistol_Guard = GivePlayerItem(LR_Player_Guard, "weapon_revolver");
 				}
 				default:
 				{
