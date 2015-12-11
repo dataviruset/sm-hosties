@@ -1495,6 +1495,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 		}
 		if ((buttons & IN_ATTACK || buttons & IN_ATTACK2) && type == LR_Shot4Shot)
 		{
+			new S4Slastshot = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
 			if (gShadow_LR_S4S_DoubleShot == 2 && (S4Slastshot == client))
 			{
 				return Plugin_Handled;
