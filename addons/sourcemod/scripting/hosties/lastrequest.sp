@@ -6022,9 +6022,13 @@ KillAndReward(loser, victor)
 		}
 		else if (g_Game == Game_CSGO)
 		{
-			new iScore = CS_GetClientContributionScore(victor);
-			iScore += gShadow_LR_VictorPoints*2;
-			CS_SetClientContributionScore(victor, iScore);
+			new iResourceEntity = GetPlayerResourceEntity();
+			if (iResourceEntity != -1)
+			{
+				new iScore = GetEntProp(iResourceEntity, Prop_Send, "m_iScore");
+				iScore += gShadow_LR_VictorPoints*2;
+				SetEntProp(iResourceEntity, Prop_Send, "m_iScore", iScore);
+			}
 		}
 	}
 }
