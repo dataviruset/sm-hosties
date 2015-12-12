@@ -1764,22 +1764,20 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					new Guard_S4S_Pistol = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData);
 					new S4Slastshot = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
 					
-					decl String:FiredWeapon[32];
+					decl String:FiredWeapon[48];
 					GetEventString(event, "weapon", FiredWeapon, sizeof(FiredWeapon));
+					// as of 8 December 2015 CS:GO weapon_fire events need weapon_ to remain
+					ReplaceString(FiredWeapon, sizeof(FiredWeapon), "weapon_", "");
 					
 					// get the entity index of the pistol
 					new iClientWeapon = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
 					
 					// check if we have the same weapon
-					new String:LR_WeaponName[32];
+					new String:LR_WeaponName[48];
 					if (iClientWeapon != -1)
 					{
 						GetEdictClassname(iClientWeapon, LR_WeaponName, sizeof(LR_WeaponName));
-						// as of 8 December 2015 CS:GO weapon_fire events need weapon_ to remain
-						if (g_Game == Game_CSS)
-						{
-							ReplaceString(LR_WeaponName, sizeof(LR_WeaponName), "weapon_", "");
-						}
+						ReplaceString(LR_WeaponName, sizeof(LR_WeaponName), "weapon_", "");
 					}
 					
 					if (StrEqual(LR_WeaponName, FiredWeapon))
