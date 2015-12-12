@@ -197,6 +197,11 @@ public Freekillers_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 		{
 			g_iConsecutiveKills[attacker]++;
 			
+			if (gH_Reset_Kill_Counter[attacker] != INVALID_HANDLE)
+			{
+				CloseHandle(gH_Reset_Kill_Counter[attacker]);				
+			}
+			
 			gH_Reset_Kill_Counter[attacker] = CreateTimer(4.0, Timer_ResetKills, attacker, TIMER_FLAG_NO_MAPCHANGE);
 		}
 		
