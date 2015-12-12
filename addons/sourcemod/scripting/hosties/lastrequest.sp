@@ -6020,7 +6020,7 @@ KillAndReward(loser, victor)
 			iFrags += gShadow_LR_VictorPoints;
 			SetEntProp(victor, Prop_Data, "m_iFrags", iFrags);
 		}
-		else if(g_Game == Game_CSGO)
+		else if (g_Game == Game_CSGO)
 		{
 			new iScore = CS_GetClientContributionScore(victor);
 			iScore += gShadow_LR_VictorPoints*2;
