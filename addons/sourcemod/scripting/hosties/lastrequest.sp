@@ -1115,7 +1115,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 			{
 				decl String:weapon[32];
 				GetEventString(event, "weapon", weapon, 32);
-				new bool:bIsItAKnife = (StrContains(FiredWeapon, "knife") == -1 ? false : true);
+				new bool:bIsItAKnife = (StrContains(weapon, "knife") == -1 ? false : true);
 				
 				switch (type)
 				{
