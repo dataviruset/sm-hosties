@@ -288,6 +288,11 @@ public MutePrisoners_RoundStart(Handle:event, const String:name[], bool:dontBroa
 	}
 }
 
+MutePrisoners_OnMapEnd()
+{
+	gH_Timer_Unmuter = INVALID_HANDLE;
+}
+
 public Action:Timer_UnmutePrisoners(Handle:timer)
 {
 	UnmuteAlive();
