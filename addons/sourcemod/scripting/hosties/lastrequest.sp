@@ -6025,9 +6025,9 @@ KillAndReward(loser, victor)
 			new iResourceEntity = GetPlayerResourceEntity();
 			if (iResourceEntity != -1)
 			{
-				new iScore = GetEntProp(iResourceEntity, Prop_Send, "m_iScore");
+				new iScore = GetEntProp(iResourceEntity, Prop_Send, "m_iScore", _, victor);
 				iScore += gShadow_LR_VictorPoints*2;
-				SetEntProp(iResourceEntity, Prop_Send, "m_iScore", iScore);
+				SetEntProp(iResourceEntity, Prop_Send, "m_iScore", iScore, _, victor);
 			}
 		}
 	}
