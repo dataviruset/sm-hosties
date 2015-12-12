@@ -926,8 +926,11 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 
 public Action:Timer_EnableLR(Handle:timer)
 {
-	g_bIsLRAvailable = true;
-	g_DelayLREnableTimer = INVALID_HANDLE;
+	if (g_DelayLREnableTimer == timer)
+	{
+		g_bIsLRAvailable = true;
+		g_DelayLREnableTimer = INVALID_HANDLE;
+	}
 	return Plugin_Stop;
 }
 
@@ -964,7 +967,6 @@ public LastRequest_RoundEnd(Handle:event, const String:name[], bool:dontBroadcas
 	// Stop timers for short rounds
 	if (g_DelayLREnableTimer != INVALID_HANDLE)
 	{
-		CloseHandle(g_DelayLREnableTimer);
 		g_DelayLREnableTimer = INVALID_HANDLE;
 	}
 	
