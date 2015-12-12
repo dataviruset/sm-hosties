@@ -3669,6 +3669,10 @@ InitializeGame(iPartnersIndex)
 		LogToGame("\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, LR_Name, LR_Player_Guard);
 	}
 	
+	//remove armor
+	SetEntData(LR_Player_Prisoner, g_Offset_Armor, 0);
+	SetEntData(LR_Player_Guard, g_Offset_Armor, 0);
+	
 	switch (selection)
 	{
 		case LR_KnifeFight:
@@ -6059,12 +6063,9 @@ KillAndReward(loser, victor)
 	ForcePlayerSuicide(loser);
 	if (IsClientInGame(victor))
 	{
-		if(g_Game == Game_CSS)
-		{
-			new iFrags = GetEntProp(victor, Prop_Data, "m_iFrags");
-			iFrags += gShadow_LR_VictorPoints;
-			SetEntProp(victor, Prop_Data, "m_iFrags", iFrags);
-		}
+		new iFrags = GetEntProp(victor, Prop_Data, "m_iFrags");
+		iFrags += gShadow_LR_VictorPoints;
+		SetEntProp(victor, Prop_Data, "m_iFrags", iFrags);
 	}
 }
 
