@@ -196,7 +196,7 @@ new Float:gShadow_LR_HelpBeams_Distance = -1.0;
 new Float:gShadow_LR_HotPotato_MaxTime = -1.0;
 new Float:gShadow_LR_HotPotato_MinTime = -1.0;
 new Float:gShadow_LR_HotPotato_Speed = -1.0;
-new bool:gShadow_LR_S4S_DoubleShot;
+new gShadow_LR_S4S_DoubleShot = -1;
 new bool:gShadow_LR_NonContKiller_Action;
 new gShadow_LR_GunToss_MarkerMode = -1;
 new gShadow_LR_GunToss_StartMode = -1;
@@ -486,8 +486,8 @@ LastRequest_OnPluginStart()
 	gShadow_LR_HotPotato_MinTime = 10.0;
 	gH_Cvar_LR_HotPotato_Speed = CreateConVar("sm_hosties_lr_hp_speed_multipl", "1.5", "What speed multiplier a hot potato contestant who has the deagle is gonna get: <1.0 - slower, >1.0 - faster", 0, true, 0.8, true, 3.0);
 	gShadow_LR_HotPotato_Speed = 1.5;
-	gH_Cvar_LR_S4S_DoubleShot = CreateConVar("sm_hosties_lr_s4s_dblsht_action", "1", "What to do with someone who fires 2 shots in a row in Shot4Shot: 0 - nothing (ignore completely), 1 - Follow rebel punishment cvars", 0, true, 0.0, true, 1.0);
-	gShadow_LR_S4S_DoubleShot = false;
+	gH_Cvar_LR_S4S_DoubleShot = CreateConVar("sm_hosties_lr_s4s_dblsht_action", "2", "What to do with someone who fires 2 shots in a row in Shot4Shot: 0 - nothing (ignore completely), 1 - Follow rebel punishment cvars, 2 - Block Shooting", 0, true, 0.0, true, 2.0);
+	gShadow_LR_S4S_DoubleShot = 2;
 	gH_Cvar_LR_NoScope_Sound = CreateConVar("sm_hosties_noscope_sound", "sm_hosties/noscopestart1.mp3", "What sound to play when a No Scope Battle starts, relative to the sound-folder: -1 - disable, path - path to sound file", 0);
 	Format(gShadow_LR_NoScope_Sound, sizeof(gShadow_LR_NoScope_Sound ), "sm_hosties/noscopestart1.mp3");
 	gH_Cvar_LR_Sound = CreateConVar("sm_hosties_lr_sound", "sm_hosties/lr1.mp3", "What sound to play when LR gets available, relative to the sound-folder (also requires sm_hosties_announce_lr to be 1): -1 - disable, path - path to sound file", 0);
@@ -1496,6 +1496,14 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 				buttons &= ~IN_ATTACK2;
 			}
 		}
+		if ((buttons & IN_ATTACK || buttons & IN_ATTACK2) && type == LR_Shot4Shot)
+		{
+			new S4Slastshot = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
+			if (gShadow_LR_S4S_DoubleShot == 2 && (S4Slastshot == client))
+			{
+				return Plugin_Handled;
+			}
+		}
 	}
 	return Plugin_Continue;
 }
@@ -1797,7 +1805,7 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 						else
 						{		    	
 							// check for double shot situation (if they picked up another deagle with more ammo between shots)
-							if (gShadow_LR_S4S_DoubleShot && (S4Slastshot == client))
+							if (gShadow_LR_S4S_DoubleShot == 1 && (S4Slastshot == client))
 							{
 								// this should no longer be possible to do without extra manipulation								
 								DecideRebelsFate(client, idx, -1);								
@@ -2409,7 +2417,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_LR_NoScope_Weapon = GetConVarInt(gH_Cvar_LR_NoScope_Weapon);
 	gShadow_Announce_Shot4Shot = bool:GetConVarInt(gH_Cvar_Announce_Shot4Shot);
 	gShadow_LR_NonContKiller_Action = bool:GetConVarInt(gH_Cvar_LR_NonContKiller_Action);
-	gShadow_LR_S4S_DoubleShot = bool:GetConVarInt(gH_Cvar_LR_S4S_DoubleShot);
+	gShadow_LR_S4S_DoubleShot = GetConVarInt(gH_Cvar_LR_S4S_DoubleShot);
 	gShadow_LR_GunToss_MarkerMode = GetConVarInt(gH_Cvar_LR_GunToss_MarkerMode);
 	gShadow_LR_GunToss_StartMode = GetConVarInt(gH_Cvar_LR_GunToss_StartMode);
 	gShadow_LR_GunToss_ShowMeter = GetConVarInt(gH_Cvar_LR_GunToss_ShowMeter);
@@ -2592,7 +2600,7 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	}
 	else if (cvar == gH_Cvar_LR_S4S_DoubleShot)
 	{
-		gShadow_LR_S4S_DoubleShot = bool:StringToInt(newValue);
+		gShadow_LR_S4S_DoubleShot = StringToInt(newValue);
 	}
 	else if (cvar == gH_Cvar_LR_GunToss_MarkerMode)
 	{
