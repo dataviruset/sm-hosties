@@ -1118,7 +1118,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 			{
 				decl String:weapon[32];
 				GetEventString(event, "weapon", weapon, 32);
-				new bool:bIsItAKnife = StrEqual(weapon, "knife");
+				new bool:bIsItAKnife = (StrContains(weapon, "knife") == -1 ? false : true);
 				
 				switch (type)
 				{
@@ -1649,11 +1649,11 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					// set the time to enable burst value to a high value
 					SetEntDataFloat(iClientWeapon, g_Offset_SecAttack, 5000.0);
 					
-					if (iClientWeapon != M4M_Prisoner_Weapon && iClientWeapon != M4M_Guard_Weapon && !StrEqual(FiredWeapon, "knife"))
+					if (iClientWeapon != M4M_Prisoner_Weapon && iClientWeapon != M4M_Guard_Weapon && StrContains(FiredWeapon, "knife") == -1)
 					{
 						DecideRebelsFate(client, idx, -1);
 					}
-					else if (!StrEqual(FiredWeapon, "knife"))
+					else if (StrContains(FiredWeapon, "knife") == -1)
 					{
 						new currentAmmo = GetEntData(iClientWeapon, g_Offset_Clip1);
 						// check if a shot was actually fired
@@ -1767,14 +1767,16 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					new Guard_S4S_Pistol = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_GuardData);
 					new S4Slastshot = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
 					
-					decl String:FiredWeapon[32];
+					decl String:FiredWeapon[48];
 					GetEventString(event, "weapon", FiredWeapon, sizeof(FiredWeapon));
+					// as of 8 December 2015 CS:GO weapon_fire events need weapon_ to remain
+					ReplaceString(FiredWeapon, sizeof(FiredWeapon), "weapon_", "");
 					
 					// get the entity index of the pistol
 					new iClientWeapon = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
 					
 					// check if we have the same weapon
-					new String:LR_WeaponName[32];
+					new String:LR_WeaponName[48];
 					if (iClientWeapon != -1)
 					{
 						GetEdictClassname(iClientWeapon, LR_WeaponName, sizeof(LR_WeaponName));
@@ -1845,7 +1847,7 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 							}
 						}		    							
 					}
-					else if (!StrEqual(FiredWeapon, "knife"))
+					else if (StrContains(FiredWeapon, "knife") == -1)
 					{
 						DecideRebelsFate(client, idx, -1);
 					}
