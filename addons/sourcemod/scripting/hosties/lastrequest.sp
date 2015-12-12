@@ -1115,7 +1115,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 			{
 				decl String:weapon[32];
 				GetEventString(event, "weapon", weapon, 32);
-				new bool:bIsItAKnife = StrEqual(weapon, "knife");
+				new bool:bIsItAKnife = (StrContains(FiredWeapon, "knife") == -1 ? false : true);
 				
 				switch (type)
 				{
@@ -1646,11 +1646,11 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					// set the time to enable burst value to a high value
 					SetEntDataFloat(iClientWeapon, g_Offset_SecAttack, 5000.0);
 					
-					if (iClientWeapon != M4M_Prisoner_Weapon && iClientWeapon != M4M_Guard_Weapon && !StrEqual(FiredWeapon, "knife"))
+					if (iClientWeapon != M4M_Prisoner_Weapon && iClientWeapon != M4M_Guard_Weapon && StrContains(FiredWeapon, "knife") == -1)
 					{
 						DecideRebelsFate(client, idx, -1);
 					}
-					else if (!StrEqual(FiredWeapon, "knife"))
+					else if (StrContains(FiredWeapon, "knife") == -1)
 					{
 						new currentAmmo = GetEntData(iClientWeapon, g_Offset_Clip1);
 						// check if a shot was actually fired
@@ -1775,7 +1775,11 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					if (iClientWeapon != -1)
 					{
 						GetEdictClassname(iClientWeapon, LR_WeaponName, sizeof(LR_WeaponName));
-						ReplaceString(LR_WeaponName, sizeof(LR_WeaponName), "weapon_", "");
+						// as of 8 December 2015 CS:GO weapon_fire events need weapon_ to remain
+						if (g_Game == Game_CSS)
+						{
+							ReplaceString(LR_WeaponName, sizeof(LR_WeaponName), "weapon_", "");
+						}
 					}
 					
 					if (StrEqual(LR_WeaponName, FiredWeapon))
@@ -1842,7 +1846,7 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 							}
 						}		    							
 					}
-					else if (!StrEqual(FiredWeapon, "knife"))
+					else if (StrContains(FiredWeapon, "knife") == -1)
 					{
 						DecideRebelsFate(client, idx, -1);
 					}
