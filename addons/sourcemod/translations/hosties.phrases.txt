@@ -59,99 +59,99 @@
 	"Hot Potato PickUp"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} picked up the hot potato!"
+		"en"		"{olive}{1} {lightgreen}picked up the hot potato!"
 	}
 	"Powered By Hosties"
 	{
-		"en"		"This server is powered by SM_Hosties v2, enjoy!"
+		"en"		"This server is powered by {olive}SM_Hosties v2{lightgreen}, enjoy!"
 	}
 	"Please Follow Rules"
 	{
-		"en"		"Please follow the rules listed in !rules."
+		"en"		"Please follow the rules listed in {olive}!rules{lightgreen}."
 	}
 	"Knife Fight Gun Attack Slay"
 	{
 		"#format"	"{1:N},{2:N},{3:s}"
-		"en"		"{1} was slain for attacking {2} with {3} during Knife Fight."
+		"en"		"{olive}{1} {lightgreen}was slain for attacking {olive}{2} {lightgreen}with {olive}{3} {lightgreen}during {olive}Knife Fight{lightgreen}."
 	}
 	"Knife Fight Gun Attack Abort"
 	{
 		"#format"	"{1:N},{2:N},{3:s}"
-		"en"		"{1} attacked {2} with {3} - Knife Fight aborted."
+		"en"		"{olive}{1} {lightgreen}attacked {olive}{2} {lightgreen}with {olive}{3} {lightgreen}- {olive}Knife Fight {lightgreen}aborted."
 	}
 	"Chicken Fight Gun Attack Slay"
 	{
 		"#format"	"{1:N},{2:N},{3:s}"
-		"en"		"{1} was slain for attacking {2} with {3} during Chicken Fight."
+		"en"		"{olive}{1} {lightgreen}was slain for attacking {olive}{2} {lightgreen}with {olive}{3} {lightgreen}during {olive}Chicken Fight{lightgreen}."
 	}
 	"Chicken Fight Gun Attack Abort"
 	{
 		"#format"	"{1:N},{2:N},{3:s}"
-		"en"		"{1} attacked {2} with {3} - Chicken Fight aborted."
+		"en"		"{olive}{1} {lightgreen}attacked {olive}{2} {lightgreen}with {olive}{3} {lightgreen}- {olive}Chicken Fight {lightgreen}aborted."
 	}
 	"Hot Potato Attack Slay"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} was slain for attacking {2} during Hot Potato competition."
+		"en"		"{olive}{1} {lightgreen}was slain for attacking {olive}{2} {lightgreen}during {olive}Hot Potato {lightgreen}competition."
 	}
 	"Hot Potato Attack Abort"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} attacked {2} - Hot Potato competition aborted."
+		"en"		"{olive}{1} {lightgreen}attacked {olive}{2} {lightgreen}- {olive}Hot Potato competition {lightgreen}aborted."
 	}
 	"New Rebel"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} is now a rebel."
+		"en"		"{olive}{1} {lightgreen}is now a {olive}rebel{lightgreen}."
 	}
 	"Freeattack"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} attacked {2}."
+		"en"		"{olive}{1} {lightgreen}attacked {olive}{2}{lightgreen}."
 	}
 	"Non LR Kill LR Slay"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"Non LR-player {1} was slain for killing LR-player {2}."
+		"en"		"Non LR-player {olive}{1} {lightgreen}was slain for killing LR-player {olive}{2}{lightgreen}."
 	}
 	"Non LR Kill LR Abort"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"Non LR-player {1} killed LR-player {2} - LR aborted."
+		"en"		"Non LR-player {olive}{1} {lightgreen}killed LR-player {olive}{2} {lightgreen}- {olive}LR {lightgreen}aborted."
 	}
 	"Rebel Kill"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} killed the rebel {2}."
+		"en"		"{olive}{1} {lightgreen}killed the rebel {olive}{2}{lightgreen}."
 	}
 	"LR Available"
 	{
-		"en"		"Terrorists can now type !lr to have a last request."
+		"en"		"Terrorists can now type {olive}!lr {lightgreen}to have a last request."
 	}
 	"LR Player Disconnect"
 	{
 		"#format"	"{1:N}"
-		"en"		"LR-player {1} disconnected - LR aborted."
+		"en"		"LR-player {olive}{1} {lightgreen}disconnected - {olive}LR {lightgreen}aborted."
 	}
 	"Chicken Fight Win And Slay"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} won the Chicken Fight - {2} slayed."
+		"en"		"{olive}{1} {lightgreen}won the {olive}Chicken Fight {lightgreen}- {olive}{2} {lightgreen}slayed."
 	}
 	"Chicken Fight Win"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} won the Chicken Fight."
+		"en"		"{olive}{1} {lightgreen}won the {olive}Chicken Fight{lightgreen}."
 	}
 	"Chicken Fight Kill Loser"
 	{
 		"#format"	"{1:N}"
-		"en"		"Kill {1}!"
+		"en"		"Kill {olive}{1}{lightgreen}!"
 	}
 	"S4S Shot Taken"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} has taken his shot."
+		"en"		"{olive}{1} {lightgreen}has taken his shot."
 	}
 	"Distance Meter"
 	{
@@ -159,7 +159,7 @@
 	}
 	"LR Rebel Not Allowed"
 	{
-		"en"		"You can not have an LR when you're rebel."
+		"en"		"You can not have an {olive}LR {lightgreen}when you're {olive}rebel{lightgreen}."
 	}
 	"LR Choose"
 	{
@@ -167,23 +167,23 @@
 	}
 	"No CTs Alive"
 	{
-		"en"		"There are no CT's (alive) to have your LR with."
+		"en"		"There are no {olive}CT's (alive) {lightgreen}to have your {olive}LR {lightgreen}with."
 	}
 	"Too Many Ts"
 	{
-		"en"		"There are too many terrorists alive to have an LR now!"
+		"en"		"There are {olive}too many terrorists alive {lightgreen}to have an {olive}LR {lightgreen}now!"
 	}
 	"Not Alive Or In Wrong Team"
 	{
-		"en"		"You're not alive or in the wrong team for LR."
+		"en"		"You're {olive}not alive {lightgreen}or {olive}in the wrong team {lightgreen}for {olive}LR{lightgreen}."
 	}
 	"Another LR In Progress"
 	{
-		"en"		"There's already an LR in progress."
+		"en"		"There's already an {olive}LR in progress{lightgreen}."
 	}
 	"LR Disabled"
 	{
-		"en"		"Sorry, last requests are disabled on this server."
+		"en"		"Sorry, last requests are {olive}disabled {lightgreen}on this server."
 	}
 	"Choose A Player"
 	{
@@ -205,99 +205,99 @@
 	"Asking For Permission"
 	{
 		"#format"	"{1:N}"
-		"en"		"Asking {1} for permission because you are a rebel..."
+		"en"		"Asking {olive}{1} {lightgreen}for permission because you are a {olive}rebel{lightgreen}..."
 	}
 	"Target Is Not Alive Or In Wrong Team"
 	{
-		"en"		"The target player is not alive or in the wrong team for LR."
+		"en"		"The target player is {olive}not alive {lightgreen}or {olive}in the wrong team {lightgreen}for LR."
 	}
 	"Declined LR Request"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} declined your LR request."
+		"en"		"{olive}{1} {lightgreen}declined your {olive}LR {lightgreen}request."
 	}
 	"LR Partner Died"
 	{
-		"en"		"Your LR partner died."
+		"en"		"Your {olive}LR partner died{lightgreen}."
 	}
 	"Too Slow Another LR In Progress"
 	{
-		"en"		"Oops, too slow. There's already another LR in progress."
+		"en"		"Oops, {olive}too slow{lightgreen}. There's already {olive}another LR in progress{lightgreen}."
 	}
 	"LR Request Decline Or Too Long"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} declined your LR request or took to long to answer it."
+		"en"		"{olive}{1} {lightgreen}declined your {olive}LR {lightgreen}request or {olive}took to long {lightgreen}to answer it."
 	}
 	"LR KF Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to have Knife Fight with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to have {olive}Knife Fight {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR S4S Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to have Shot4Shot with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to have {olive}Shot4Shot {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR GT Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to have Gun Toss with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to have {olive}Gun Toss {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR CF Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to have Chicken Fight with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to have {olive}Chicken Fight {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR HP Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to have Hot Potato with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to have {olive}Hot Potato {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR DB Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to have Dodgeball with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to have {olive}Dodgeball {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR NS Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to have a No Scope Battle with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to have a {olive}No Scope Battle {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR RPS Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to play Rock Paper Scissors with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to play {olive}Rock Paper Scissors {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR Mag4Mag Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to have Mag4Mag with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to have {olive}Mag4Mag {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR RR Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to play Russian Roulette with {2}."
+		"en"		"{olive}{1} {lightgreen}chose to play {olive}Russian Roulette {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"LR Has Chosen to Rebel!"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} has chosen to rebel!"
+		"en"		"{olive}{1} {lightgreen}has chosen to {olive}rebel{lightgreen}!"
 	}
 	"Start Jump Contest"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} selected a Most Jumps Contest with {2}."
+		"en"		"{olive}{1} {lightgreen}selected a {olive}Most Jumps Contest {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"Start Brink of Death"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} selected a To The Brink of Death Contest with {2}."
+		"en"		"{olive}{1} {lightgreen}selected a {olive}To The Brink of Death Contest {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"Start Farthest Jump"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} selected to have a Farthest Jumping competition with {2}."
+		"en"		"{olive}{1} {lightgreen}selected to have a {olive}Farthest Jumping competition {lightgreen}with {olive}{2}{lightgreen}."
 	}
 	"No Rebels ATM"
 	{
@@ -309,7 +309,7 @@
 	}
 	"CheckPlayers CMD Disabled"
 	{
-		"en"		"The !checkplayers-command is disabled on this server."
+		"en"		"The {olive}!checkplayers{lightgreen}-command is disabled on this server."
 	}
 	"Server Rules"
 	{
@@ -318,7 +318,7 @@
 	"HP Win"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} won the Hot Potato contest - {2} slayed."
+		"en"		"{olive}{1} {lightgreen}won the {olive}Hot Potato contest {lightgreen}- {olive}{2} {lightgreen}slayed."
 	}
 	"HP Last One To Have The Potato"
 	{
@@ -344,7 +344,7 @@
 	"CT Attack T Gun"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} attacked {2} who has a gun..."
+		"en"		"{olive}{1} {lightgreen}attacked {olive}{2} {lightgreen}who has a gun..."
 	}
 	"Rock"
 	{
@@ -361,17 +361,17 @@
 	"LR RPS No Answer"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} didn't choose rock, paper or scissors, or didn't choose in time."
+		"en"		"{olive}{1} {lightgreen}didn't choose {olive}rock{lightgreen}, {olive}paper {lightgreen}or {olive}scissors{lightgreen}, or {olive}didn't choose {lightgreen}in time."
 	}
 	"LR RPS Done"
 	{
 		"#format"	"{1:N},{2:s},{3:N},{4:s},{5:N}"
-		"en"		"{1} chose {2}, {3} chose {4} - {5} wins"
+		"en"		"{olive}{1} {lightgreen}chose {olive}{2}{lightgreen}, {olive}{3} {lightgreen}chose {olive}{4} {lightgreen}- {olive}{5} {lightgreen}wins"
 	}
 	"LR RPS Tie"
 	{
 		"#format"	"{1:N},{2:s},{3:N},{4:s}"
-		"en"		"{1} chose {2}, {3} chose {4} - tie"
+		"en"		"{olive}{1} {lightgreen}chose {olive}{2}{lightgreen}, {olive}{3} {lightgreen}chose {olive}{4} {lightgreen}- {olive}tie"
 	}
 	"LR Not With Bot"
 	{
@@ -389,12 +389,12 @@
 	"Freekill Slay"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} was slain for killing too many non-rebelling terrorists."
+		"en"		"{olive}{1} {lightgreen}was slain for killing too many non-rebelling terrorists."
 	}
 	"Freekill Kick"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} was kicked for killing too many non-rebelling terrorists."
+		"en"		"{olive}{1} {lightgreen}was kicked for killing too many non-rebelling terrorists."
 	}
 	"Freekill Kick Reason"
 	{
@@ -403,7 +403,7 @@
 	"Freekill Ban"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} was banned for killing too many non-rebelling terrorists."
+		"en"		"{olive}{1} {lightgreen}was banned for killing too many non-rebelling terrorists."
 	}
 	"Freekill Ban Reason"
 	{
@@ -412,22 +412,22 @@
 	"Freekill Record Increased"
 	{
 		"#format"	"{1:d},{2:d}"
-		"en"		"You have {1} of {2} non-rebel kills (before action is taken)..."
+		"en"		"You have {olive}{1} {lightgreen}of {olive}{2} {lightgreen}non-rebel kills (before action is taken)..."
 	}
 	"Race Won"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} won the Race!"
+		"en"		"{olive}{1} {lightgreen}won the {olive}Race{lightgreen}!"
 	}
 	"Won Jump Contest"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} won the Jumping Contest!"
+		"en"		"{olive}{1} {lightgreen}won the {olive}Jumping Contest{lightgreen}!"
 	}
 	"Russian Roulette - Hit"
 	{
 		"#format"	"{1:N}"
-		"en"		"Russian Roulette: Bullet hit {1}!"
+		"en"		"Russian Roulette: Bullet hit {olive}{1} {lightgreen}!"
 	}
 	"Russian Roulette - Miss"
 	{
@@ -436,62 +436,62 @@
 	"Randomly Chose First Player"
 	{
 		"#format"	"{1:N}"
-		"en"		"Randomly selected {1} to shoot first."
+		"en"		"Randomly selected {olive}{1} {lightgreen}to shoot first."
 	}
 	"LR Interference Slay"
 	{
 		"#format"	"{1:N},{2:N},{3:s}"
-		"en"		"{1} was slain for attacking {2} with {3} during LR."
+		"en"		"{olive}{1} {lightgreen}was slain for attacking {olive}{2} {lightgreen}with {olive}{3} {lightgreen}during LR."
 	}
 	"LR Interference Abort"
 	{
 		"#format"	"{1:N},{2:N},{3:s}"
-		"en"		"{1} attacked {2} with {3}. LR aborted."
+		"en"		"{olive}{1} {lightgreen}attacked {olive}{2} {lightgreen}with {olive}{3} {lightgreen}. LR aborted."
 	}
 	"LR Interference Slay - No Victim"
 	{
 		"#format"	"{1:N},{2:s}"
-		"en"		"{1} was slain for attacking with {2} during LR."
+		"en"		"{olive}{1} {lightgreen}was slain for attacking with {olive}{2} {lightgreen}during LR."
 	}
 	"LR Interference Abort - No Victim"
 	{
 		"#format"	"{1:N},{2:s}"
-		"en"		"{1} attacked with {2}. LR aborted."
+		"en"		"{olive}{1} {lightgreen}attacked with {olive}{2} {lightgreen}. LR aborted."
 	}
 	"LR Cheating Abort"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} cheated! LR aborted."
+		"en"		"{olive}{1} {lightgreen}cheated! LR aborted."
 	}
 	"LR Cheating Slay"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} was slain for cheating during LR."
+		"en"		"{olive}{1} {lightgreen}was slain for cheating during LR."
 	}
 	"Noscope Knife Attack Slay"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} was slain for attacking {2} with a knife during No Scope."
+		"en"		"{olive}{1} {lightgreen}was slain for attacking {olive}{2} {lightgreen}with a knife during No Scope."
 	}
 	"Noscope Knife Attack Abort"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} attacked {2} with a knife - No Scope aborted."
+		"en"		"{olive}{1} {lightgreen}attacked {olive}{2} {lightgreen}with a knife - No Scope aborted."
 	}
 	"S4S Rebel Slayed"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} was slain for rebelling during S4S."
+		"en"		"{olive}{1} {lightgreen}was slain for rebelling during S4S."
 	}
 	"S4S Rebel Aborted"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} rebelled during LR - S4S aborted."
+		"en"		"{olive}{1} {lightgreen}rebelled during LR - S4S aborted."
 	}
 	"M4M Mag Used"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} has used their magazine."
+		"en"		"{olive}{1} {lightgreen}has used their magazine."
 	}
 	"LR No CTs Available"
 	{
@@ -636,17 +636,17 @@
 	"Farthest Jump Won"
 	{
 		"#format"	"{1:N},{2:N},{3:3.1f},{4:3.1f}"
-		"en"		"{1} won the farthest jump with {3} compared to {2}'s {4}."
+		"en"		"{olive}{1} {lightgreen}won the farthest jump with {olive}{3} {lightgreen}compared to {olive}{2} {lightgreen}'s {olive}{4} {lightgreen}."
 	}
 	"Race Could Start Soon"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} picked the Race LR. Watch for starting & ending points!"
+		"en"		"{olive}{1} {lightgreen}picked the Race LR. Watch for starting & ending points!"
 	}
 	"Respawned Target"
 	{
 		"#format"	"{1:s}"
-		"en"		"Respawned {1}"
+		"en"		"Respawned {olive}{1}"
 	}
 	
 	"Player Alive"
@@ -661,6 +661,6 @@
 	"Respawn Data Unavailable"
 	{
 		"#format"	"{1:N}"
-		"en"		"Player {1} did not have respawn data yet and was sent back to cells."
+		"en"		"Player {olive}{1} {lightgreen}did not have respawn data yet and was sent back to cells."
 	}
 }
