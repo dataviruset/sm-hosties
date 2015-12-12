@@ -69,7 +69,7 @@ public Rules_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (gShadow_Announce_Rules)
 	{
-		PrintToChatAll(CHAT_BANNER, "Please Follow Rules");
+		CPrintToChatAll(CHAT_BANNER, "Please Follow Rules");
 	}
 }
 

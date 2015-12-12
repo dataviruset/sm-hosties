@@ -414,18 +414,18 @@ public Action:Command_Control(client, args)
 {
 	if (GetClientTeam(client) != 3)
 	{
-		PrintToChat(client, CHAT_BANNER, "Must Be CT");
+		CPrintToChat(client, CHAT_BANNER, "Must Be CT");
 		return Plugin_Handled;
 	}
 	
 	if(g_bHasController && Control_GetController() != 0)
 	{
-		PrintToChat(client, CHAT_BANNER, "Control Already Taken");
+		CPrintToChat(client, CHAT_BANNER, "Control Already Taken");
 	}
 	else
 	{
 		Control_Controller(client, true, -1, true);
-		PrintToChat(client, CHAT_BANNER, "Control Taken");
+		CPrintToChat(client, CHAT_BANNER, "Control Taken");
 	}
 	
 	return Plugin_Handled;
@@ -466,7 +466,7 @@ public Control_Controller(client, bool:controller, reason, bool:ann)
 			g_bHasController = true;
 			g_iState = 0;
 			Control_Menu(client);
-			PrintToChatAll(CHAT_BANNER, "The New Controller");
+			CPrintToChatAll(CHAT_BANNER, "The New Controller");
 		}
 	}
 	else
@@ -479,24 +479,24 @@ public Control_Controller(client, bool:controller, reason, bool:ann)
 			{
 				if(reason == -1)
 				{
-					PrintToChatAll(CHAT_BANNER, "No Longer The Controller", client);
+					CPrintToChatAll(CHAT_BANNER, "No Longer The Controller", client);
 				}
 				else if(reason == 0)
 				{
-					PrintToChatAll(CHAT_BANNER, "No Longer The Controller Reason", client, "Disconncted");
+					CPrintToChatAll(CHAT_BANNER, "No Longer The Controller Reason", client, "Disconncted");
 				}
 				else if(reason == 1)
 				{
-					PrintToChatAll(CHAT_BANNER, "No Longer The Controller Reason", client, "Died");
+					CPrintToChatAll(CHAT_BANNER, "No Longer The Controller Reason", client, "Died");
 				}
 				else if(reason == 2)
 				{
-					PrintToChatAll(CHAT_BANNER, "No Longer The Controller Reason", client, "Stopped controlling");
+					CPrintToChatAll(CHAT_BANNER, "No Longer The Controller Reason", client, "Stopped controlling");
 				}
 			}
 			else
 			{
-				PrintToChatAll(CHAT_BANNER, "No Controller");
+				CPrintToChatAll(CHAT_BANNER, "No Controller");
 			}
 		}
 	}

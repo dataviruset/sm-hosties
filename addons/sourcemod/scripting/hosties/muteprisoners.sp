@@ -210,7 +210,7 @@ public Action:Timer_Mute(Handle:timer, any:client)
 	if (IsClientInGame(client))
 	{
 		MutePlayer(client);
-		PrintToChat(client, CHAT_BANNER, "Now Muted");
+		CPrintToChat(client, CHAT_BANNER, "Now Muted");
 	}
 	
 	return Plugin_Stop;
@@ -284,14 +284,14 @@ public MutePrisoners_RoundStart(Handle:event, const String:name[], bool:dontBroa
 		// Unmute Timer
 		gH_Timer_Unmuter = CreateTimer(gShadow_MuteLength, Timer_UnmutePrisoners, _, TIMER_FLAG_NO_MAPCHANGE);
 		
-		PrintToChatAll(CHAT_BANNER, "Ts Muted", RoundToNearest(gShadow_MuteLength));
+		CPrintToChatAll(CHAT_BANNER, "Ts Muted", RoundToNearest(gShadow_MuteLength));
 	}
 }
 
 public Action:Timer_UnmutePrisoners(Handle:timer)
 {
 	UnmuteAlive();
-	PrintToChatAll(CHAT_BANNER, "Ts Can Speak Again");
+	CPrintToChatAll(CHAT_BANNER, "Ts Can Speak Again");
 	gH_Timer_Unmuter = INVALID_HANDLE;
 	
 	return Plugin_Stop;

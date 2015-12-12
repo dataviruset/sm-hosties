@@ -24,7 +24,7 @@
 #define _Hosties_Included_
 
 // Change to include your own clan tag but leave the '%t' intact
-#define 	CHAT_BANNER			"\x03[SM] \x04%t"
+#define 	CHAT_BANNER			"{green}[SM] {lightgreen}%t"
 #define 	NORMAL_VISION		90
 
 enum GameType
