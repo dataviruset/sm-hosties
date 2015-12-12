@@ -549,7 +549,7 @@ LastRequest_OnPluginStart()
 	gShadow_LR_AutoDisplay = false;
 	gH_Cvar_LR_BlockSuicide = CreateConVar("sm_hosties_lr_blocksuicide", "0", "Blocks LR participants from commiting suicide to avoid deaths: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
 	gShadow_LR_BlockSuicide = false;
-	gH_Cvar_LR_VictorPoints = CreateConVar("sm_hosties_lr_victorpoints", "1", "Amount of frags to reward victor in an LR where other player automatically dies", 0, true, 0.0);
+	gH_Cvar_LR_VictorPoints = CreateConVar("sm_hosties_lr_victorpoints", "1", "Amount of frags CS:S or 2x points to score in CS:GO to reward victor in an LR where other player automatically dies", 0, true, 0.0);
 	gShadow_LR_VictorPoints = 1;
 	
 	// Listen for changes
