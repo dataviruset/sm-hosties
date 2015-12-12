@@ -569,6 +569,18 @@
 	{
 		"en"		"Tec 9"
 	}
+	"Pistol_CZ75"
+	{
+		"en"		"CZ75"
+	}
+	"Pistol_USPS"
+	{
+		"en"		"USP-S"
+	}
+	"Pistol_Revolver"
+	{
+		"en"		"Revovler"
+	}
 	"NSW_AWP"
 	{
 		"en"		"AWP"
