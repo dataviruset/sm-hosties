@@ -1,0 +1,22 @@
+sudo: false
+language: c
+
+addons:
+  apt_packages:
+    - lib32stdc++6
+
+env:
+  - SOURCEMOD=1.7
+  - SOURCEMOD=1.8
+
+before_script:
+  - wget "http://www.sourcemod.net/latest.php?version=$SOURCEMOD&os=linux" -O sourcemod-$SOURCEMOD-linux.tar.gz
+  - tar -xzf sourcemod-$SOURCEMOD-linux.tar.gz
+  - cd addons/sourcemod/scripting/
+  - wget https://raw.githubusercontent.com/powerlord/sourcemod-snippets/master/scripting/include/emitsoundany.inc -O include/emitsoundany.inc
+  - wget https://github.com/KyleSanderson/SteamWorks/raw/master/Pawn/includes/SteamWorks.inc -O include/SteamWorks.inc
+  - wget https://github.com/GameConnect/sourcebansv1/raw/master/game_upload/addons/sourcemod/scripting/include/sourcebans.inc -O include/sourcebans.inc
+  - chmod +x spcomp
+
+script:
+  - ./spcomp sm_hosties.sp
