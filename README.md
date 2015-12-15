@@ -2,7 +2,7 @@
 ---
 by: databomb, dataviruset and DorCoMaNdO
 
-Build Status: [![Build Status](https://travis-ci.org/Bara20/sm-hosties.svg?branch=patch-3)](https://travis-ci.org/Bara20/sm-hosties)
+Build Status: [![Build Status](https://travis-ci.org/dataviruset/sm-hosties.svg?branch=master)](https://travis-ci.org/dataviruset/sm-hosties)
 
 Description:
 --
