@@ -1772,87 +1772,67 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 					
 					decl String:FiredWeapon[48];
 					GetEventString(event, "weapon", FiredWeapon, sizeof(FiredWeapon));
-					// as of 8 December 2015 CS:GO weapon_fire events need weapon_ to remain
-					ReplaceString(FiredWeapon, sizeof(FiredWeapon), "weapon_", "");
 					
-					// get the entity index of the pistol
-					new iClientWeapon = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
+					new iClientWeapon = GetEntDataEnt2(client, g_Offset_ActiveWeapon);
 					
-					// check if we have the same weapon
-					new String:LR_WeaponName[48];
-					if (iClientWeapon != -1)
+					if (iClientWeapon != Prisoner_S4S_Pistol && iClientWeapon != Guard_S4S_Pistol && StrContains(FiredWeapon, "knife") == -1)
 					{
-						GetEdictClassname(iClientWeapon, LR_WeaponName, sizeof(LR_WeaponName));
-						ReplaceString(LR_WeaponName, sizeof(LR_WeaponName), "weapon_", "");
+						DecideRebelsFate(client, idx, -1);
 					}
-					
-					if (StrEqual(LR_WeaponName, FiredWeapon))
+					else if (StrContains(FiredWeapon, "knife") == -1)
 					{
 						// update who took the last shot
 						SetArrayCell(gH_DArray_LR_Partners, idx, client, _:Block_Global1);
 						
-						// they picked up an identical gun and are using it instead
-						if (iClientWeapon != Prisoner_S4S_Pistol && iClientWeapon != Guard_S4S_Pistol)		    	
+						// check for double shot situation (if they picked up another deagle with more ammo between shots)
+						if (gShadow_LR_S4S_DoubleShot && (S4Slastshot == client))
 						{
-							DecideRebelsFate(client, idx, -1);
+							// this should no longer be possible to do without extra manipulation								
+							DecideRebelsFate(client, idx, -1);								
 						}
-						// firing weapon IS correct
-						else
-						{		    	
-							// check for double shot situation (if they picked up another deagle with more ammo between shots)
-							if (gShadow_LR_S4S_DoubleShot && (S4Slastshot == client))
+						else // if we didn't repeat
+						{		
+							if (gShadow_Announce_Shot4Shot)
 							{
-								// this should no longer be possible to do without extra manipulation								
-								DecideRebelsFate(client, idx, -1);								
-							}
-							else // if we didn't repeat
-							{		
-								if (gShadow_Announce_Shot4Shot)
+								if (gShadow_SendGlobalMsgs)
 								{
-									if (gShadow_SendGlobalMsgs)
-									{
-										PrintToChatAll(CHAT_BANNER, "S4S Shot Taken", client);
-									}
-									else
-									{
-										PrintToChat(LR_Player_Guard, CHAT_BANNER, "S4S Shot Taken", client);
-										PrintToChat(LR_Player_Prisoner, CHAT_BANNER, "S4S Shot Taken", client);
-									}
-								}
-								
-								// give the opposite LR player 1 bullet in their deagle
-								if (client == LR_Player_Prisoner)
-								{
-									// modify deagle 2s ammo
-									SetEntData(Guard_S4S_Pistol, g_Offset_Clip1, 1);
-								}
-								else if (client == LR_Player_Guard)
-								{
-									// modify deagle 1s ammo
-									SetEntData(Prisoner_S4S_Pistol, g_Offset_Clip1, 1);
-								}
-								
-								if(g_Game == Game_CSGO)
-								{
-									SetEntProp(Guard_S4S_Pistol, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
-									SetEntProp(Prisoner_S4S_Pistol, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+									PrintToChatAll(CHAT_BANNER, "S4S Shot Taken", client);
 								}
 								else
 								{
-									new iAmmoType = GetEntProp(Prisoner_S4S_Pistol, Prop_Send, "m_iPrimaryAmmoType");
-									SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
-									SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+									PrintToChat(LR_Player_Guard, CHAT_BANNER, "S4S Shot Taken", client);
+									PrintToChat(LR_Player_Prisoner, CHAT_BANNER, "S4S Shot Taken", client);
 								}
-								
-								// propogate the ammo immediately! (thanks psychonic)
-								ChangeEdictState(Prisoner_S4S_Pistol, g_Offset_Clip1);
-								ChangeEdictState(Guard_S4S_Pistol, g_Offset_Clip1);
 							}
-						}		    							
-					}
-					else if (StrContains(FiredWeapon, "knife") == -1)
-					{
-						DecideRebelsFate(client, idx, -1);
+							
+							// give the opposite LR player 1 bullet in their deagle
+							if (client == LR_Player_Prisoner)
+							{
+								// modify deagle 2s ammo
+								SetEntData(Guard_S4S_Pistol, g_Offset_Clip1, 1);
+							}
+							else if (client == LR_Player_Guard)
+							{
+								// modify deagle 1s ammo
+								SetEntData(Prisoner_S4S_Pistol, g_Offset_Clip1, 1);
+							}
+							
+							if(g_Game == Game_CSGO)
+							{
+								SetEntProp(Guard_S4S_Pistol, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+								SetEntProp(Prisoner_S4S_Pistol, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+							}
+							else
+							{
+								new iAmmoType = GetEntProp(Prisoner_S4S_Pistol, Prop_Send, "m_iPrimaryAmmoType");
+								SetEntData(LR_Player_Guard, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+								SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(iAmmoType*4), 0, _, true);
+							}
+							
+							// propogate the ammo immediately! (thanks psychonic)
+							ChangeEdictState(Prisoner_S4S_Pistol, g_Offset_Clip1);
+							ChangeEdictState(Guard_S4S_Pistol, g_Offset_Clip1);
+						}
 					}
 				}	
 			}			
