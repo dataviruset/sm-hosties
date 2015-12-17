@@ -2933,17 +2933,20 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 								Format(sDataField, sizeof(sDataField), "%d", Knife_Vintage);
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Vintage", client);
 								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								Format(sDataField, sizeof(sDataField), "%d", Knife_Drunk);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drunk", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+								if (g_Game == Game_CSS)
+								{
+									Format(sDataField, sizeof(sDataField), "%d", Knife_Drunk);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drunk", client);
+									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+									Format(sDataField, sizeof(sDataField), "%d", Knife_Drugs);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drugs", client);
+									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+								}
 								Format(sDataField, sizeof(sDataField), "%d", Knife_LowGrav);
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_LowGrav", client);
 								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
 								Format(sDataField, sizeof(sDataField), "%d", Knife_HiSpeed);
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_HiSpeed", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								Format(sDataField, sizeof(sDataField), "%d", Knife_Drugs);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drugs", client);
 								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
 								Format(sDataField, sizeof(sDataField), "%d", Knife_ThirdPerson);
 								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_ThirdPerson", client);
