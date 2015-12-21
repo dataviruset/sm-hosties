@@ -925,6 +925,7 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 		g_bIsARebel[idx] = false;
 		g_bInLastRequest[idx] = false;
 		g_LR_Player_Guard[idx] = 0;
+		SetCorrectPlayerColor(idx);
 	}
 }
 
