@@ -579,7 +579,7 @@
 	}
 	"Pistol_Revolver"
 	{
-		"en"		"Revovler"
+		"en"		"Revolver"
 	}
 	"NSW_AWP"
 	{
