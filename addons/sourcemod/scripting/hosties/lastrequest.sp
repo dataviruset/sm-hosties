@@ -4063,15 +4063,8 @@ InitializeGame(iPartnersIndex)
 			SetEntData(LR_Player_Guard, g_Offset_Armor, 0);
 
 			// give flashbangs
-			new flash1 = CreateEntityByName("weapon_flashbang");
-			new flash2 = CreateEntityByName("weapon_flashbang");
-			if (g_Game == Game_CSGO)
-			{
-				SetEntProp(flash1, Prop_Send, "m_iItemDefinitionIndex", 43);
-				SetEntProp(flash2, Prop_Send, "m_iItemDefinitionIndex", 43);
-			}
-			DispatchSpawn(flash1);
-			DispatchSpawn(flash2);
+			new flash1 = GivePlayerItem(LR_Player_Prisoner, "weapon_flashbang");
+			new flash2 = GivePlayerItem(LR_Player_Guard, "weapon_flashbang");
 			EquipPlayerWeapon(LR_Player_Prisoner, flash1);
 			EquipPlayerWeapon(LR_Player_Guard, flash2);
 
@@ -4151,69 +4144,48 @@ InitializeGame(iPartnersIndex)
 				{
 					case NSW_AWP:
 					{
-						NSW_Prisoner = CreateEntityByName("weapon_awp");
-						NSW_Guard = CreateEntityByName("weapon_awp");
-						if (g_Game == Game_CSGO)
-						{
-							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 9);
-							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 9);
-						}
+						NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_awp");
+						NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_awp");
 					}
 					case NSW_Scout:
 					{
 						if (g_Game == Game_CSS)
 						{
-							NSW_Prisoner = CreateEntityByName("weapon_scout");
-							NSW_Guard = CreateEntityByName("weapon_scout");
+							NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_scout");
+							NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_scout");
 						}
 						else if (g_Game == Game_CSGO)
 						{
-							NSW_Prisoner = CreateEntityByName("weapon_ssg08");
-							NSW_Guard = CreateEntityByName("weapon_ssg08");
-							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 40);
-							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 40);
+							NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_ssg08");
+							NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_ssg08");
 						}
 					}
 					case NSW_SG550:
 					{
 						if (g_Game == Game_CSS)
 						{
-							NSW_Prisoner = CreateEntityByName("weapon_sg550");
-							NSW_Guard = CreateEntityByName("weapon_sg550");
+							NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_sg550");
+							NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_sg550");
 						}
 						else if (g_Game == Game_CSGO)
 						{
-							NSW_Prisoner = CreateEntityByName("weapon_scar20");
-							NSW_Guard = CreateEntityByName("weapon_scar20");
-							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 38);
-							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 38);
+							NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_scar20");
+							NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_scar20");
 						}
 					}
 					case NSW_G3SG1:
 					{
-						NSW_Prisoner = CreateEntityByName("weapon_g3sg1");
-						NSW_Guard = CreateEntityByName("weapon_g3sg1");
-						if (g_Game == Game_CSGO)
-						{
-							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 11);
-							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 11);
-						}
+						NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_g3sg1");
+						NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_g3sg1");
 					}
 					default:
 					{
 						LogError("hit default NS");
-						NSW_Prisoner = CreateEntityByName("weapon_awp");
-						NSW_Guard = CreateEntityByName("weapon_awp");
-						if (g_Game == Game_CSGO)
-						{
-							SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 9);
-							SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 9);
-						}
+						NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_awp");
+						NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_awp");
 					}
 				}
 				
-				DispatchSpawn(NSW_Prisoner);
-				DispatchSpawn(NSW_Guard);
 				EquipPlayerWeapon(LR_Player_Prisoner, NSW_Prisoner);
 				EquipPlayerWeapon(LR_Player_Guard, NSW_Guard);
 				SetEntPropEnt(LR_Player_Prisoner, Prop_Send, "m_hActiveWeapon", NSW_Prisoner);
@@ -5108,12 +5080,7 @@ public Action:Timer_RemoveFlashbang(Handle:timer, any:entity)
 		
 		if ((client != -1) && IsClientInGame(client) && IsPlayerAlive(client) && Local_IsClientInLR(client))
 		{
-			new flash = CreateEntityByName("weapon_flashbang");
-			if (g_Game == Game_CSGO)
-			{
-				SetEntProp(flash, Prop_Send, "m_iItemDefinitionIndex", 43);
-			}
-			DispatchSpawn(flash);
+			new flash = GivePlayerItem(client, "weapon_flashbang");
 			EquipPlayerWeapon(client, flash);		
 		}
 	}
@@ -5197,69 +5164,48 @@ public Action:Timer_Countdown(Handle:timer)
 					{
 						case NSW_AWP:
 						{
-							NSW_Prisoner = CreateEntityByName("weapon_awp");
-							NSW_Guard = CreateEntityByName("weapon_awp");
-							if (g_Game == Game_CSGO)
-							{
-								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 9);
-								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 9);
-							}
+							NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_awp");
+							NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_awp");
 						}
 						case NSW_Scout:
 						{
 							if(g_Game == Game_CSS)
 							{
-								NSW_Prisoner = CreateEntityByName("weapon_scout");
-								NSW_Guard = CreateEntityByName("weapon_scout");
+								NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_scout");
+								NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_scout");
 							}
 							else if(g_Game == Game_CSGO)
 							{
-								NSW_Prisoner = CreateEntityByName("weapon_ssg08");
-								NSW_Guard = CreateEntityByName("weapon_ssg08");
-								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 40);
-								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 40);
+								NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_ssg08");
+								NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_ssg08");
 							}
 						}
 						case NSW_SG550:
 						{
 							if(g_Game == Game_CSS)
 							{
-								NSW_Prisoner = CreateEntityByName("weapon_sg550");
-								NSW_Guard = CreateEntityByName("weapon_sg550");
+								NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_sg550");
+								NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_sg550");
 							}
 							else if(g_Game == Game_CSGO)
 							{
-								NSW_Prisoner = CreateEntityByName("weapon_scar20");
-								NSW_Guard = CreateEntityByName("weapon_scar20");
-								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 38);
-								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 38);
+								NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_scar20");
+								NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_scar20");
 							}
 						}
 						case NSW_G3SG1:
 						{
-							NSW_Prisoner = CreateEntityByName("weapon_g3sg1");
-							NSW_Guard = CreateEntityByName("weapon_g3sg1");
-							if (g_Game == Game_CSGO)
-							{
-								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 11);
-								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 11);
-							}
+							NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_g3sg1");
+							NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_g3sg1");
 						}
 						default:
 						{
 							LogError("hit default NS");
-							NSW_Prisoner = CreateEntityByName("weapon_awp");
-							NSW_Guard = CreateEntityByName("weapon_awp");
-							if (g_Game == Game_CSGO)
-							{
-								SetEntProp(NSW_Prisoner, Prop_Send, "m_iItemDefinitionIndex", 9);
-								SetEntProp(NSW_Guard, Prop_Send, "m_iItemDefinitionIndex", 9);
-							}
+							NSW_Prisoner = GivePlayerItem(LR_Player_Prisoner, "weapon_awp");
+							NSW_Guard = GivePlayerItem(LR_Player_Guard, "weapon_awp");
 						}
 					}
 					
-					DispatchSpawn(NSW_Prisoner);
-					DispatchSpawn(NSW_Guard);
 					EquipPlayerWeapon(LR_Player_Prisoner, NSW_Prisoner);
 					EquipPlayerWeapon(LR_Player_Guard, NSW_Guard);
 					SetEntPropEnt(LR_Player_Prisoner, Prop_Send, "m_hActiveWeapon", NSW_Prisoner);
