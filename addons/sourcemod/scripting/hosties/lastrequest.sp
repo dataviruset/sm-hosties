@@ -4065,8 +4065,8 @@ InitializeGame(iPartnersIndex)
 			// give flashbangs
 			new flash1 = GivePlayerItem(LR_Player_Prisoner, "weapon_flashbang");
 			new flash2 = GivePlayerItem(LR_Player_Guard, "weapon_flashbang");
-			EquipPlayerWeapon(LR_Player_Prisoner, flash1);
-			EquipPlayerWeapon(LR_Player_Guard, flash2);
+			//EquipPlayerWeapon(LR_Player_Prisoner, flash1);
+			//EquipPlayerWeapon(LR_Player_Guard, flash2);
 
 			SetEntityGravity(LR_Player_Prisoner, gShadow_LR_Dodgeball_Gravity);
 			SetEntityGravity(LR_Player_Guard, gShadow_LR_Dodgeball_Gravity);
@@ -5081,7 +5081,7 @@ public Action:Timer_RemoveFlashbang(Handle:timer, any:entity)
 		if ((client != -1) && IsClientInGame(client) && IsPlayerAlive(client) && Local_IsClientInLR(client))
 		{
 			new flash = GivePlayerItem(client, "weapon_flashbang");
-			EquipPlayerWeapon(client, flash);		
+			//EquipPlayerWeapon(client, flash);		
 		}
 	}
 }
