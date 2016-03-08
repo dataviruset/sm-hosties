@@ -3214,7 +3214,6 @@ public SubLRType_MenuHandler(Handle:SelectionMenu, MenuAction:action, client, iM
 			{
 				if (IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
 				{
-					decl String:sSubTypeName[MAX_DISPLAYNAME_SIZE];
 					decl String:sDataField[MAX_DATAENTRY_SIZE];	
 					GetMenuItem(SelectionMenu, iMenuChoice, sDataField, sizeof(sDataField));
 					int iSelection = StringToInt(sDataField);
