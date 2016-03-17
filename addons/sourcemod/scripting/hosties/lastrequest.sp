@@ -3216,7 +3216,7 @@ public SubLRType_MenuHandler(Handle:SelectionMenu, MenuAction:action, client, iM
 				{
 					decl String:sDataField[MAX_DATAENTRY_SIZE];	
 					GetMenuItem(SelectionMenu, iMenuChoice, sDataField, sizeof(sDataField));
-					int iSelection = StringToInt(sDataField);
+					new iSelection = StringToInt(sDataField);
 					WritePackCell(gH_BuildLR[client], iSelection);
 					CreateMainPlayerHandler(client);
 				}
