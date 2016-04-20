@@ -2014,6 +2014,17 @@ public Action:OnWeaponDecideUse(client, weapon)
 					return Plugin_Handled;
 				}
 			}
+			else if (type == LR_NoScope && g_Game == Game_CSGO)
+			{
+				decl String:weapon_name[32];
+				GetEdictClassname(weapon, weapon_name, sizeof(weapon_name));
+				
+				// block switching to knife for NoScope
+				if ((client == LR_Player_Guard || client == LR_Player_Prisoner) && StrEqual(weapon_name, "weapon_knife"))
+				{
+					return Plugin_Handled;
+				}
+			}
 		}
 	}
 	return Plugin_Continue;
