@@ -909,7 +909,8 @@ public LastRequest_RoundFreezeEnd(Handle:event, const String:name[], bool:dontBr
 	UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);	
 
 	// Check if we should send OnAvailableLR forward now
-	if (g_bIsLRAvailable && g_DelayLREnableTimer == INVALID_HANDLE && Ts <= gShadow_MaxPrisonersToLR && (NumCTsAvailable > 0) && (Ts > 0))
+	// Don't fire here if there is an LR delay timer
+	if (g_bIsLRAvailable && gShadow_LR_Delay_Enable_Time <= 0.0 && Ts <= gShadow_MaxPrisonersToLR && (NumCTsAvailable > 0) && (Ts > 0))
 	{
 		// do not announce later
 		g_bAnnouncedThisRound = true;
