@@ -301,12 +301,12 @@ LastRequest_OnPluginStart()
 	g_sLastRequestPhrase[LR_JumpContest] = "Jumping Contest";
 
 	// Gather all offsets
-	g_Offset_Health = FindSendPropOffs("CBasePlayer", "m_iHealth");
+	g_Offset_Health = FindSendPropInfo("CBasePlayer", "m_iHealth");
 	if (g_Offset_Health == -1)
 	{
 		SetFailState("Unable to find offset for health.");
 	}
-	g_Offset_Armor = FindSendPropOffs("CCSPlayer", "m_ArmorValue");
+	g_Offset_Armor = FindSendPropInfo("CCSPlayer", "m_ArmorValue");
 	if (g_Offset_Armor == -1)
 	{
 		SetFailState("Unable to find offset for armor.");
@@ -324,7 +324,7 @@ LastRequest_OnPluginStart()
 			SetFailState("Unable to find offset for ammo.");
 		}
 	}
-	g_Offset_FOV = FindSendPropOffs("CBasePlayer", "m_iFOV");
+	g_Offset_FOV = FindSendPropInfo("CBasePlayer", "m_iFOV");
 	if (g_Offset_FOV == -1)
 	{
 		SetFailState("Unable to find offset for FOV.");
@@ -334,12 +334,12 @@ LastRequest_OnPluginStart()
 	{
 		SetFailState("Unable to find offset for active weapon.");
 	}
-	g_Offset_GroundEnt = FindSendPropOffs("CBasePlayer", "m_hGroundEntity");
+	g_Offset_GroundEnt = FindSendPropInfo("CBasePlayer", "m_hGroundEntity");
 	if (g_Offset_GroundEnt == -1)
 	{
 		SetFailState("Unable to find offset for ground entity.");
 	}
-	g_Offset_DefFOV = FindSendPropOffs("CBasePlayer", "m_iDefaultFOV");
+	g_Offset_DefFOV = FindSendPropInfo("CBasePlayer", "m_iDefaultFOV");
 	if (g_Offset_DefFOV == -1)
 	{
 		SetFailState("Unable to find offset for default FOV.");
@@ -356,7 +356,7 @@ LastRequest_OnPluginStart()
 	{
 		SetFailState("Unable to find offset for punch angle.");
 	}
-	g_Offset_SecAttack = FindSendPropOffs("CBaseCombatWeapon", "m_flNextSecondaryAttack");
+	g_Offset_SecAttack = FindSendPropInfo("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 	if (g_Offset_SecAttack == -1)
 	{
 		SetFailState("Unable to find offset for next secondary attack.");
@@ -2015,6 +2015,17 @@ public Action:OnWeaponDecideUse(client, weapon)
 			else if (type == LR_ChickenFight && g_Game == Game_CSGO)
 			{
 				if (client == LR_Player_Guard || client == LR_Player_Prisoner)
+				{
+					return Plugin_Handled;
+				}
+			}
+			else if (type == LR_NoScope && g_Game == Game_CSGO)
+			{
+				decl String:weapon_name[32];
+				GetEdictClassname(weapon, weapon_name, sizeof(weapon_name));
+				
+				// block switching to knife for NoScope
+				if ((client == LR_Player_Guard || client == LR_Player_Prisoner) && StrEqual(weapon_name, "weapon_knife"))
 				{
 					return Plugin_Handled;
 				}

@@ -33,7 +33,7 @@ NoBlock_OnPluginStart()
 	
 	HookConVarChange(gH_Cvar_NoBlock, NoBlock_CvarChanged);
 	
-	g_Offset_CollisionGroup = FindSendPropOffs("CBaseEntity", "m_CollisionGroup");
+	g_Offset_CollisionGroup = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	if (g_Offset_CollisionGroup == -1)
 	{
 		SetFailState("Unable to find offset for collision groups.");
