@@ -647,6 +647,7 @@ LastRequest_OnPluginStart()
 			SDKHook(idx, SDKHook_WeaponEquip, OnWeaponEquip);
 			SDKHook(idx, SDKHook_WeaponCanUse, OnWeaponDecideUse);
 			SDKHook(idx, SDKHook_OnTakeDamage, OnTakeDamage);
+			SDKHook(idx, SDKHook_PreThink, OnPreThink);
 		}
 		g_bIsARebel[idx] = false;
 		g_bInLastRequest[idx] = false;
@@ -1486,6 +1487,34 @@ public LastRequest_BulletImpact(Handle:event, const String:name[], bool:dontBroa
 			else
 			{
 				PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
+			}
+		}
+	}
+}
+
+public Action:OnPreThink(client)
+{
+	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
+	if (iArraySize > 0)
+	{
+		for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
+		{
+			new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
+			if (type == LR_KnifeFight)
+			{
+				new KnifeType:KnifeChoice = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
+				if(KnifeChoice == Knife_ThirdPerson)
+				{
+					new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
+					new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+					if (client == LR_Player_Prisoner || client == LR_Player_Guard)
+					{
+						if (g_Game == Game_CSGO)
+						{
+							ClientCommand(client, "thirdperson");
+						}
+					}
+				}
 			}
 		}
 	}
@@ -2817,6 +2846,7 @@ LastRequest_ClientPutInServer(client)
 	SDKHook(client, SDKHook_WeaponEquip, OnWeaponEquip);
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponDecideUse);
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage); 
+	SDKHook(client, SDKHook_PreThink, OnPreThink);
 }
 
 public Action:Command_LastRequest(client, args)
