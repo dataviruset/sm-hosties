@@ -382,6 +382,7 @@ LastRequest_OnPluginStart()
 	HookEvent("weapon_fire", LastRequest_WeaponFire);
 	HookEvent("player_jump", LastRequest_PlayerJump);
 	HookEvent("player_spawn", LastRequest_PlayerSpawn);
+	HookEvent("round_freeze_end", LastRequest_RoundFreezeEnd);
 	
 	// Make global arrays
 	gH_DArray_LastRequests = CreateArray(2);
@@ -902,6 +903,25 @@ Local_IsClientInLR(client)
 	return 0;
 }
 
+public LastRequest_RoundFreezeEnd(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new Ts, CTs, NumCTsAvailable;
+	UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);	
+
+	// Check if we should send OnAvailableLR forward now
+	if (g_bIsLRAvailable && g_DelayLREnableTimer == INVALID_HANDLE && Ts <= gShadow_MaxPrisonersToLR && (NumCTsAvailable > 0) && (Ts > 0))
+	{
+		// do not announce later
+		g_bAnnouncedThisRound = true;
+		
+		Call_StartForward(gH_Frwd_LR_Available);
+		// announced = no
+		Call_PushCell(false);
+		new ignore;
+		Call_Finish(_:ignore);
+	}
+}
+
 public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	g_bAnnouncedThisRound = false;
@@ -940,6 +960,22 @@ public Action:Timer_EnableLR(Handle:timer)
 	{
 		g_bIsLRAvailable = true;
 		g_DelayLREnableTimer = INVALID_HANDLE;
+		
+		new Ts, CTs, NumCTsAvailable;
+		UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);	
+	
+		// Check if we should send OnAvailableLR forward now
+		if (Ts <= gShadow_MaxPrisonersToLR && (NumCTsAvailable > 0) && (Ts > 0))
+		{
+			// do not announce later
+			g_bAnnouncedThisRound = true;
+			
+			Call_StartForward(gH_Frwd_LR_Available);
+			// announced = no
+			Call_PushCell(false);
+			new ignore;
+			Call_Finish(_:ignore);
+		}
 	}
 	return Plugin_Stop;
 }
