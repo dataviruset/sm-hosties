@@ -294,7 +294,17 @@ public OnConfigsExecuted()
 {
 	if (GetConVarInt(gH_Cvar_Add_ServerTag) == 1)
 	{
-		ServerCommand("sv_tags %s\n", SERVERTAG);
+		new Handle:hTags = FindConVar("sv_tags");
+		decl String:sTags[128];
+		GetConVarString(hTags, sTags, sizeof(sTags));
+		if (StrContains(sTags, SERVERTAG, false) == -1)
+		{
+			decl String:sTagsFormat[128];
+			Format(sTagsFormat, sizeof(sTagsFormat), ", %s", SERVERTAG);
+			
+			StrCat(sTags, sizeof(sTags), sTagsFormat);
+			SetConVarString(hTags, sTags);
+		}
 	}
 	
 	#if (MODULE_FREEKILL == 1)
