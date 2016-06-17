@@ -557,8 +557,8 @@ LastRequest_OnPluginStart()
 	gShadow_LR_BlockSuicide = false;
 	gH_Cvar_LR_VictorPoints = CreateConVar("sm_hosties_lr_victorpoints", "1", "Amount of frags CS:S or 2x points to score in CS:GO to reward victor in an LR where other player automatically dies", 0, true, 0.0);
 	gShadow_LR_VictorPoints = 1;
-	gH_Cvar_LR_RemoveArmor = CreateConVar("sm_hosties_lr_removearmovr", "1", "Remove armor before LR", 1, true, 0.0);
-	gShadow_LR_RemoveArmor = 1;
+	gH_Cvar_LR_RemoveArmor = CreateConVar("sm_hosties_lr_removearmor", "0", "Remove armor before LR", FCVAR_NONE, true, 0.0);
+	gShadow_LR_RemoveArmor = 0;
 	
 	// Listen for changes
 	HookConVarChange(gH_Cvar_LR_KnifeFight_On, ConVarChanged_LastRequest);
@@ -3670,7 +3670,7 @@ InitializeGame(iPartnersIndex)
 	}
 	
 	//remove armor
-	if (gShadow_LR_RemoveArmor == 1)
+	if (gShadow_LR_RemoveArmor)
 	{
 		SetEntData(LR_Player_Prisoner, g_Offset_Armor, 0);
 		SetEntData(LR_Player_Guard, g_Offset_Armor, 0);
