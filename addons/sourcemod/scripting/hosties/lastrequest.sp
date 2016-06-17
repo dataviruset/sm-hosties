@@ -1885,6 +1885,10 @@ public LastRequest_WeaponFire(Handle:event, const String:name[], bool:dontBroadc
 				new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
 				if (client == LR_Player_Prisoner || client == LR_Player_Guard)
 				{
+					// place delay on zoom
+					new iClientWeapon = GetEntDataEnt2(client, g_Offset_ActiveWeapon);
+					SetEntDataFloat(iClientWeapon, g_Offset_SecAttack, 5000.0);
+					
 					// grab weapon choice
 					new NoScopeWeapon:NS_Selection;
 					NS_Selection = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global2);					
@@ -4257,7 +4261,11 @@ InitializeGame(iPartnersIndex)
 				SetEntPropEnt(LR_Player_Prisoner, Prop_Send, "m_hActiveWeapon", NSW_Prisoner);
 				SetEntPropEnt(LR_Player_Guard, Prop_Send, "m_hActiveWeapon", NSW_Guard);
 				SetEntData(NSW_Prisoner, g_Offset_Clip1, 99);
-				SetEntData(NSW_Guard, g_Offset_Clip1, 99);		
+				SetEntData(NSW_Guard, g_Offset_Clip1, 99);
+				
+				// place delay on zoom
+				SetEntDataFloat(NSW_Prisoner, g_Offset_SecAttack, 5000.0);
+				SetEntDataFloat(NSW_Guard, g_Offset_SecAttack, 5000.0);
 				
 				if ((strlen(gShadow_LR_NoScope_Sound) > 0) && !StrEqual(gShadow_LR_NoScope_Sound, "-1"))
 				{
@@ -5276,7 +5284,11 @@ public Action:Timer_Countdown(Handle:timer)
 					SetEntPropEnt(LR_Player_Prisoner, Prop_Send, "m_hActiveWeapon", NSW_Prisoner);
 					SetEntPropEnt(LR_Player_Guard, Prop_Send, "m_hActiveWeapon", NSW_Guard);
 					SetEntData(NSW_Prisoner, g_Offset_Clip1, 99);
-					SetEntData(NSW_Guard, g_Offset_Clip1, 99);		
+					SetEntData(NSW_Guard, g_Offset_Clip1, 99);
+					
+					// place delay on zoom
+					SetEntDataFloat(NSW_Prisoner, g_Offset_SecAttack, 5000.0);
+					SetEntDataFloat(NSW_Guard, g_Offset_SecAttack, 5000.0);
 					
 					if ((strlen(gShadow_LR_NoScope_Sound) > 0) && !StrEqual(gShadow_LR_NoScope_Sound, "-1"))
 					{
