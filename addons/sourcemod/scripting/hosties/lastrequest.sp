@@ -154,6 +154,7 @@ new Handle:gH_Cvar_LR_Beacon_Sound = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_AutoDisplay = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_BlockSuicide = INVALID_HANDLE;
 new Handle:gH_Cvar_LR_VictorPoints = INVALID_HANDLE;
+new Handle:gH_Cvar_LR_RemoveArmor = INVALID_HANDLE;
 
 new g_iLastCT_FreeAttacker = -1;
 new gShadow_LR_KnifeFight_On = -1;
@@ -231,6 +232,7 @@ new String:gShadow_LR_Beacon_Sound[PLATFORM_MAX_PATH];
 new bool:gShadow_LR_KillTimeouts = false;
 new bool:gShadow_LR_BlockSuicide = false;
 new gShadow_LR_VictorPoints = -1;
+new gShadow_LR_RemoveArmor = 1;
 
 // Autostart
 new LastRequest:g_selection[MAXPLAYERS + 1];
@@ -555,6 +557,8 @@ LastRequest_OnPluginStart()
 	gShadow_LR_BlockSuicide = false;
 	gH_Cvar_LR_VictorPoints = CreateConVar("sm_hosties_lr_victorpoints", "1", "Amount of frags CS:S or 2x points to score in CS:GO to reward victor in an LR where other player automatically dies", 0, true, 0.0);
 	gShadow_LR_VictorPoints = 1;
+	gH_Cvar_LR_RemoveArmor = CreateConVar("sm_hosties_lr_removearmovr", "1", "Remove armor before LR", 1, true, 0.0);
+	gShadow_LR_RemoveArmor = 1;
 	
 	// Listen for changes
 	HookConVarChange(gH_Cvar_LR_KnifeFight_On, ConVarChanged_LastRequest);
@@ -632,6 +636,7 @@ LastRequest_OnPluginStart()
 	HookConVarChange(gH_Cvar_LR_AutoDisplay, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_BlockSuicide, ConVarChanged_Setting);
 	HookConVarChange(gH_Cvar_LR_VictorPoints, ConVarChanged_Setting);
+	HookConVarChange(gH_Cvar_LR_RemoveArmor, ConVarChanged_Setting);
 	
 	// Account for late loading
 	for (new idx = 1; idx <= MaxClients ; idx++)
@@ -2351,6 +2356,7 @@ LastRequest_OnConfigsExecuted()
 	gShadow_LR_AutoDisplay = bool:GetConVarInt(gH_Cvar_LR_AutoDisplay);
 	gShadow_LR_BlockSuicide = bool:GetConVarInt(gH_Cvar_LR_BlockSuicide);
 	gShadow_LR_VictorPoints = GetConVarInt(gH_Cvar_LR_VictorPoints);
+	gShadow_LR_RemoveArmor = GetConVarInt(gH_Cvar_LR_RemoveArmor);
 	if (gShadow_LR_BlockSuicide && !g_bListenersAdded)
 	{
 		AddCommandListener(Suicide_Check, "kill");
@@ -2630,6 +2636,10 @@ public ConVarChanged_Setting(Handle:cvar, const String:oldValue[], const String:
 	else if (cvar == gH_Cvar_LR_VictorPoints)
 	{
 		gShadow_LR_VictorPoints = StringToInt(newValue);
+	}
+	else if (cvar == gH_Cvar_LR_RemoveArmor)
+	{
+		gShadow_LR_RemoveArmor = StringToInt(newValue);
 	}
 	else if (cvar == gH_Cvar_LR_Damage)
 	{
@@ -3657,6 +3667,13 @@ InitializeGame(iPartnersIndex)
 		decl String:LR_Name[MAX_DISPLAYNAME_SIZE];
 		GetArrayString(gH_DArray_LR_CustomNames, _:(selection - LastRequest), LR_Name, MAX_DISPLAYNAME_SIZE);
 		LogToGame("\"%L\" started a LR game (\"%s\") with \"%L\"", LR_Player_Prisoner, LR_Name, LR_Player_Guard);
+	}
+	
+	//remove armor
+	if (gShadow_LR_RemoveArmor == 1)
+	{
+		SetEntData(LR_Player_Prisoner, g_Offset_Armor, 0);
+		SetEntData(LR_Player_Guard, g_Offset_Armor, 0);
 	}
 	
 	switch (selection)
