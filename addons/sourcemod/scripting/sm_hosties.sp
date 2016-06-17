@@ -305,6 +305,7 @@ public OnConfigsExecuted()
 			StrCat(sTags, sizeof(sTags), sTagsFormat);
 			SetConVarString(hTags, sTags);
 		}
+		CloseHandle(hTags);
 	}
 	
 	#if (MODULE_FREEKILL == 1)
