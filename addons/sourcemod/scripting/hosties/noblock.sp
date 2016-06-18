@@ -28,7 +28,7 @@ new bool:gShadow_NoBlock;
 
 NoBlock_OnPluginStart()
 {
-	gH_Cvar_NoBlock = CreateConVar("sm_hosties_noblock_enable", "1", "Enable or disable integrated removing of player vs player collisions (noblock): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
+	gH_Cvar_NoBlock = CreateConVar("sm_hosties_noblock_enable", "1", "Enable or disable integrated removing of player vs player collisions (noblock): 0 - disable, 1 - enable", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_NoBlock = true;
 	
 	HookConVarChange(gH_Cvar_NoBlock, NoBlock_CvarChanged);
