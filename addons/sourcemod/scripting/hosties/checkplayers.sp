@@ -26,7 +26,7 @@ new bool:gShadow_CheckPlayersOn;
 
 CheckPlayers_OnPluginStart()
 {
-	gH_Cvar_CheckPlayersOn = CreateConVar("sm_hosties_checkplayers_enable", "1", "Enable or disable the !checkplayers command: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
+	gH_Cvar_CheckPlayersOn = CreateConVar("sm_hosties_checkplayers_enable", "1", "Enable or disable the !checkplayers command: 0 - disable, 1 - enable", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_CheckPlayersOn = true;
 	
 	RegConsoleCmd("sm_checkplayers", Command_CheckPlayers);
