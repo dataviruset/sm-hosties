@@ -26,7 +26,7 @@ new Handle:gH_Cvar_RulesOn = INVALID_HANDLE;
 new bool:gShadow_RulesOn;
 new Handle:gH_Cvar_Announce_Rules = INVALID_HANDLE;
 new bool:gShadow_Announce_Rules;
-new Handle:gH_Cvar_Rules_Mode = INVALID_HANDLE;c
+new Handle:gH_Cvar_Rules_Mode = INVALID_HANDLE;
 new gShadow_Rules_Mode = 1;
 new Handle:gH_Cvar_Rules_Website = INVALID_HANDLE;
 new String:gShadow_Rules_Website[192];
