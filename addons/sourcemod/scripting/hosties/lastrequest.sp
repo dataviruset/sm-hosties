@@ -1617,7 +1617,7 @@ public LastRequest_PlayerJump(Handle:event, const String:name[], bool:dontBroadc
 							decl Float:Prisoner_Position[3];
 							GetClientAbsOrigin(LR_Player_Prisoner, Prisoner_Position);
 							new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);						
-							SetPackPosition(JumpPackPosition, 0);
+							SetPackPosition(JumpPackPosition, DataPackPos:0);
 							WritePackFloat(JumpPackPosition, Prisoner_Position[0]);
 							WritePackFloat(JumpPackPosition, Prisoner_Position[1]);
 							WritePackFloat(JumpPackPosition, Prisoner_Position[2]);
@@ -1628,7 +1628,7 @@ public LastRequest_PlayerJump(Handle:event, const String:name[], bool:dontBroadc
 							decl Float:Guard_Position[3];
 							GetClientAbsOrigin(LR_Player_Guard, Guard_Position);
 							new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);							
-							SetPackPosition(JumpPackPosition, 24);
+							SetPackPosition(JumpPackPosition, DataPackPos:24);
 							WritePackFloat(JumpPackPosition, Guard_Position[0]);
 							WritePackFloat(JumpPackPosition, Guard_Position[1]);
 							WritePackFloat(JumpPackPosition, Guard_Position[2]);
@@ -1650,7 +1650,7 @@ public LastRequest_PlayerJump(Handle:event, const String:name[], bool:dontBroadc
 					decl Float:Prisoner_Position[3];
 					GetClientAbsOrigin(LR_Player_Prisoner, Prisoner_Position);
 					new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);
-					SetPackPosition(JumpPackPosition, 96);
+					SetPackPosition(JumpPackPosition, DataPackPos:96);
 					WritePackFloat(JumpPackPosition, Prisoner_Position[0]);
 					WritePackFloat(JumpPackPosition, Prisoner_Position[1]);
 					WritePackFloat(JumpPackPosition, Prisoner_Position[2]);
@@ -1661,7 +1661,7 @@ public LastRequest_PlayerJump(Handle:event, const String:name[], bool:dontBroadc
 					decl Float:Guard_Position[3];
 					GetClientAbsOrigin(LR_Player_Guard, Guard_Position);
 					new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);
-					SetPackPosition(JumpPackPosition, 120);
+					SetPackPosition(JumpPackPosition, DataPackPos:120);
 					WritePackFloat(JumpPackPosition, Guard_Position[0]);
 					WritePackFloat(JumpPackPosition, Guard_Position[1]);
 					WritePackFloat(JumpPackPosition, Guard_Position[2]);
@@ -2213,7 +2213,7 @@ public Action:OnWeaponDrop(client, weapon)
 
 								decl Float:GTp1droppos[3];
 								GetClientAbsOrigin(LR_Player_Prisoner, GTp1droppos);
-								SetPackPosition(PositionDataPack, 48);
+								SetPackPosition(PositionDataPack, DataPackPos:48);
 								WritePackFloat(PositionDataPack, GTp1droppos[0]);
 								WritePackFloat(PositionDataPack, GTp1droppos[1]);
 								WritePackFloat(PositionDataPack, GTp1droppos[2]);
@@ -2231,7 +2231,7 @@ public Action:OnWeaponDrop(client, weapon)
 							{
 								decl Float:GTp2droppos[3];
 								GetClientAbsOrigin(LR_Player_Guard, GTp2droppos);
-								SetPackPosition(PositionDataPack, 72);
+								SetPackPosition(PositionDataPack, DataPackPos:72);
 								WritePackFloat(PositionDataPack, GTp2droppos[0]);
 								WritePackFloat(PositionDataPack, GTp2droppos[1]);
 								WritePackFloat(PositionDataPack, GTp2droppos[2]);
@@ -5790,7 +5790,7 @@ public Action:Timer_GunToss(Handle:timer)
 							GTdeagle1lastpos[0] = GTdeagle1pos[0];
 							GTdeagle1lastpos[1] = GTdeagle1pos[1];
 							GTdeagle1lastpos[2] = GTdeagle1pos[2];
-							SetPackPosition(PositionDataPack, 0);
+							SetPackPosition(PositionDataPack, DataPackPos:0);
 							WritePackFloat(PositionDataPack, GTdeagle1lastpos[0]);
 							WritePackFloat(PositionDataPack, GTdeagle1lastpos[1]);
 							WritePackFloat(PositionDataPack, GTdeagle1lastpos[2]);
@@ -5835,7 +5835,7 @@ public Action:Timer_GunToss(Handle:timer)
 							GTdeagle2lastpos[1] = GTdeagle2pos[1];
 							GTdeagle2lastpos[2] = GTdeagle2pos[2];
 	
-							SetPackPosition(PositionDataPack, 24);
+							SetPackPosition(PositionDataPack, DataPackPos:24);
 							WritePackFloat(PositionDataPack, GTdeagle2lastpos[0]);
 							WritePackFloat(PositionDataPack, GTdeagle2lastpos[1]);
 							WritePackFloat(PositionDataPack, GTdeagle2lastpos[2]);
