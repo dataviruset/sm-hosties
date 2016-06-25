@@ -57,7 +57,7 @@ public Action:Command_CheckPlayers(client, args)
 			new realrebelscount = 0;
 			for (new idx = 1; idx < MaxClients; idx++)
 			{
-				if (g_bIsARebel[idx])
+				if (g_bIsARebel[idx] && IsClientInGame(idx))
 				{
 					realrebelscount++;
 				}
@@ -76,7 +76,7 @@ public Action:Command_CheckPlayers(client, args)
 				decl String:item[64];
 				for(new i; i < MaxClients; i++)
 				{
-					if (g_bIsARebel[i])
+					if (g_bIsARebel[i] && IsClientInGame(i))
 					{
 						GetClientName(g_bIsARebel[i], item, sizeof(item));
 						AddMenuItem(checkplayersmenu, "player", item);
