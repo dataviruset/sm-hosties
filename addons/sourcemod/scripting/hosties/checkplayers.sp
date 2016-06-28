@@ -78,7 +78,7 @@ public Action:Command_CheckPlayers(client, args)
 				{
 					if (g_bIsARebel[i] && IsClientInGame(i))
 					{
-						GetClientName(g_bIsARebel[i], item, sizeof(item));
+						GetClientName(i, item, sizeof(item));
 						AddMenuItem(checkplayersmenu, "player", item);
 					}
 				}
