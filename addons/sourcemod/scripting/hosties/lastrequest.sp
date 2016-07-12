@@ -1360,11 +1360,11 @@ CleanupLastRequest(loser, arrayIndex)
 				{
 					if (IsClientInGame(LR_Player_Prisoner))
 					{
-						SetFirstPerson(LR_Player_Prisoner);
+						SetFirstPerson(LR_Player_Prisoner, g_Game);
 					}
 					if (IsClientInGame(LR_Player_Guard))
 					{
-						SetFirstPerson(LR_Player_Guard);
+						SetFirstPerson(LR_Player_Guard, g_Game);
 					}
 				}
 			}
@@ -3801,8 +3801,8 @@ InitializeGame(iPartnersIndex)
 				}
 				case Knife_ThirdPerson:
 				{
-					SetThirdPerson(LR_Player_Prisoner);
-					SetThirdPerson(LR_Player_Guard);
+					SetThirdPerson(LR_Player_Prisoner, g_Game);
+					SetThirdPerson(LR_Player_Guard, g_Game);
 				}
 				case Knife_Drugs:
 				{
