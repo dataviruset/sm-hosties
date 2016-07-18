@@ -849,13 +849,13 @@ public Native_LR_Cleanup(Handle:h_Plugin, iNumParameters)
 	}
 }
 
-public Native_LR_Available (Handle:h_Plugin, iNumParameters)
+public Native_LR_Available(Handle:h_Plugin, iNumParameters)
 {
-	if (g_bIsLRAvailable)
+	if (!g_bIsLRAvailable)
 	{
-		return true;
+		return false;
 	}
-	else return false;
+	return true;
 }
 
 public Native_IsClientRebel(Handle:h_Plugin, iNumParameters)
