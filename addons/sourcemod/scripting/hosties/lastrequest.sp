@@ -685,6 +685,7 @@ LastRequest_APL()
 	CreateNative("ProcessAllLastRequests", Native_ProcessLRs);
 	CreateNative("ChangeRebelStatus", Native_ChangeRebelStatus);
 	CreateNative("InitializeLR", Native_LR_Initialize);
+	CreateNative("IsLastRequestAvailable", Native_LR_Available);
 	CreateNative("CleanupLR", Native_LR_Cleanup);
 	
 	RegPluginLibrary("lastrequest");
@@ -848,6 +849,15 @@ public Native_LR_Cleanup(Handle:h_Plugin, iNumParameters)
 	}
 }
 
+public Native_LR_Available(Handle:h_Plugin, iNumParameters)
+{
+	if (!g_bIsLRAvailable)
+	{
+		return false;
+	}
+	return true;
+}
+
 public Native_IsClientRebel(Handle:h_Plugin, iNumParameters)
 {
 	new client = GetNativeCell(1);
@@ -937,7 +947,7 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 	// roundstart done, enable LR if there should be no LR delay (credits to Caza for this :p)
 	if (gShadow_LR_Delay_Enable_Time > 0.0)
 	{
-		g_bIsLRAvailable = false;	
+		g_bIsLRAvailable = false;
 		g_DelayLREnableTimer = CreateTimer(gShadow_LR_Delay_Enable_Time, Timer_EnableLR, _, TIMER_FLAG_NO_MAPCHANGE);
 
 		if (gShadow_Announce_Delay_Enable)

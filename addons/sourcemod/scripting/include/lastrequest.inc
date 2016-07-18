@@ -93,6 +93,7 @@ public __pl_lastrequest_SetNTVOptional()
 {
 	MarkNativeAsOptional("IsClientRebel");
 	MarkNativeAsOptional("IsClientInLastRequest");
+	MarkNativeAsOptional("IsLastRequestAvailable");
 	MarkNativeAsOptional("AddLastRequestToList");
 	MarkNativeAsOptional("RemoveLastRequestFromList");
 	MarkNativeAsOptional("ProcessAllLastRequests");
@@ -108,6 +109,13 @@ functag FuncProcessLR public(Handle:array, iLRNumber);
 forward OnStartLR(PrisonerIndex, GuardIndex, LR_Type);
 
 forward OnAvailableLR(Announced);
+
+/**
+ * Find if last request is available.
+ * 
+ * @return						True if last request is available, false otherwise.
+ */
+native bool:IsLastRequestAvailable(IsLR);
 
 /**
  * Find if a client is listed as a rebel.
