@@ -105,6 +105,7 @@ public __pl_lastrequest_SetNTVOptional()
 functag FuncLastRequest public(type, prisoner, guard);
 functag FuncProcessLR public(Handle:array, iLRNumber);
 
+forward OnRebelStateChange(client, bool:status);
 
 forward OnStartLR(PrisonerIndex, GuardIndex, LR_Type);
 

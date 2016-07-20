@@ -259,6 +259,7 @@ public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[],
 
 	MarkNativeAsOptional("SteamWorks_SetGameDescription");
 
+	FreeKillers_APL();
 	LastRequest_APL();
 	
 	RegPluginLibrary("hosties");

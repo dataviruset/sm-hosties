@@ -50,6 +50,11 @@ enum MediaType
 	type_Decal
 };
 
+forward OnFreeKill(attacker, victim);
+
+forward OnFreeAttack(attacker, victim, Float:damange);
+
+
 stock ShowOverlayToClient(client, const String:overlaypath[])
 {
 	ClientCommand(client, "r_screenoverlay \"%s\"", overlaypath);

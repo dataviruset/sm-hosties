@@ -30,6 +30,9 @@ new g_iLastKillTime[MAXPLAYERS+1];
 new g_iConsecutiveKills[MAXPLAYERS+1];
 new Handle:gH_Reset_Kill_Counter[MAXPLAYERS+1];
 
+new Handle:gH_OnFreeKill = INVALID_HANDLE;
+new Handle:gH_OnFreeAttack = INVALID_HANDLE;
+
 Freekillers_OnPluginStart()
 {
 	gH_Cvar_Freekill_Sound = CreateConVar("sm_hosties_freekill_sound", "sm_hosties/freekill1.mp3", "What sound to play if a non-rebelling T gets 'freekilled', relative to the sound-folder: -1 - disable, path - path to sound file", FCVAR_NONE);
@@ -73,6 +76,14 @@ Freekillers_OnPluginStart()
 	}
 }
 
+FreeKillers_APL()
+{
+	gH_OnFreeKill = CreateGlobalForward("OnFreeKill", ET_Event, Param_Cell, Param_Cell);
+	gH_OnFreeAttack = CreateGlobalForward("OnFreeAttack", ET_Event, Param_Cell, Param_Cell, Param_Float);
+	
+	RegPluginLibrary("freekillers");
+}
+
 ResetNumFreekills()
 {
 	for (new fidx = 1; fidx < MaxClients; fidx++)
@@ -98,6 +109,20 @@ public Action:Freekill_Damage_Adjustment(victim, &attacker, &inflictor, &Float:d
 	{
 		if (gShadow_Advanced_FK_Prevention && (g_iConsecutiveKills[attacker] > 0))
 		{
+			// Call forward (maybe anyone want to block/stop/modify this)
+			decl Action:result = Plugin_Continue;
+			Call_StartForward(gH_OnFreeAttack);
+			Call_PushCell(attacker);
+			Call_PushCell(victim);
+			Call_PushCell(damage);
+			Call_Finish(result);
+			
+			if(result == Plugin_Stop)
+			{
+				// Stop with reset
+				return Plugin_Handled;;
+			}
+			
 			new Float:f_percentChange = 0.01*(100.0 - 20.0*float(g_iConsecutiveKills[attacker]));			
 			if (f_percentChange < 0.01)
 			{
@@ -204,7 +229,7 @@ public Freekillers_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 			new iArraySize = GetArraySize(gH_DArray_LR_Partners);
 			if (iArraySize == 0)
 			{
-				TakeActionOnFreekiller(attacker);
+				TakeActionOnFreekiller(attacker, victim);
 			}
 			else
 			{
@@ -217,7 +242,7 @@ public Freekillers_PlayerDeath(Handle:event, const String:name[], bool:dontBroad
 					
 					if (type != LR_Rebel && (victim == LR_Player_Prisoner) && (attacker != LR_Player_Guard))
 					{
-						TakeActionOnFreekiller(attacker);
+						TakeActionOnFreekiller(attacker, victim);
 					}
 				}
 			}
@@ -236,8 +261,22 @@ public Action:Timer_ResetKills(Handle:timer, any:client)
 	return Plugin_Stop;
 }
 
-TakeActionOnFreekiller(attacker)
+TakeActionOnFreekiller(attacker, victim)
 {
+	// Call forward (maybe anyone want to block/stop this)
+	decl Action:result = Plugin_Continue;
+	Call_StartForward(gH_OnFreeKill);
+	Call_PushCell(attacker);
+	Call_PushCell(victim);
+	Call_Finish(result);
+	
+	if(result == Plugin_Stop)
+	{
+		// Stop with reset
+		gA_FreekillsOfCT[attacker] = 0;
+		return Plugin_Continue;
+	}
+	
 	// FREEEEEKILL... rawr...
 	if (gShadow_Freekill_Threshold > 0)
 	{

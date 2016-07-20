@@ -234,6 +234,8 @@ new bool:gShadow_LR_BlockSuicide = false;
 new gShadow_LR_VictorPoints = -1;
 new gShadow_LR_RemoveArmor = 1;
 
+new Handle:gH_OnRebelStatusChange = INVALID_HANDLE;
+
 // Autostart
 new LastRequest:g_selection[MAXPLAYERS + 1];
 new g_LR_Player_Guard[MAXPLAYERS + 1] = 0;
@@ -654,6 +656,7 @@ LastRequest_OnPluginStart()
 			}
 		}
 		g_bIsARebel[idx] = false;
+		OnRebelChange(idx);
 		g_bInLastRequest[idx] = false;
 		gH_BuildLR[idx] = INVALID_HANDLE;
 	}
@@ -687,6 +690,8 @@ LastRequest_APL()
 	CreateNative("InitializeLR", Native_LR_Initialize);
 	CreateNative("IsLastRequestAvailable", Native_LR_Available);
 	CreateNative("CleanupLR", Native_LR_Cleanup);
+	
+	gH_OnRebelStatusChange = CreateGlobalForward("OnRebelStateChange", ET_Ignore, Param_Cell, Param_Cell);
 	
 	RegPluginLibrary("lastrequest");
 }
@@ -881,6 +886,7 @@ public Native_ChangeRebelStatus(Handle:h_Plugin, iNumParameters)
 		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid rebel status (%d)", status);
 	}
 	g_bIsARebel[client] = bool:status;
+	OnRebelChange(client);
 	return 1;
 }
 
@@ -963,6 +969,7 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 	for (new idx = 1; idx <= MaxClients; idx++)
 	{
 		g_bIsARebel[idx] = false;
+		OnRebelChange(idx);
 		g_bInLastRequest[idx] = false;
 		g_LR_Player_Guard[idx] = 0;
 		SetCorrectPlayerColor(idx);
@@ -1151,6 +1158,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 				if (!g_bIsARebel[attacker] && (GetClientTeam(attacker) == CS_TEAM_T))
 				{
 					g_bIsARebel[attacker] = true;
+					OnRebelChange(attacker);
 					if (gShadow_Announce_Rebel && IsClientInGame(attacker))
 					{
 						if (gShadow_SendGlobalMsgs)
@@ -1209,6 +1217,7 @@ public LastRequest_PlayerHurt(Handle:event, const String:name[], bool:dontBroadc
 		&& !g_bIsARebel[attacker] && g_bRoundInProgress)
 	{
 		g_bIsARebel[attacker] = true;
+		OnRebelChange(attacker);
 		if (IsClientInGame(attacker))
 		{
 			if (gShadow_Announce_Rebel)
@@ -1522,6 +1531,7 @@ public LastRequest_BulletImpact(Handle:event, const String:name[], bool:dontBroa
 	if (!g_bIsARebel[attacker] && gShadow_RebelOnImpact && (GetClientTeam(attacker) == CS_TEAM_T) && !Local_IsClientInLR(attacker))
 	{
 		g_bIsARebel[attacker] = true;
+		OnRebelChange(attacker);
 		
 		if (gShadow_ColorRebels)
 		{
@@ -3201,6 +3211,7 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 								SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Guard);
 								g_bInLastRequest[client] = true;
 								g_bIsARebel[client] = true;
+								OnRebelChange(client);
 								InitializeGame(iArrayIndex);			
 							}
 							case LR_JumpContest:
@@ -6166,4 +6177,12 @@ public LastRequest_PlayerSpawn(Handle:event, const String:name[], bool:dontBroad
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	SetCorrectPlayerColor(client);
+}
+
+OnRebelChange(client)
+{
+	Call_StartForward(gH_OnFreeAttack);
+	Call_PushCell(client);
+	Call_PushCell(g_bIsARebel[client]);
+	Call_Finish();
 }
