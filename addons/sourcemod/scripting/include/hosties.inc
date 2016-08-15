@@ -50,15 +50,15 @@ enum MediaType
 	type_Decal
 };
 
-stock ShowOverlayToClient(client, const String:overlaypath[])
+stock void ShowOverlayToClient(int client, const  char[] overlaypath)
 {
 	ClientCommand(client, "r_screenoverlay \"%s\"", overlaypath);
 }
 
-stock ShowOverlayToAll(const String:overlaypath[])
+stock void ShowOverlayToAll(const char[] overlaypath)
 {
 	// x = client index.
-	for (new x = 1; x <= MaxClients; x++)
+	for (int x = 1; x <= MaxClients; x++)
 	{
 		// If client isn't in-game, then stop.
 		if (IsClientInGame(x) && !IsFakeClient(x))
@@ -68,10 +68,10 @@ stock ShowOverlayToAll(const String:overlaypath[])
 	}
 }
 
-stock StripAllWeapons(client)
+stock void StripAllWeapons(int client)
 {
-	new wepIdx;
-	for (new i; i < 4; i++)
+	int wepIdx;
+	for (int i; i < 4; i++)
 	{
 		if ((wepIdx = GetPlayerWeaponSlot(client, i)) != -1)
 		{
@@ -81,19 +81,19 @@ stock StripAllWeapons(client)
 	}
 }
 
-stock BlockEntity(client, cachedOffset)
+stock void BlockEntity(int client, int cachedOffset)
 {
 	SetEntData(client, cachedOffset, 5, 4, true);
 }
 
-stock UnblockEntity(client, cachedOffset)
+stock void UnblockEntity(int client, int cachedOffset)
 {
 	SetEntData(client, cachedOffset, 2, 4, true);
 }
 
-stock BlockClientAll()
+stock void BlockClientAll()
 {
-	for (new i = 1; i <= MaxClients; i++)
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		if ( IsClientInGame(i) && IsPlayerAlive(i) )
 		{
@@ -102,9 +102,9 @@ stock BlockClientAll()
 	}
 }
 
-stock UnblockClientAll()
+stock void UnblockClientAll()
 {
-	for (new i = 1; i <= MaxClients; i++)
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		if ( IsClientInGame(i) && IsPlayerAlive(i) )
 		{
@@ -113,19 +113,19 @@ stock UnblockClientAll()
 	}
 }
 
-stock MutePlayer(client)
+stock void MutePlayer(int client)
 {
 	SetClientListeningFlags(client, VOICE_MUTED);
 }
 
-stock UnmutePlayer(client)
+stock void UnmutePlayer(int client)
 {
 	SetClientListeningFlags(client, VOICE_NORMAL);
 }
 
-stock CacheTheFile(const String:path[], MediaType:filetype)
+stock void CacheTheFile(const char[] path, MediaType filetype)
 {
-	decl String:sDownloadPath[PLATFORM_MAX_PATH];
+	char sDownloadPath[PLATFORM_MAX_PATH];
 	switch (filetype)
 	{
 		case type_Sound:

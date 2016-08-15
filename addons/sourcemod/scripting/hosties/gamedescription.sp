@@ -22,18 +22,18 @@
 #include <sdkhooks>
 #include <hosties>
 
-new Handle:gH_Cvar_GameDescriptionOn = INVALID_HANDLE;
-new bool:gShadow_GameDescriptionOn;
-new Handle:gH_Cvar_GameDescriptionTag = INVALID_HANDLE;
-new String:gShadow_GameDescriptionTag[64];
-new bool:g_bSTAvailable = false; // SteamTools
+Handle gH_Cvar_GameDescriptionOn = null;
+bool gShadow_GameDescriptionOn;
+Handle gH_Cvar_GameDescriptionTag = null;
+char gShadow_GameDescriptionTag[64];
+bool g_bSTAvailable = false; // SteamTools
 
-GameDescription_OnPluginStart()
+void GameDescription_OnPluginStart()
 {
-	gH_Cvar_GameDescriptionOn = CreateConVar("sm_hosties_override_gamedesc", "1", "Enable or disable an override of the game description (standard Counter-Strike: Source, override to Hosties/jailbreak): 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
+	gH_Cvar_GameDescriptionOn = CreateConVar("sm_hosties_override_gamedesc", "1", "Enable or disable an override of the game description (standard Counter-Strike: Source, override to Hosties/jailbreak): 0 - disable, 1 - enable", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_GameDescriptionOn = true;
 	
-	gH_Cvar_GameDescriptionTag = CreateConVar("sm_hosties_gamedesc_tag", "Hosties/Jailbreak v2", "Sets the game description tag.", 0);
+	gH_Cvar_GameDescriptionTag = CreateConVar("sm_hosties_gamedesc_tag", "Hosties/Jailbreak v2", "Sets the game description tag.", FCVAR_NONE);
 	Format(gShadow_GameDescriptionTag, sizeof(gShadow_GameDescriptionTag), "Hosties/Jailbreak v2");
 	
 	HookConVarChange(gH_Cvar_GameDescriptionOn, GameDescription_CvarChanged);
@@ -46,11 +46,11 @@ GameDescription_OnPluginStart()
 	}
 }
 
-public GameDescription_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
+public void GameDescription_CvarChanged(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == gH_Cvar_GameDescriptionOn)
 	{
-		gShadow_GameDescriptionOn = bool:StringToInt(newValue);
+		gShadow_GameDescriptionOn = view_as<bool>(StringToInt(newValue));
 	}
 	else if (cvar == gH_Cvar_GameDescriptionTag)
 	{
@@ -63,7 +63,7 @@ public GameDescription_CvarChanged(Handle:cvar, const String:oldValue[], const S
 	}
 }
 
-GameDesc_OnConfigsExecuted()
+void GameDesc_OnConfigsExecuted()
 {
 	gShadow_GameDescriptionOn = GetConVarBool(gH_Cvar_GameDescriptionOn);
 	GetConVarString(gH_Cvar_GameDescriptionTag, gShadow_GameDescriptionTag, sizeof(gShadow_GameDescriptionTag));

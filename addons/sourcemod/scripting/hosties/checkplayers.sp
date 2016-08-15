@@ -21,12 +21,12 @@
 #include <cstrike>
 #include <hosties>
 
-new Handle:gH_Cvar_CheckPlayersOn = INVALID_HANDLE;
-new bool:gShadow_CheckPlayersOn;
+Handle gH_Cvar_CheckPlayersOn = null;
+bool gShadow_CheckPlayersOn;
 
-CheckPlayers_OnPluginStart()
+void CheckPlayers_OnPluginStart()
 {
-	gH_Cvar_CheckPlayersOn = CreateConVar("sm_hosties_checkplayers_enable", "1", "Enable or disable the !checkplayers command: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
+	gH_Cvar_CheckPlayersOn = CreateConVar("sm_hosties_checkplayers_enable", "1", "Enable or disable the !checkplayers command: 0 - disable, 1 - enable", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_CheckPlayersOn = true;
 	
 	RegConsoleCmd("sm_checkplayers", Command_CheckPlayers);
@@ -34,30 +34,30 @@ CheckPlayers_OnPluginStart()
 	HookConVarChange(gH_Cvar_CheckPlayersOn, CheckPlayers_CvarChanged);
 }
 
-CheckPlayers_OnConfigsExecuted()
+void CheckPlayers_OnConfigsExecuted()
 {
 	gShadow_CheckPlayersOn = GetConVarBool(gH_Cvar_CheckPlayersOn);
 }
 
-public CheckPlayers_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
+public void CheckPlayers_CvarChanged(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == gH_Cvar_CheckPlayersOn)
 	{
-		gShadow_CheckPlayersOn = bool:StringToInt(newValue);
+		gShadow_CheckPlayersOn = view_as<bool>(StringToInt(newValue));
 	}
 }
 
-public Action:Command_CheckPlayers(client, args)
+public Action Command_CheckPlayers(int client, int args)
 {
 	if (gShadow_CheckPlayersOn)
 	{
 		if (IsPlayerAlive(client))
 		{
 			// count number of rebels
-			new realrebelscount = 0;
-			for (new idx = 1; idx < MaxClients; idx++)
+			int realrebelscount = 0;
+			for (int idx = 1; idx < MaxClients; idx++)
 			{
-				if (g_bIsARebel[idx])
+				if (g_bIsARebel[idx] && IsClientInGame(idx))
 				{
 					realrebelscount++;
 				}
@@ -69,16 +69,16 @@ public Action:Command_CheckPlayers(client, args)
 			}
 			else
 			{
-				new Handle:checkplayersmenu = CreateMenu(Handler_DoNothing);
-				decl String:rebellingterrorists[32];
+				Handle checkplayersmenu = CreateMenu(Handler_DoNothing);
+				char rebellingterrorists[32];
 				Format(rebellingterrorists, sizeof(rebellingterrorists), "%T", "Rebelling Terrorists", client);
 				SetMenuTitle(checkplayersmenu, rebellingterrorists);
-				decl String:item[64];
-				for(new i; i < MaxClients; i++)
+				char item[64];
+				for(int i; i < MaxClients; i++)
 				{
-					if (g_bIsARebel[i])
+					if (g_bIsARebel[i] && IsClientInGame(i))
 					{
-						GetClientName(g_bIsARebel[i], item, sizeof(item));
+						GetClientName(i, item, sizeof(item));
 						AddMenuItem(checkplayersmenu, "player", item);
 					}
 				}
@@ -95,7 +95,7 @@ public Action:Command_CheckPlayers(client, args)
 	return Plugin_Handled;
 }
 
-public Handler_DoNothing(Handle:menu, MenuAction:action, param1, param2)
+public int Handler_DoNothing(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
