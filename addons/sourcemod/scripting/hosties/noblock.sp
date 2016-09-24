@@ -22,11 +22,11 @@
 #include <sdkhooks>
 #include <hosties>
 
-new g_Offset_CollisionGroup = -1;
-new Handle:gH_Cvar_NoBlock = INVALID_HANDLE;
-new bool:gShadow_NoBlock;
+int g_Offset_CollisionGroup = -1;
+Handle gH_Cvar_NoBlock = null;
+bool gShadow_NoBlock;
 
-NoBlock_OnPluginStart()
+void NoBlock_OnPluginStart()
 {
 	gH_Cvar_NoBlock = CreateConVar("sm_hosties_noblock_enable", "1", "Enable or disable integrated removing of player vs player collisions (noblock): 0 - disable, 1 - enable", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_NoBlock = true;
@@ -42,22 +42,22 @@ NoBlock_OnPluginStart()
 	HookEvent("player_spawn", NoBlock_PlayerSpawn);
 }
 
-NoBlock_OnConfigsExecuted()
+void NoBlock_OnConfigsExecuted()
 {
 	gShadow_NoBlock = GetConVarBool(gH_Cvar_NoBlock);
 }
 
-public NoBlock_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
+public void NoBlock_CvarChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if (cvar == gH_Cvar_NoBlock)
+	if (convar == gH_Cvar_NoBlock)
 	{
-		gShadow_NoBlock = bool:StringToInt(newValue);
+		gShadow_NoBlock = view_as<bool>(StringToInt(newValue));
 	}
 }
 
-public NoBlock_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public Action NoBlock_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
 	if (gShadow_NoBlock)
 	{

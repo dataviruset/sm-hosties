@@ -22,7 +22,6 @@
 #include <cstrike>
 #include <adminmenu>
 #include <sdkhooks>
-#include <hosties>
 #include <emitsoundany>
 
 #undef REQUIRE_PLUGIN
@@ -32,14 +31,17 @@
 #define REQUIRE_EXTENSIONS
 #define REQUIRE_PLUGIN
 
+// Hosties includes should support new syntax
+#include <hosties>
+
 // Compiler directives
 #pragma 	semicolon 					1
 
 // Constants
-#define 	PLUGIN_VERSION				"2.2.3"
+#define 	PLUGIN_VERSION				"2.3.0"
 #define 	MAX_DISPLAYNAME_SIZE		64
 #define 	MAX_DATAENTRY_SIZE			5
-#define 	SERVERTAG					"SM Hosties v2.2"
+#define 	SERVERTAG					"SM Hosties v2.3"
 
 // Note: you cannot safely turn these modules on and off yet. Use cvars to disable functionality.
 
@@ -73,29 +75,29 @@
 ******************************************************************************/
 
 // Global vars
-new bool:g_bSBAvailable = false; // SourceBans
-new GameType:g_Game = Game_Unknown;
+bool g_bSBAvailable = false; // SourceBans
+GameType g_Game = Game_Unknown;
 
 #if (MODULE_FREEKILL == 1)
-new Handle:gH_Cvar_Freekill_Sound = INVALID_HANDLE;
-new Handle:gH_Cvar_Freekill_Threshold = INVALID_HANDLE;
-new Handle:gH_Cvar_Freekill_Notify = INVALID_HANDLE;
-new Handle:gH_Cvar_Freekill_BanLength = INVALID_HANDLE;
-new Handle:gH_Cvar_Freekill_Punishment = INVALID_HANDLE;
-new Handle:gH_Cvar_Freekill_Reset = INVALID_HANDLE;
-new Handle:gH_Cvar_Freekill_Sound_Mode = INVALID_HANDLE;
-new String:gShadow_Freekill_Sound[PLATFORM_MAX_PATH];
-new gShadow_Freekill_Threshold;
-new gShadow_Freekill_BanLength;
-new gShadow_Freekill_Reset;
-new gShadow_Freekill_Sound_Mode;
-new FreekillPunishment:gShadow_Freekill_Punishment;
-new bool:gShadow_Freekill_Notify;
-new gA_FreekillsOfCT[MAXPLAYERS+1];
+Handle gH_Cvar_Freekill_Sound = null;
+Handle gH_Cvar_Freekill_Threshold = null;
+Handle gH_Cvar_Freekill_Notify = null;
+Handle gH_Cvar_Freekill_BanLength = null;
+Handle gH_Cvar_Freekill_Punishment = null;
+Handle gH_Cvar_Freekill_Reset = null;
+Handle gH_Cvar_Freekill_Sound_Mode = null;
+char gShadow_Freekill_Sound[PLATFORM_MAX_PATH];
+int gShadow_Freekill_Threshold;
+int gShadow_Freekill_BanLength;
+int gShadow_Freekill_Reset;
+int gShadow_Freekill_Sound_Mode;
+FreekillPunishment gShadow_Freekill_Punishment;
+bool gShadow_Freekill_Notify;
+int gA_FreekillsOfCT[MAXPLAYERS+1];
 #endif
 
-new Handle:gH_TopMenu = INVALID_HANDLE;
-new TopMenuObject:gM_Hosties = INVALID_TOPMENUOBJECT;
+Handle gH_TopMenu = null;
+TopMenuObject gM_Hosties = INVALID_TOPMENUOBJECT;
 
 #if (MODULE_NOBLOCK == 1)
 #include "hosties/noblock.sp"
@@ -134,11 +136,13 @@ new TopMenuObject:gM_Hosties = INVALID_TOPMENUOBJECT;
 #include "hosties/control.sp"
 #endif
 
-// ConVars
-new Handle:gH_Cvar_Add_ServerTag = INVALID_HANDLE;
-new Handle:gH_Cvar_Display_Advert = INVALID_HANDLE;
+#pragma newdecls required
 
-public Plugin:myinfo =
+// ConVars
+Handle gH_Cvar_Add_ServerTag = null;
+Handle gH_Cvar_Display_Advert = null;
+
+public Plugin myinfo =
 {
 	name = "SM_Hosties v2",
 	author = "databomb & dataviruset & comando",
@@ -147,7 +151,7 @@ public Plugin:myinfo =
 	url = "http://forums.alliedmods.net/showthread.php?t=108810"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	// Load translations
 	LoadTranslations("common.phrases");
@@ -204,7 +208,7 @@ public OnPluginStart()
 	AutoExecConfig(true, "sm_hosties2");
 }
 
-public OnMapStart()
+public void OnMapStart()
 {
 	#if (MODULE_TEAMOVERLAYS == 1)
 	TeamOverlays_OnMapStart();
@@ -217,22 +221,22 @@ public OnMapStart()
 	#endif
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	#if (MODULE_FREEKILL == 1)	
 	Freekillers_OnMapEnd();
 	#endif
 }
 
-public OnAllPluginsLoaded()
+public void OnAllPluginsLoaded()
 {
 	if (LibraryExists("sourcebans"))
 	{
 		g_bSBAvailable = true;
 	}
 	
-	new Handle:h_TopMenu = GetAdminTopMenu();
-	if (LibraryExists("adminmenu") && (h_TopMenu != INVALID_HANDLE))
+	Handle h_TopMenu = GetAdminTopMenu();
+	if (LibraryExists("adminmenu") && (h_TopMenu != null))
 	{
 		OnAdminMenuReady(h_TopMenu);
 	}
@@ -242,7 +246,7 @@ public OnAllPluginsLoaded()
 	#endif
 }
 
-public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[], error_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (GetEngineVersion() == Engine_CSS)
 	{
@@ -267,19 +271,19 @@ public APLRes:AskPluginLoad2(Handle:h_Myself, bool:bLateLoaded, String:sError[],
 	return APLRes_Success;
 }
 
-public OnLibraryAdded(const String:name[])
+public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "sourcebans"))
 	{
 		g_bSBAvailable = true;
 	}
-	else if (StrEqual(name, "adminmenu") && (GetAdminTopMenu() != INVALID_HANDLE))
+	else if (StrEqual(name, "adminmenu") && (GetAdminTopMenu() != null))
 	{
 		OnAdminMenuReady(GetAdminTopMenu());
 	}
 }
 
-public OnLibraryRemoved(const String:name[])
+public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "sourcebans"))
 	{
@@ -291,16 +295,16 @@ public OnLibraryRemoved(const String:name[])
 	}
 }
 
-public OnConfigsExecuted()
+public void OnConfigsExecuted()
 {
 	if (GetConVarInt(gH_Cvar_Add_ServerTag) == 1)
 	{
-		new Handle:hTags = FindConVar("sv_tags");
-		decl String:sTags[128];
+		Handle hTags = FindConVar("sv_tags");
+		char sTags[128];
 		GetConVarString(hTags, sTags, sizeof(sTags));
 		if (StrContains(sTags, SERVERTAG, false) == -1)
 		{
-			decl String:sTagsFormat[128];
+			char sTagsFormat[128];
 			Format(sTagsFormat, sizeof(sTagsFormat), ", %s", SERVERTAG);
 			
 			StrCat(sTags, sizeof(sTags), sTagsFormat);
@@ -338,7 +342,7 @@ public OnConfigsExecuted()
 	#endif
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	#if (MODULE_LASTREQUEST == 1)
 	LastRequest_ClientPutInServer(client);
@@ -348,7 +352,7 @@ public OnClientPutInServer(client)
 	#endif
 }
 
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_RoundStart(Event event, const char[] name , bool dontBroadcast)
 {
 	if (GetConVarInt(gH_Cvar_Display_Advert))
 	{
@@ -357,7 +361,7 @@ public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
-public OnAdminMenuReady(Handle:h_TopMenu)
+public void OnAdminMenuReady(Handle h_TopMenu)
 {
 	// block double calls
 	if (h_TopMenu == gH_TopMenu)
@@ -387,13 +391,13 @@ public OnAdminMenuReady(Handle:h_TopMenu)
 	#endif
 }
 
-public Action:Command_HostiesAdmin(client, args)
+public Action Command_HostiesAdmin(int client, int args)
 {
 	DisplayTopMenu(gH_TopMenu, client, TopMenuPosition_LastRoot);
 	return Plugin_Handled;
 }
 
-public HostiesCategoryHandler(Handle:h_TopMenu, TopMenuAction:action, TopMenuObject:item, param, String:buffer[], maxlength)
+public void HostiesCategoryHandler(Handle topmenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	switch (action)
 	{

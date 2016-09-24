@@ -24,17 +24,17 @@
 
 #define FILE_SEPARATOR_LENGTH 3
 
-new Handle:gH_Cvar_T_Material = INVALID_HANDLE;
-new Handle:gH_Cvar_T_Texture = INVALID_HANDLE;
-new Handle:gH_Cvar_CT_Material = INVALID_HANDLE;
-new Handle:gH_Cvar_CT_Texture = INVALID_HANDLE;
+Handle gH_Cvar_T_Material = null;
+Handle gH_Cvar_T_Texture = null;
+Handle gH_Cvar_CT_Material = null;
+Handle gH_Cvar_CT_Texture = null;
 
-new String:gShadow_T_Material[PLATFORM_MAX_PATH];
-new String:gShadow_T_Texture[PLATFORM_MAX_PATH];
-new String:gShadow_CT_Material[PLATFORM_MAX_PATH];
-new String:gShadow_CT_Texture[PLATFORM_MAX_PATH];
+char gShadow_T_Material[PLATFORM_MAX_PATH];
+char gShadow_T_Texture[PLATFORM_MAX_PATH];
+char gShadow_CT_Material[PLATFORM_MAX_PATH];
+char gShadow_CT_Texture[PLATFORM_MAX_PATH];
 
-TeamOverlays_OnPluginStart()
+void TeamOverlays_OnPluginStart()
 {
 	HookEvent("round_start", TeamOverlays_RoundStart);
 	HookEvent("round_end", TeamOverlays_RoundEnd);
@@ -57,7 +57,7 @@ TeamOverlays_OnPluginStart()
 	HookConVarChange(gH_Cvar_CT_Texture, TeamOverlay_CvarChanged);
 }
 
-TeamOverlays_OnConfigsExecuted()
+void TeamOverlays_OnConfigsExecuted()
 {
 	GetConVarString(gH_Cvar_T_Material, gShadow_T_Material, sizeof(gShadow_T_Material));
 	GetConVarString(gH_Cvar_T_Texture, gShadow_T_Texture, sizeof(gShadow_T_Texture));
@@ -65,7 +65,7 @@ TeamOverlays_OnConfigsExecuted()
 	GetConVarString(gH_Cvar_CT_Texture, gShadow_CT_Texture, sizeof(gShadow_CT_Texture));
 }
 
-public TeamOverlay_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
+public void TeamOverlay_CvarChanged(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == gH_Cvar_T_Material)
 	{
@@ -85,9 +85,9 @@ public TeamOverlay_CvarChanged(Handle:cvar, const String:oldValue[], const Strin
 	}
 }
 
-TeamOverlays_OnMapStart()
+void TeamOverlays_OnMapStart()
 {
-	new MediaType:overlayType = type_Decal;
+	MediaType overlayType = type_Decal;
 	if (strlen(gShadow_T_Material) > 0)
 	{
 		CacheTheFile(gShadow_T_Material, overlayType);
@@ -106,12 +106,12 @@ TeamOverlays_OnMapStart()
 	}
 }
 
-public TeamOverlays_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
+public Action TeamOverlays_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	// overlay stuff
-	new winner_team = GetEventInt(event, "winner");
-	decl String:theOverlay[PLATFORM_MAX_PATH];
-	new iOverlayLength = 0;
+	int winner_team = GetEventInt(event, "winner");
+	char theOverlay[PLATFORM_MAX_PATH];
+	int iOverlayLength = 0;
 	
 	if (winner_team == CS_TEAM_T)
 	{
@@ -133,7 +133,7 @@ public TeamOverlays_RoundEnd(Handle:event, const String:name[], bool:dontBroadca
 	}
 }
 
-public TeamOverlays_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+public Action TeamOverlays_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	ShowOverlayToAll("");
 }

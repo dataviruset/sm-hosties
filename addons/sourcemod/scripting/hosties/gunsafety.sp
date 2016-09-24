@@ -22,20 +22,20 @@
 #include <sdktools>
 #include <hosties>
 
-new Handle:gH_Cvar_Strip_On_Slay = INVALID_HANDLE;
-new Handle:gH_Cvar_Strip_On_Kick = INVALID_HANDLE;
-new Handle:gH_Cvar_Strip_On_Ban = INVALID_HANDLE;
+Handle gH_Cvar_Strip_On_Slay = null;
+Handle gH_Cvar_Strip_On_Kick = null;
+Handle gH_Cvar_Strip_On_Ban = null;
 
-new bool:gShadow_Strip_On_Slay = false;
-new bool:gShadow_Strip_On_Kick = false;
-new bool:gShadow_Strip_On_Ban = false;
+bool gShadow_Strip_On_Slay = false;
+bool gShadow_Strip_On_Kick = false;
+bool gShadow_Strip_On_Ban = false;
 
 // for ban.sp menu mimic
-new g_BanTarget[MAXPLAYERS+1];
-new g_BanTargetUserId[MAXPLAYERS+1];
-new g_BanTime[MAXPLAYERS+1];
+int g_BanTarget[MAXPLAYERS+1];
+int g_BanTargetUserId[MAXPLAYERS+1];
+int g_BanTime[MAXPLAYERS+1];
 
-GunSafety_OnPluginStart()
+void GunSafety_OnPluginStart()
 {
 	LoadTranslations("basebans.phrases");
 	LoadTranslations("plugin.basecommands");
@@ -57,7 +57,7 @@ GunSafety_OnPluginStart()
 	AddCommandListener(Strip_Player_Weapons_Intercept, "sm_ban");
 }
 
-public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iArgNumber)
+public Action Strip_Player_Weapons_Intercept(int client, const char[] command, int iArgNumber)
 {
 	// let original command handle return text
 	if (iArgNumber < 1)
@@ -73,8 +73,8 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 			return Plugin_Continue;
 		}
 	
-		new AdminFlag:flag;
-		if (!GetCommandOverride(command, Override_Command, _:flag))
+		AdminFlag flag;
+		if (!GetCommandOverride(command, Override_Command, view_as<int>(flag)))
 		{
 			flag = Admin_Slay;
 		}
@@ -91,8 +91,8 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 			return Plugin_Continue;
 		}
 		
-		new AdminFlag:flag;
-		if (!GetCommandOverride(command, Override_Command, _:flag))
+		AdminFlag flag;
+		if (!GetCommandOverride(command, Override_Command, view_as<int>(flag)))
 		{
 			flag = Admin_Kick;
 		}
@@ -109,8 +109,8 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 			return Plugin_Continue;
 		}
 		
-		new AdminFlag:flag;
-		if (!GetCommandOverride(command, Override_Command, _:flag))
+		AdminFlag flag;
+		if (!GetCommandOverride(command, Override_Command, view_as<int>(flag)))
 		{
 			flag = Admin_Ban;
 		}
@@ -122,11 +122,12 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 	}
 		
 	// process the command
-	decl String:arg[65];
+	char arg[65];
 	GetCmdArg(1, arg, sizeof(arg));
 
-	decl String:target_name[MAX_TARGET_LENGTH];
-	decl target_list[MAXPLAYERS], target_count, bool:tn_is_ml;
+	char target_name[MAX_TARGET_LENGTH];
+	int target_list[MAXPLAYERS], target_count;
+	bool tn_is_ml;
 	
 	if ((target_count = ProcessTargetString(
 			arg,
@@ -142,7 +143,7 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 		return Plugin_Handled;
 	}
 
-	for (new i = 0; i < target_count; i++)
+	for (int i = 0; i < target_count; i++)
 	{
 		StripAllWeapons(target_list[i]);
 	}
@@ -150,23 +151,23 @@ public Action:Strip_Player_Weapons_Intercept(client, const String:command[], iAr
 	return Plugin_Continue;
 }
 
-public GunSafety_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
+public void GunSafety_CvarChanged(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == gH_Cvar_Strip_On_Slay)
 	{
-		gShadow_Strip_On_Slay = bool:StringToInt(newValue);
+		gShadow_Strip_On_Slay = view_as<bool>(StringToInt(newValue));
 	}
 	else if (cvar == gH_Cvar_Strip_On_Kick)
 	{
-		gShadow_Strip_On_Kick = bool:StringToInt(newValue);
+		gShadow_Strip_On_Kick = view_as<bool>(StringToInt(newValue));
 	}
 	else if (cvar == gH_Cvar_Strip_On_Ban)
 	{
-		gShadow_Strip_On_Ban = bool:StringToInt(newValue);
+		gShadow_Strip_On_Ban = view_as<bool>(StringToInt(newValue));
 	}
 }
 
-GunSafety_Menus(Handle:h_TopMenu, TopMenuObject:obj_Hosties)
+void GunSafety_Menus(Handle h_TopMenu, TopMenuObject obj_Hosties)
 {
 	AddToTopMenu(h_TopMenu, "sm_hslay", TopMenuObject_Item, AdminMenu_Slay, obj_Hosties, "sm_slay", ADMFLAG_SLAY);
 	AddToTopMenu(h_TopMenu, "sm_hkick", TopMenuObject_Item, AdminMenu_Kick, obj_Hosties, "sm_kick", ADMFLAG_KICK);
@@ -192,18 +193,18 @@ GunSafety_Menus(Handle:h_TopMenu, TopMenuObject:obj_Hosties)
 }
 
 // from slay.sp
-PerformSlay(client, target)
+void PerformSlay(int client, int target)
 {
 	LogAction(client, target, "\"%L\" slayed \"%L\"", client, target);
 	StripAllWeapons(target);
 	ForcePlayerSuicide(target);
 }
 
-DisplaySlayMenu(client)
+void DisplaySlayMenu(int client)
 {
-	new Handle:menu = CreateMenu(MenuHandler_Slay);
+	Handle menu = CreateMenu(MenuHandler_Slay);
 	
-	decl String:title[100];
+	char title[100];
 	Format(title, sizeof(title), "%T:", "Slay player", client);
 	SetMenuTitle(menu, title);
 	SetMenuExitBackButton(menu, true);
@@ -213,12 +214,12 @@ DisplaySlayMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public AdminMenu_Slay(Handle:topmenu, 
-					  TopMenuAction:action,
-					  TopMenuObject:object_id,
-					  param,
-					  String:buffer[],
-					  maxlength)
+public void AdminMenu_Slay(Handle topmenu, 
+					  TopMenuAction action,
+					  TopMenuObject object_id,
+					  int param,
+					  char[] buffer,
+					  int maxlength)
 {
 	if (action == TopMenuAction_DisplayOption)
 	{
@@ -230,7 +231,7 @@ public AdminMenu_Slay(Handle:topmenu,
 	}
 }
 
-public MenuHandler_Slay(Handle:menu, MenuAction:action, param1, param2)
+public int MenuHandler_Slay(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
@@ -238,15 +239,15 @@ public MenuHandler_Slay(Handle:menu, MenuAction:action, param1, param2)
 	}
 	else if (action == MenuAction_Cancel)
 	{
-		if (param2 == MenuCancel_ExitBack && gH_TopMenu != INVALID_HANDLE)
+		if (param2 == MenuCancel_ExitBack && gH_TopMenu != null)
 		{
 			DisplayTopMenu(gH_TopMenu, param1, TopMenuPosition_LastCategory);
 		}
 	}
 	else if (action == MenuAction_Select)
 	{
-		decl String:info[32];
-		new userid, target;
+		char info[32];
+		int userid, target;
 		
 		GetMenuItem(menu, param2, info, sizeof(info));
 		userid = StringToInt(info);
@@ -265,7 +266,7 @@ public MenuHandler_Slay(Handle:menu, MenuAction:action, param1, param2)
 		}
 		else
 		{
-			decl String:name[32];
+			char name[32];
 			GetClientName(target, name, sizeof(name));
 			PerformSlay(param1, target);
 			ShowActivity2(param1, "[SM] ", "%t", "Slayed target", "_s", name);
@@ -276,7 +277,7 @@ public MenuHandler_Slay(Handle:menu, MenuAction:action, param1, param2)
 }
 
 // from kick.sp
-PerformKick(client, target, const String:reason[])
+void PerformKick(int client, int target, const char[] reason)
 {
 	LogAction(client, target, "\"%L\" kicked \"%L\" (reason \"%s\")", client, target, reason);
 
@@ -292,11 +293,11 @@ PerformKick(client, target, const String:reason[])
 	}
 }
 
-DisplayKickMenu(client)
+void DisplayKickMenu(int client)
 {
-	new Handle:menu = CreateMenu(MenuHandler_Kick);
+	Handle menu = CreateMenu(MenuHandler_Kick);
 	
-	decl String:title[100];
+	char title[100];
 	Format(title, sizeof(title), "%T:", "Kick player", client);
 	SetMenuTitle(menu, title);
 	SetMenuExitBackButton(menu, true);
@@ -306,12 +307,12 @@ DisplayKickMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public AdminMenu_Kick(Handle:topmenu, 
-					  TopMenuAction:action,
-					  TopMenuObject:object_id,
-					  param,
-					  String:buffer[],
-					  maxlength)
+public void AdminMenu_Kick(Handle topmenu, 
+					  TopMenuAction action,
+					  TopMenuObject object_id,
+					  int param,
+					  char[] buffer,
+					  int maxlength)
 {
 	if (action == TopMenuAction_DisplayOption)
 	{
@@ -323,7 +324,7 @@ public AdminMenu_Kick(Handle:topmenu,
 	}
 }
 
-public MenuHandler_Kick(Handle:menu, MenuAction:action, param1, param2)
+public int MenuHandler_Kick(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
@@ -331,15 +332,15 @@ public MenuHandler_Kick(Handle:menu, MenuAction:action, param1, param2)
 	}
 	else if (action == MenuAction_Cancel)
 	{
-		if (param2 == MenuCancel_ExitBack && gH_TopMenu != INVALID_HANDLE)
+		if (param2 == MenuCancel_ExitBack && gH_TopMenu != null)
 		{
 			DisplayTopMenu(gH_TopMenu, param1, TopMenuPosition_LastCategory);
 		}
 	}
 	else if (action == MenuAction_Select)
 	{
-		decl String:info[32];
-		new userid, target;
+		char info[32];
+		int userid, target;
 		
 		GetMenuItem(menu, param2, info, sizeof(info));
 		userid = StringToInt(info);
@@ -354,7 +355,7 @@ public MenuHandler_Kick(Handle:menu, MenuAction:action, param1, param2)
 		}
 		else
 		{
-			decl String:name[MAX_NAME_LENGTH];
+			char name[MAX_NAME_LENGTH];
 			GetClientName(target, name, sizeof(name));
 			ShowActivity2(param1, "[SM] ", "%t", "Kicked target", "_s", name);
 			PerformKick(param1, target, "");
@@ -369,9 +370,9 @@ public MenuHandler_Kick(Handle:menu, MenuAction:action, param1, param2)
 }
 
 // from ban.sp
-PrepareBan(client, target, time, const String:reason[])
+void PrepareBan(int client, int target, int time, const char[] reason)
 {
-	new originalTarget = GetClientOfUserId(g_BanTargetUserId[client]);
+	int originalTarget = GetClientOfUserId(g_BanTargetUserId[client]);
 
 	if (originalTarget != target)
 	{
@@ -387,7 +388,7 @@ PrepareBan(client, target, time, const String:reason[])
 		return;
 	}
 
-	decl String:authid[64], String:name[32];
+	char authid[64], name[32];
 	GetClientAuthId(target, AuthId_Steam2, authid, sizeof(authid));
 	GetClientName(target, name, sizeof(name));
 	
@@ -428,7 +429,7 @@ PrepareBan(client, target, time, const String:reason[])
 		if (g_bSBAvailable)
 		{
 			// avoid const-string tag mismatch
-			new String:banreason[255];
+			char banreason[255];
 			strcopy(banreason, sizeof(banreason), reason);
 			SBBanPlayer(client, target, time, banreason);
 		}
@@ -439,11 +440,11 @@ PrepareBan(client, target, time, const String:reason[])
 	}
 }
 
-DisplayBanTargetMenu(client)
+void DisplayBanTargetMenu(int client)
 {
-	new Handle:menu = CreateMenu(MenuHandler_BanPlayerList);
+	Handle menu = CreateMenu(MenuHandler_BanPlayerList);
 
-	decl String:title[100];
+	char title[100];
 	Format(title, sizeof(title), "%T:", "Ban player", client);
 	SetMenuTitle(menu, title);
 	SetMenuExitBackButton(menu, true);
@@ -453,11 +454,11 @@ DisplayBanTargetMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-DisplayBanTimeMenu(client)
+void DisplayBanTimeMenu(int client)
 {
-	new Handle:menu = CreateMenu(MenuHandler_BanTimeList);
+	Handle menu = CreateMenu(MenuHandler_BanTimeList);
 
-	decl String:title[100];
+	char title[100];
 	Format(title, sizeof(title), "%T: %N", "Ban player", client, g_BanTarget[client]);
 	SetMenuTitle(menu, title);
 	SetMenuExitBackButton(menu, true);
@@ -473,11 +474,11 @@ DisplayBanTimeMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-DisplayBanReasonMenu(client)
+void DisplayBanReasonMenu(int client)
 {
-	new Handle:menu = CreateMenu(MenuHandler_BanReasonList);
+	Handle menu = CreateMenu(MenuHandler_BanReasonList);
 
-	decl String:title[100];
+	char title[100];
 	Format(title, sizeof(title), "%T: %N", "Ban reason", client, g_BanTarget[client]);
 	SetMenuTitle(menu, title);
 	SetMenuExitBackButton(menu, true);
@@ -501,12 +502,12 @@ DisplayBanReasonMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public AdminMenu_Ban(Handle:topmenu,
-							  TopMenuAction:action,
-							  TopMenuObject:object_id,
-							  param,
-							  String:buffer[],
-							  maxlength)
+public void AdminMenu_Ban(Handle topmenu,
+							  TopMenuAction action,
+							  TopMenuObject object_id,
+							  int param,
+							  char[] buffer,
+							  int maxlength)
 {
 	if (action == TopMenuAction_DisplayOption)
 	{
@@ -518,7 +519,7 @@ public AdminMenu_Ban(Handle:topmenu,
 	}
 }
 
-public MenuHandler_BanReasonList(Handle:menu, MenuAction:action, param1, param2)
+public int MenuHandler_BanReasonList(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
@@ -526,14 +527,14 @@ public MenuHandler_BanReasonList(Handle:menu, MenuAction:action, param1, param2)
 	}
 	else if (action == MenuAction_Cancel)
 	{
-		if (param2 == MenuCancel_ExitBack && gH_TopMenu != INVALID_HANDLE)
+		if (param2 == MenuCancel_ExitBack && gH_TopMenu != null)
 		{
 			DisplayTopMenu(gH_TopMenu, param1, TopMenuPosition_LastCategory);
 		}
 	}
 	else if (action == MenuAction_Select)
 	{
-		decl String:info[64];
+		char info[64];
 
 		GetMenuItem(menu, param2, info, sizeof(info));
 
@@ -541,7 +542,7 @@ public MenuHandler_BanReasonList(Handle:menu, MenuAction:action, param1, param2)
 	}
 }
 
-public MenuHandler_BanPlayerList(Handle:menu, MenuAction:action, param1, param2)
+public int MenuHandler_BanPlayerList(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
@@ -549,15 +550,15 @@ public MenuHandler_BanPlayerList(Handle:menu, MenuAction:action, param1, param2)
 	}
 	else if (action == MenuAction_Cancel)
 	{
-		if (param2 == MenuCancel_ExitBack && gH_TopMenu != INVALID_HANDLE)
+		if (param2 == MenuCancel_ExitBack && gH_TopMenu != null)
 		{
 			DisplayTopMenu(gH_TopMenu, param1, TopMenuPosition_LastCategory);
 		}
 	}
 	else if (action == MenuAction_Select)
 	{
-		decl String:info[32], String:name[32];
-		new userid, target;
+		char info[32], name[32];
+		int userid, target;
 
 		GetMenuItem(menu, param2, info, sizeof(info), _, name, sizeof(name));
 		userid = StringToInt(info);
@@ -579,7 +580,7 @@ public MenuHandler_BanPlayerList(Handle:menu, MenuAction:action, param1, param2)
 	}
 }
 
-public MenuHandler_BanTimeList(Handle:menu, MenuAction:action, param1, param2)
+public int MenuHandler_BanTimeList(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
@@ -587,14 +588,14 @@ public MenuHandler_BanTimeList(Handle:menu, MenuAction:action, param1, param2)
 	}
 	else if (action == MenuAction_Cancel)
 	{
-		if (param2 == MenuCancel_ExitBack && gH_TopMenu != INVALID_HANDLE)
+		if (param2 == MenuCancel_ExitBack && gH_TopMenu != null)
 		{
 			DisplayTopMenu(gH_TopMenu, param1, TopMenuPosition_LastCategory);
 		}
 	}
 	else if (action == MenuAction_Select)
 	{
-		decl String:info[32];
+		char info[32];
 
 		GetMenuItem(menu, param2, info, sizeof(info));
 		g_BanTime[param1] = StringToInt(info);

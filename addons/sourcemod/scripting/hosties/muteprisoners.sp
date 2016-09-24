@@ -25,24 +25,24 @@
 #define REQUIRE_PLUGIN
 #include <hosties>
 
-new Handle:gH_Cvar_MuteStatus = INVALID_HANDLE;
-new gShadow_MuteStatus;
-new Handle:gH_Cvar_MuteLength = INVALID_HANDLE;
-new Float:gShadow_MuteLength;
-new Handle:gH_Timer_Unmuter = INVALID_HANDLE;
-new Handle:gH_Cvar_MuteImmune = INVALID_HANDLE;
-new String:gShadow_MuteImmune[37];
-new Handle:gH_Cvar_MuteCT = INVALID_HANDLE;
-new bool:gShadow_MuteCT = false;
-new gAdmFlags_MuteImmunity = 0;
+Handle gH_Cvar_MuteStatus = null;
+int gShadow_MuteStatus;
+Handle gH_Cvar_MuteLength = null;
+float gShadow_MuteLength;
+Handle gH_Timer_Unmuter = null;
+Handle gH_Cvar_MuteImmune = null;
+char gShadow_MuteImmune[37];
+Handle gH_Cvar_MuteCT = null;
+bool gShadow_MuteCT = false;
+int gAdmFlags_MuteImmunity = 0;
 
-MutePrisoners_OnPluginStart()
+void MutePrisoners_OnPluginStart()
 {
 	gH_Cvar_MuteStatus = CreateConVar("sm_hosties_mute", "1", "Setting for muting terrorists automatically: 0 - disable, 1 - terrorists are muted the first few seconds of a round, 2 - terrorists are muted when they die, 3 - both", FCVAR_NONE, true, 0.0, true, 3.0);
 	gShadow_MuteStatus = 0;
 	
 	gH_Cvar_MuteLength = CreateConVar("sm_hosties_roundstart_mute", "30.0", "The length of time the Terrorist team is muted for after the round begins", FCVAR_NONE, true, 3.0, true, 90.0);
-	gShadow_MuteLength = Float:30.0;
+	gShadow_MuteLength = 30.0;
 	
 	gH_Cvar_MuteImmune = CreateConVar("sm_hosties_mute_immune", "z", "Admin flags which are immune from getting muted: 0 - nobody, 1 - all admins, flag values: abcdefghijklmnopqrst", FCVAR_NONE);
 	Format(gShadow_MuteImmune, sizeof(gShadow_MuteImmune), "z");
@@ -62,7 +62,7 @@ MutePrisoners_OnPluginStart()
 	}
 }
 
-MutePrisoners_AllPluginsLoaded()
+void MutePrisoners_AllPluginsLoaded()
 {
 	if (DoesContainBaseCommNatives())
 	{
@@ -78,7 +78,7 @@ MutePrisoners_AllPluginsLoaded()
 	}
 }
 
-MutePrisoners_OnConfigsExecuted()
+void MutePrisoners_OnConfigsExecuted()
 {
 	gShadow_MuteStatus = GetConVarInt(gH_Cvar_MuteStatus);
 	gShadow_MuteLength = GetConVarFloat(gH_Cvar_MuteLength);
@@ -87,9 +87,9 @@ MutePrisoners_OnConfigsExecuted()
 	MutePrisoners_CalcImmunity();
 }
 
-stock MuteTs()
+stock void MuteTs()
 {
-	for(new i = 1; i <= MaxClients; i++)
+	for(int i = 1; i <= MaxClients; i++)
 	{
 		if ( (IsClientInGame(i)) && (IsPlayerAlive(i)) ) // if player is in game and alive
 		{
@@ -102,9 +102,9 @@ stock MuteTs()
 	}
 }
 
-stock UnmuteAlive()
+stock void UnmuteAlive()
 {
-	for(new i = 1; i <= MaxClients; i++)
+	for(int i = 1; i <= MaxClients; i++)
 	{
 		if (IsClientInGame(i) && IsPlayerAlive(i)) // if player is in game and alive
 		{
@@ -116,7 +116,7 @@ stock UnmuteAlive()
 	}
 }
 
-stock bool:DoesContainBaseCommNatives()
+stock bool DoesContainBaseCommNatives()
 {
 	// 1.3.9 will have Native_IsClientMuted in basecomm.inc 
 	if (GetFeatureStatus(FeatureType_Native, "BaseComm_IsClientMuted") == FeatureStatus_Available)
@@ -126,9 +126,9 @@ stock bool:DoesContainBaseCommNatives()
 	return false;
 }
 
-stock UnmuteAll()
+stock void UnmuteAll()
 {
-	for(new i = 1; i <= MaxClients; i++)
+	for(int i = 1; i <= MaxClients; i++)
 	{
 		if (IsClientInGame(i)) // if player is in game
 		{
@@ -158,7 +158,7 @@ void MutePrisoners_CalcImmunity()
 	}
 }
 
-public MutePrisoners_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
+public void MutePrisoners_CvarChanged(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == gH_Cvar_MuteStatus)
 	{
@@ -175,18 +175,18 @@ public MutePrisoners_CvarChanged(Handle:cvar, const String:oldValue[], const Str
 	}
 	else if (cvar == gH_Cvar_MuteCT)
 	{
-		gShadow_MuteCT = bool:StringToInt(newValue);
+		gShadow_MuteCT = view_as<bool>(StringToInt(newValue));
 	}
 }
 
-public MutePrisoners_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public Action MutePrisoners_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	if (gShadow_MuteStatus == 1 || gShadow_MuteStatus == 3)
 	{
 		// if the timer is anything but invalid, we should mute these new spawners
-		if (gH_Timer_Unmuter != INVALID_HANDLE)
+		if (gH_Timer_Unmuter != null)
 		{
-			new client = GetClientOfUserId(GetEventInt(event, "userid"));
+			int client = GetClientOfUserId(GetEventInt(event, "userid"));
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
 				if (gAdmFlags_MuteImmunity == 0)
@@ -205,7 +205,7 @@ public MutePrisoners_PlayerSpawn(Handle:event, const String:name[], bool:dontBro
 	}
 }
 
-public Action:Timer_Mute(Handle:timer, any:client)
+public Action Timer_Mute(Handle timer, any client)
 {
 	if (IsClientInGame(client))
 	{
@@ -216,18 +216,18 @@ public Action:Timer_Mute(Handle:timer, any:client)
 	return Plugin_Stop;
 }
 
-public MutePrisoners_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
+public Action MutePrisoners_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	if (gShadow_MuteStatus <= 1)
 	{
 		return;
 	}
 	
-	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	
 	if (gAdmFlags_MuteImmunity == 0 || !(GetUserFlagBits(victim) & gAdmFlags_MuteImmunity))
 	{
-		new team = GetClientTeam(victim);
+		int team = GetClientTeam(victim);
 		switch (team)
 		{
 			case CS_TEAM_T:
@@ -245,7 +245,7 @@ public MutePrisoners_PlayerDeath(Handle:event, const String:name[], bool:dontBro
 	}
 }
 
-public MutePrisoners_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
+public Action MutePrisoners_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	if (gShadow_MuteStatus)
 	{
@@ -253,13 +253,13 @@ public MutePrisoners_RoundEnd(Handle:event, const String:name[], bool:dontBroadc
 		CreateTimer(0.2, Timer_UnmuteAll, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 	
-	if (gH_Timer_Unmuter != INVALID_HANDLE)
+	if (gH_Timer_Unmuter != null)
 	{
-		gH_Timer_Unmuter = INVALID_HANDLE;
+		gH_Timer_Unmuter = null;
 	}
 }
 
-public MutePrisoners_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+public Action MutePrisoners_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if (gShadow_MuteStatus == 1 || gShadow_MuteStatus == 3)
 	{
@@ -271,7 +271,7 @@ public MutePrisoners_RoundStart(Handle:event, const String:name[], bool:dontBroa
 		else
 		{
 			// Mute non-flagged Ts
-			for (new idx = 1; idx <= MaxClients; idx++)
+			for (int idx = 1; idx <= MaxClients; idx++)
 			{
 				if (IsClientInGame(idx) && (GetClientTeam(idx) == CS_TEAM_T) && !(GetUserFlagBits(idx) & gAdmFlags_MuteImmunity))
 				{
@@ -287,19 +287,19 @@ public MutePrisoners_RoundStart(Handle:event, const String:name[], bool:dontBroa
 	}
 }
 
-public Action:Timer_UnmutePrisoners(Handle:timer)
+public Action Timer_UnmutePrisoners(Handle timer)
 {
 	if (gH_Timer_Unmuter == timer)
 	{
 		UnmuteAlive();
 		PrintToChatAll(CHAT_BANNER, "Ts Can Speak Again");
-		gH_Timer_Unmuter = INVALID_HANDLE;
+		gH_Timer_Unmuter = null;
 	}
 	
 	return Plugin_Stop;
 }
 
-public Action:Timer_UnmuteAll(Handle:timer)
+public Action Timer_UnmuteAll(Handle timer)
 {
 	UnmuteAll();
 	
