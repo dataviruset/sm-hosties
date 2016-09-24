@@ -42,11 +42,7 @@ void MutePrisoners_OnPluginStart()
 	gShadow_MuteStatus = 0;
 	
 	gH_Cvar_MuteLength = CreateConVar("sm_hosties_roundstart_mute", "30.0", "The length of time the Terrorist team is muted for after the round begins", FCVAR_NONE, true, 3.0, true, 90.0);
-<<<<<<< HEAD
 	gShadow_MuteLength = 30.0;
-=======
-	gShadow_MuteLength = Float:30.0;
->>>>>>> refs/remotes/dataviruset/master
 	
 	gH_Cvar_MuteImmune = CreateConVar("sm_hosties_mute_immune", "z", "Admin flags which are immune from getting muted: 0 - nobody, 1 - all admins, flag values: abcdefghijklmnopqrst", FCVAR_NONE);
 	Format(gShadow_MuteImmune, sizeof(gShadow_MuteImmune), "z");

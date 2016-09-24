@@ -38,10 +38,10 @@
 #pragma 	semicolon 					1
 
 // Constants
-#define 	PLUGIN_VERSION				"2.2.3"
+#define 	PLUGIN_VERSION				"2.3.0"
 #define 	MAX_DISPLAYNAME_SIZE		64
 #define 	MAX_DATAENTRY_SIZE			5
-#define 	SERVERTAG					"SM Hosties v2.2"
+#define 	SERVERTAG					"SM Hosties v2.3"
 
 // Note: you cannot safely turn these modules on and off yet. Use cvars to disable functionality.
 

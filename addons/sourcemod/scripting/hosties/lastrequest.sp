@@ -849,20 +849,7 @@ public int Native_LR_Cleanup(Handle h_Plugin, int iNumParameters)
 	}
 }
 
-<<<<<<< HEAD
-public Native_LR_Available(Handle h_Plugin, int iNumParameters)
-=======
-public Native_LR_Available(Handle:h_Plugin, iNumParameters)
-{
-	if (!g_bIsLRAvailable)
-	{
-		return false;
-	}
-	return true;
-}
-
-public Native_IsClientRebel(Handle:h_Plugin, iNumParameters)
->>>>>>> refs/remotes/dataviruset/master
+public int Native_LR_Available(Handle h_Plugin, int iNumParameters)
 {
 	return g_bIsLRAvailable;
 }
@@ -926,15 +913,9 @@ int Local_IsClientInLR(int client)
 	return 0;
 }
 
-<<<<<<< HEAD
 public Action LastRequest_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	int Ts, CTs, NumCTsAvailable;
-=======
-public LastRequest_RoundFreezeEnd(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	new Ts, CTs, NumCTsAvailable;
->>>>>>> refs/remotes/dataviruset/master
 	UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);	
 
 	// Check if we should send OnAvailableLR forward now
@@ -947,20 +928,12 @@ public LastRequest_RoundFreezeEnd(Handle:event, const String:name[], bool:dontBr
 		Call_StartForward(gH_Frwd_LR_Available);
 		// announced = no
 		Call_PushCell(false);
-<<<<<<< HEAD
 		int ignore;
-=======
-		new ignore;
->>>>>>> refs/remotes/dataviruset/master
-		Call_Finish(_:ignore);
+		Call_Finish(view_as<int>(ignore));
 	}
 }
 
-<<<<<<< HEAD
 public Action LastRequest_RoundStart(Event event, const char[] name, bool dontBroadcast)
-=======
-public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
->>>>>>> refs/remotes/dataviruset/master
 {
 	g_bAnnouncedThisRound = false;
 	
@@ -997,15 +970,9 @@ public Action Timer_EnableLR(Handle timer)
 	if (g_DelayLREnableTimer == timer)
 	{
 		g_bIsLRAvailable = true;
-<<<<<<< HEAD
 		g_DelayLREnableTimer = null;
 		
 		int Ts, CTs, NumCTsAvailable;
-=======
-		g_DelayLREnableTimer = INVALID_HANDLE;
-		
-		new Ts, CTs, NumCTsAvailable;
->>>>>>> refs/remotes/dataviruset/master
 		UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);	
 	
 		// Check if we should send OnAvailableLR forward now
@@ -1017,12 +984,8 @@ public Action Timer_EnableLR(Handle timer)
 			Call_StartForward(gH_Frwd_LR_Available);
 			// announced = no
 			Call_PushCell(false);
-<<<<<<< HEAD
 			int ignore;
-=======
-			new ignore;
->>>>>>> refs/remotes/dataviruset/master
-			Call_Finish(_:ignore);
+			Call_Finish(view_as<int>(ignore));
 		}
 	}
 	return Plugin_Stop;
@@ -1403,11 +1366,11 @@ void CleanupLastRequest(int loser, int arrayIndex)
 				{
 					if (IsClientInGame(LR_Player_Prisoner))
 					{
-						SetFirstPerson(LR_Player_Prisoner, g_Game);
+						SetFirstPerson(LR_Player_Prisoner);
 					}
 					if (IsClientInGame(LR_Player_Guard))
 					{
-						SetFirstPerson(LR_Player_Guard, g_Game);
+						SetFirstPerson(LR_Player_Guard);
 					}
 				}
 			}
@@ -1659,17 +1622,12 @@ public Action LastRequest_PlayerJump(Event event, const char[] name, bool dontBr
 							// record position
 							float Prisoner_Position[3];
 							GetClientAbsOrigin(LR_Player_Prisoner, Prisoner_Position);
-<<<<<<< HEAD
 							Handle JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_DataPackHandle));						
 							#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 8
 								SetPackPosition(JumpPackPosition, view_as<DataPackPos>(0));
 							#else
 								SetPackPosition(JumpPackPosition, 0);
 							#endif
-=======
-							new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);						
-							SetPackPosition(JumpPackPosition, DataPackPos:0);
->>>>>>> refs/remotes/dataviruset/master
 							WritePackFloat(JumpPackPosition, Prisoner_Position[0]);
 							WritePackFloat(JumpPackPosition, Prisoner_Position[1]);
 							WritePackFloat(JumpPackPosition, Prisoner_Position[2]);
@@ -1679,17 +1637,12 @@ public Action LastRequest_PlayerJump(Event event, const char[] name, bool dontBr
 							// record position
 							float Guard_Position[3];
 							GetClientAbsOrigin(LR_Player_Guard, Guard_Position);
-<<<<<<< HEAD
 							Handle JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_DataPackHandle));							
 							#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 8
 								SetPackPosition(JumpPackPosition, view_as<DataPackPos>(24));
 							#else
 								SetPackPosition(JumpPackPosition, 24);
 							#endif
-=======
-							new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);							
-							SetPackPosition(JumpPackPosition, DataPackPos:24);
->>>>>>> refs/remotes/dataviruset/master
 							WritePackFloat(JumpPackPosition, Guard_Position[0]);
 							WritePackFloat(JumpPackPosition, Guard_Position[1]);
 							WritePackFloat(JumpPackPosition, Guard_Position[2]);
@@ -1710,17 +1663,12 @@ public Action LastRequest_PlayerJump(Event event, const char[] name, bool dontBr
 					// record position
 					float Prisoner_Position[3];
 					GetClientAbsOrigin(LR_Player_Prisoner, Prisoner_Position);
-<<<<<<< HEAD
 					Handle JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_DataPackHandle));
 					#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 8
 						SetPackPosition(JumpPackPosition, view_as<DataPackPos>(96));
 					#else
 						SetPackPosition(JumpPackPosition, 96);
 					#endif
-=======
-					new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);
-					SetPackPosition(JumpPackPosition, DataPackPos:96);
->>>>>>> refs/remotes/dataviruset/master
 					WritePackFloat(JumpPackPosition, Prisoner_Position[0]);
 					WritePackFloat(JumpPackPosition, Prisoner_Position[1]);
 					WritePackFloat(JumpPackPosition, Prisoner_Position[2]);
@@ -1730,17 +1678,12 @@ public Action LastRequest_PlayerJump(Event event, const char[] name, bool dontBr
 					// record position
 					float Guard_Position[3];
 					GetClientAbsOrigin(LR_Player_Guard, Guard_Position);
-<<<<<<< HEAD
 					Handle JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_DataPackHandle));
 					#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 8
 						SetPackPosition(JumpPackPosition, view_as<DataPackPos>(120));
 					#else
 						SetPackPosition(JumpPackPosition, 120);
 					#endif
-=======
-					new Handle:JumpPackPosition = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_DataPackHandle);
-					SetPackPosition(JumpPackPosition, DataPackPos:120);
->>>>>>> refs/remotes/dataviruset/master
 					WritePackFloat(JumpPackPosition, Guard_Position[0]);
 					WritePackFloat(JumpPackPosition, Guard_Position[1]);
 					WritePackFloat(JumpPackPosition, Guard_Position[2]);
@@ -1969,7 +1912,7 @@ public Action LastRequest_WeaponFire(Event event, const char[] name, bool dontBr
 				if (client == LR_Player_Prisoner || client == LR_Player_Guard)
 				{
 					// place delay on zoom
-					new iClientWeapon = GetEntDataEnt2(client, g_Offset_ActiveWeapon);
+					int iClientWeapon = GetEntDataEnt2(client, g_Offset_ActiveWeapon);
 					SetEntDataFloat(iClientWeapon, g_Offset_SecAttack, 5000.0);
 					
 					// grab weapon choice
@@ -2292,15 +2235,11 @@ public Action OnWeaponDrop(int client, int weapon)
 
 								float GTp1droppos[3];
 								GetClientAbsOrigin(LR_Player_Prisoner, GTp1droppos);
-<<<<<<< HEAD
 								#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 8
 									SetPackPosition(PositionDataPack, view_as<DataPackPos>(48));
 								#else
 									SetPackPosition(PositionDataPack, 48);
 								#endif
-=======
-								SetPackPosition(PositionDataPack, DataPackPos:48);
->>>>>>> refs/remotes/dataviruset/master
 								WritePackFloat(PositionDataPack, GTp1droppos[0]);
 								WritePackFloat(PositionDataPack, GTp1droppos[1]);
 								WritePackFloat(PositionDataPack, GTp1droppos[2]);
@@ -2318,15 +2257,11 @@ public Action OnWeaponDrop(int client, int weapon)
 							{
 								float GTp2droppos[3];
 								GetClientAbsOrigin(LR_Player_Guard, GTp2droppos);
-<<<<<<< HEAD
 								#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 8
 									SetPackPosition(PositionDataPack, view_as<DataPackPos>(72));
 								#else
 									SetPackPosition(PositionDataPack, 722);
 								#endif
-=======
-								SetPackPosition(PositionDataPack, DataPackPos:72);
->>>>>>> refs/remotes/dataviruset/master
 								WritePackFloat(PositionDataPack, GTp2droppos[0]);
 								WritePackFloat(PositionDataPack, GTp2droppos[1]);
 								WritePackFloat(PositionDataPack, GTp2droppos[2]);
@@ -2353,7 +2288,6 @@ public Action OnWeaponDrop(int client, int weapon)
 	return Plugin_Continue;
 }
 
-<<<<<<< HEAD
 public Action OnPreThink(int client)
 {
 	int iArraySize = GetArraySize(gH_DArray_LR_Partners);
@@ -2361,37 +2295,17 @@ public Action OnPreThink(int client)
 	{
 		for (int idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
 		{
-			LastRequest type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
+			LastRequest type = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_LRType));
 			if (type == LR_KnifeFight)
 			{
-				KnifeType KnifeChoice = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
+				KnifeType KnifeChoice = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_Global1));
 				if(KnifeChoice == Knife_ThirdPerson)
 				{
-					int LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
-					int LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
+					int LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_Prisoner));
+					int LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_Guard));
 					if (client == LR_Player_Prisoner || client == LR_Player_Guard)
 					{
 						SetThirdPerson(client);
-=======
-public Action:OnPreThink(client)
-{
-	new iArraySize = GetArraySize(gH_DArray_LR_Partners);
-	if (iArraySize > 0)
-	{
-		for (new idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
-		{
-			new LastRequest:type = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_LRType);
-			if (type == LR_KnifeFight)
-			{
-				new KnifeType:KnifeChoice = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Global1);
-				if(KnifeChoice == Knife_ThirdPerson)
-				{
-					new LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Prisoner);
-					new LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, _:Block_Guard);
-					if (client == LR_Player_Prisoner || client == LR_Player_Guard)
-					{
-						SetThirdPerson(client, g_Game);
->>>>>>> refs/remotes/dataviruset/master
 					}
 				}
 			}
@@ -2399,11 +2313,7 @@ public Action:OnPreThink(client)
 	}
 }
 
-<<<<<<< HEAD
 void LastRequest_OnMapStart()
-=======
-LastRequest_OnMapStart()
->>>>>>> refs/remotes/dataviruset/master
 {
 	// Precache any materials needed
 	if (g_Game == Game_CSS)
@@ -3921,8 +3831,8 @@ void InitializeGame(int iPartnersIndex)
 				}
 				case Knife_ThirdPerson:
 				{
-					SetThirdPerson(LR_Player_Prisoner, g_Game);
-					SetThirdPerson(LR_Player_Guard, g_Game);
+					SetThirdPerson(LR_Player_Prisoner);
+					SetThirdPerson(LR_Player_Guard);
 				}
 				case Knife_Drugs:
 				{
@@ -5910,16 +5820,11 @@ public Action Timer_GunToss(Handle timer)
 							GTdeagle1lastpos[0] = GTdeagle1pos[0];
 							GTdeagle1lastpos[1] = GTdeagle1pos[1];
 							GTdeagle1lastpos[2] = GTdeagle1pos[2];
-<<<<<<< HEAD
 							#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 8
 								SetPackPosition(PositionDataPack, view_as<DataPackPos>(0));
 							#else
 								SetPackPosition(PositionDataPack, 0);
 							#endif
-=======
-							SetPackPosition(PositionDataPack, DataPackPos:0);
->>>>>>> refs/remotes/dataviruset/master
-							WritePackFloat(PositionDataPack, GTdeagle1lastpos[0]);
 							WritePackFloat(PositionDataPack, GTdeagle1lastpos[1]);
 							WritePackFloat(PositionDataPack, GTdeagle1lastpos[2]);
 						}
@@ -5963,15 +5868,11 @@ public Action Timer_GunToss(Handle timer)
 							GTdeagle2lastpos[1] = GTdeagle2pos[1];
 							GTdeagle2lastpos[2] = GTdeagle2pos[2];
 	
-<<<<<<< HEAD
 							#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 8
 								SetPackPosition(PositionDataPack, view_as<DataPackPos>(24));
 							#else
 								SetPackPosition(PositionDataPack, 24);
 							#endif
-=======
-							SetPackPosition(PositionDataPack, DataPackPos:24);
->>>>>>> refs/remotes/dataviruset/master
 							WritePackFloat(PositionDataPack, GTdeagle2lastpos[0]);
 							WritePackFloat(PositionDataPack, GTdeagle2lastpos[1]);
 							WritePackFloat(PositionDataPack, GTdeagle2lastpos[2]);

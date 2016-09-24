@@ -24,7 +24,6 @@
 
 #define FILE_SEPARATOR_LENGTH 3
 
-<<<<<<< HEAD
 Handle gH_Cvar_T_Material = null;
 Handle gH_Cvar_T_Texture = null;
 Handle gH_Cvar_CT_Material = null;
@@ -36,19 +35,6 @@ char gShadow_CT_Material[PLATFORM_MAX_PATH];
 char gShadow_CT_Texture[PLATFORM_MAX_PATH];
 
 void TeamOverlays_OnPluginStart()
-=======
-new Handle:gH_Cvar_T_Material = INVALID_HANDLE;
-new Handle:gH_Cvar_T_Texture = INVALID_HANDLE;
-new Handle:gH_Cvar_CT_Material = INVALID_HANDLE;
-new Handle:gH_Cvar_CT_Texture = INVALID_HANDLE;
-
-new String:gShadow_T_Material[PLATFORM_MAX_PATH];
-new String:gShadow_T_Texture[PLATFORM_MAX_PATH];
-new String:gShadow_CT_Material[PLATFORM_MAX_PATH];
-new String:gShadow_CT_Texture[PLATFORM_MAX_PATH];
-
-TeamOverlays_OnPluginStart()
->>>>>>> refs/remotes/dataviruset/master
 {
 	HookEvent("round_start", TeamOverlays_RoundStart);
 	HookEvent("round_end", TeamOverlays_RoundEnd);
@@ -71,11 +57,7 @@ TeamOverlays_OnPluginStart()
 	HookConVarChange(gH_Cvar_CT_Texture, TeamOverlay_CvarChanged);
 }
 
-<<<<<<< HEAD
 void TeamOverlays_OnConfigsExecuted()
-=======
-TeamOverlays_OnConfigsExecuted()
->>>>>>> refs/remotes/dataviruset/master
 {
 	GetConVarString(gH_Cvar_T_Material, gShadow_T_Material, sizeof(gShadow_T_Material));
 	GetConVarString(gH_Cvar_T_Texture, gShadow_T_Texture, sizeof(gShadow_T_Texture));
@@ -83,11 +65,7 @@ TeamOverlays_OnConfigsExecuted()
 	GetConVarString(gH_Cvar_CT_Texture, gShadow_CT_Texture, sizeof(gShadow_CT_Texture));
 }
 
-<<<<<<< HEAD
 public void TeamOverlay_CvarChanged(Handle cvar, const char[] oldValue, const char[] newValue)
-=======
-public TeamOverlay_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
->>>>>>> refs/remotes/dataviruset/master
 {
 	if (cvar == gH_Cvar_T_Material)
 	{
@@ -107,15 +85,9 @@ public TeamOverlay_CvarChanged(Handle:cvar, const String:oldValue[], const Strin
 	}
 }
 
-<<<<<<< HEAD
 void TeamOverlays_OnMapStart()
 {
 	MediaType overlayType = type_Decal;
-=======
-TeamOverlays_OnMapStart()
-{
-	new MediaType:overlayType = type_Decal;
->>>>>>> refs/remotes/dataviruset/master
 	if (strlen(gShadow_T_Material) > 0)
 	{
 		CacheTheFile(gShadow_T_Material, overlayType);
@@ -134,21 +106,12 @@ TeamOverlays_OnMapStart()
 	}
 }
 
-<<<<<<< HEAD
 public Action TeamOverlays_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	// overlay stuff
 	int winner_team = GetEventInt(event, "winner");
 	char theOverlay[PLATFORM_MAX_PATH];
 	int iOverlayLength = 0;
-=======
-public TeamOverlays_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	// overlay stuff
-	new winner_team = GetEventInt(event, "winner");
-	decl String:theOverlay[PLATFORM_MAX_PATH];
-	new iOverlayLength = 0;
->>>>>>> refs/remotes/dataviruset/master
 	
 	if (winner_team == CS_TEAM_T)
 	{
@@ -170,11 +133,7 @@ public TeamOverlays_RoundEnd(Handle:event, const String:name[], bool:dontBroadca
 	}
 }
 
-<<<<<<< HEAD
 public Action TeamOverlays_RoundStart(Event event, const char[] name, bool dontBroadcast)
-=======
-public TeamOverlays_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
->>>>>>> refs/remotes/dataviruset/master
 {
 	ShowOverlayToAll("");
 }

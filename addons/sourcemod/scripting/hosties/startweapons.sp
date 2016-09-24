@@ -22,7 +22,6 @@
 #include <cstrike>
 #include <hosties>
 
-<<<<<<< HEAD
 Handle gH_Cvar_StartWeaponsOn = null;
 Handle gH_Cvar_T_Weapons = null;
 Handle gH_Cvar_CT_Weapons = null;
@@ -35,20 +34,6 @@ int g_iSizeOfTList;
 int g_iSizeOfCTList;
 
 void StartWeapons_OnPluginStart()
-=======
-new Handle:gH_Cvar_StartWeaponsOn = INVALID_HANDLE;
-new Handle:gH_Cvar_T_Weapons = INVALID_HANDLE;
-new Handle:gH_Cvar_CT_Weapons = INVALID_HANDLE;
-new bool:gShadow_StartWeaponsOn;
-new String:gShadow_T_Weapons[256];
-new String:gShadow_CT_Weapons[256];
-new String:gs_T_WeaponList[8][32];
-new String:gs_CT_WeaponList[8][32];
-new g_iSizeOfTList;
-new g_iSizeOfCTList;
-
-StartWeapons_OnPluginStart()
->>>>>>> refs/remotes/dataviruset/master
 {
 	gH_Cvar_StartWeaponsOn = CreateConVar("sm_hosties_startweapons_on", "1", "Enable or disable configurable payloads for each time on player spawn", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_StartWeaponsOn = true;
@@ -61,11 +46,7 @@ StartWeapons_OnPluginStart()
 	}
 	else if (g_Game == Game_CSGO)
 	{
-<<<<<<< HEAD
-		gH_Cvar_CT_Weapons = CreateConVar("sm_hosties_ct_start", "weapon_knife,weapon_m4a1,weapon_hkp2000", "Comma delimitted list of items to give to CTs at spawn", 0);
-=======
 		gH_Cvar_CT_Weapons = CreateConVar("sm_hosties_ct_start", "weapon_knife,weapon_m4a1,weapon_hkp2000", "Comma delimitted list of items to give to CTs at spawn", FCVAR_NONE);
->>>>>>> refs/remotes/dataviruset/master
 		Format(gShadow_CT_Weapons, sizeof(gShadow_CT_Weapons), "weapon_knife,weapon_m4a1,weapon_hkp2000");
 	}
 	UpdateStartWeapons();	
@@ -77,11 +58,7 @@ StartWeapons_OnPluginStart()
 	HookConVarChange(gH_Cvar_CT_Weapons, StartWeapons_CvarChanged);
 }
 
-<<<<<<< HEAD
 void StartWeapons_OnConfigsExecuted()
-=======
-StartWeapons_OnConfigsExecuted()
->>>>>>> refs/remotes/dataviruset/master
 {
 	GetConVarString(gH_Cvar_CT_Weapons, gShadow_CT_Weapons, sizeof(gShadow_CT_Weapons));
 	GetConVarString(gH_Cvar_T_Weapons, gShadow_T_Weapons, sizeof(gShadow_T_Weapons));
@@ -89,41 +66,20 @@ StartWeapons_OnConfigsExecuted()
 	UpdateStartWeapons();
 }
 
-<<<<<<< HEAD
 public Action StartWeapons_Spawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-=======
-public StartWeapons_Spawn(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
->>>>>>> refs/remotes/dataviruset/master
 	
 	if (gShadow_StartWeaponsOn)
 	{
 		StripAllWeapons(client);
 		
-<<<<<<< HEAD
 		int team = GetClientTeam(client);
-=======
-		new team = GetClientTeam(client);
->>>>>>> refs/remotes/dataviruset/master
 		switch (team)
 		{
 			case CS_TEAM_T:
 			{
-<<<<<<< HEAD
 				for (int Tidx = 0; Tidx < g_iSizeOfTList; Tidx++)
-=======
-				for (new Tidx = 0; Tidx < g_iSizeOfTList; Tidx++)
-				{
-					GivePlayerItem(client, gs_T_WeaponList[Tidx]);
-				}
-			}
-			case CS_TEAM_CT:
-			{
-				for (new CTidx = 0; CTidx < g_iSizeOfCTList; CTidx++)
->>>>>>> refs/remotes/dataviruset/master
 				{
 					GivePlayerItem(client, gs_T_WeaponList[Tidx]);
 				}
@@ -150,19 +106,11 @@ public StartWeapons_Spawn(Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
-<<<<<<< HEAD
 public void StartWeapons_CvarChanged(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == gH_Cvar_StartWeaponsOn)
 	{
 		gShadow_StartWeaponsOn = view_as<bool>(StringToInt(newValue));
-=======
-public StartWeapons_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
-{
-	if (cvar == gH_Cvar_StartWeaponsOn)
-	{
-		gShadow_StartWeaponsOn = bool:StringToInt(newValue);
->>>>>>> refs/remotes/dataviruset/master
 	}
 	else if (cvar == gH_Cvar_T_Weapons)
 	{
