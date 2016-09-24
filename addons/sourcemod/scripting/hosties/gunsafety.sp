@@ -41,11 +41,11 @@ GunSafety_OnPluginStart()
 	LoadTranslations("plugin.basecommands");
 	LoadTranslations("playercommands.phrases");
 
-	gH_Cvar_Strip_On_Slay = CreateConVar("sm_hosties_strip_onslay", "1", "Enable or disable the stripping of weapons from anyone who is slain.", 0, true, 0.0, true, 1.0);
+	gH_Cvar_Strip_On_Slay = CreateConVar("sm_hosties_strip_onslay", "1", "Enable or disable the stripping of weapons from anyone who is slain.", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_Strip_On_Slay = true;
-	gH_Cvar_Strip_On_Kick = CreateConVar("sm_hosties_strip_onkick", "1", "Enable or disable the stripping of weapons from anyone who is kicked.", 0, true, 0.0, true, 1.0);
+	gH_Cvar_Strip_On_Kick = CreateConVar("sm_hosties_strip_onkick", "1", "Enable or disable the stripping of weapons from anyone who is kicked.", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_Strip_On_Kick = true;
-	gH_Cvar_Strip_On_Ban = CreateConVar("sm_hosties_strip_onban", "1", "Enable or disable the stripping of weapons from anyone who is banned.", 0, true, 0.0, true, 1.0);
+	gH_Cvar_Strip_On_Ban = CreateConVar("sm_hosties_strip_onban", "1", "Enable or disable the stripping of weapons from anyone who is banned.", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_Strip_On_Ban = true;
 	
 	HookConVarChange(gH_Cvar_Strip_On_Slay, GunSafety_CvarChanged);

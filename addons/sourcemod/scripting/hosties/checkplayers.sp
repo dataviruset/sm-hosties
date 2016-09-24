@@ -26,7 +26,7 @@ new bool:gShadow_CheckPlayersOn;
 
 CheckPlayers_OnPluginStart()
 {
-	gH_Cvar_CheckPlayersOn = CreateConVar("sm_hosties_checkplayers_enable", "1", "Enable or disable the !checkplayers command: 0 - disable, 1 - enable", 0, true, 0.0, true, 1.0);
+	gH_Cvar_CheckPlayersOn = CreateConVar("sm_hosties_checkplayers_enable", "1", "Enable or disable the !checkplayers command: 0 - disable, 1 - enable", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_CheckPlayersOn = true;
 	
 	RegConsoleCmd("sm_checkplayers", Command_CheckPlayers);
@@ -57,7 +57,7 @@ public Action:Command_CheckPlayers(client, args)
 			new realrebelscount = 0;
 			for (new idx = 1; idx < MaxClients; idx++)
 			{
-				if (g_bIsARebel[idx])
+				if (g_bIsARebel[idx] && IsClientInGame(idx))
 				{
 					realrebelscount++;
 				}
@@ -76,9 +76,9 @@ public Action:Command_CheckPlayers(client, args)
 				decl String:item[64];
 				for(new i; i < MaxClients; i++)
 				{
-					if (g_bIsARebel[i])
+					if (g_bIsARebel[i] && IsClientInGame(i))
 					{
-						GetClientName(g_bIsARebel[i], item, sizeof(item));
+						GetClientName(i, item, sizeof(item));
 						AddMenuItem(checkplayersmenu, "player", item);
 					}
 				}

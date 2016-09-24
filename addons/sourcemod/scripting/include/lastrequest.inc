@@ -93,6 +93,7 @@ public __pl_lastrequest_SetNTVOptional()
 {
 	MarkNativeAsOptional("IsClientRebel");
 	MarkNativeAsOptional("IsClientInLastRequest");
+	MarkNativeAsOptional("IsLastRequestAvailable");
 	MarkNativeAsOptional("AddLastRequestToList");
 	MarkNativeAsOptional("RemoveLastRequestFromList");
 	MarkNativeAsOptional("ProcessAllLastRequests");
@@ -108,6 +109,13 @@ functag FuncProcessLR public(Handle:array, iLRNumber);
 forward OnStartLR(PrisonerIndex, GuardIndex, LR_Type);
 
 forward OnAvailableLR(Announced);
+
+/**
+ * Find if last request is available.
+ * 
+ * @return						True if last request is available, false otherwise.
+ */
+native bool:IsLastRequestAvailable(IsLR);
 
 /**
  * Find if a client is listed as a rebel.
@@ -188,25 +196,39 @@ native InitializeLR(prisoner);
  */
 native CleanupLR(prisoner);
 
-stock SetThirdPerson(client)
+stock SetThirdPerson(client, GameType:game = Game_Unknown)
 {
 	if (IsValidEntity(client) && IsClientInGame(client))
 	{
-		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 0);
-		SetEntProp(client, Prop_Send, "m_iObserverMode", 1);
-		SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
-		SetEntProp(client, Prop_Send, "m_iFOV", 120);
+		if (game == Game_CSGO)
+		{
+			ClientCommand(client, "thirdperson");
+		}
+		else
+		{
+			SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 0);
+			SetEntProp(client, Prop_Send, "m_iObserverMode", 1);
+			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
+			SetEntProp(client, Prop_Send, "m_iFOV", 120);
+		}
 	}
 }
 
-stock SetFirstPerson(client)
+stock SetFirstPerson(client, GameType:game = Game_Unknown)
 {
 	if (IsValidEntity(client) && IsClientInGame(client))
 	{
-		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 1);
-		SetEntProp(client, Prop_Send, "m_iObserverMode", 0);
-		SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
-		SetEntProp(client, Prop_Send, "m_iFOV", 90);
+		if (game == Game_CSGO)
+		{
+			ClientCommand(client, "firstperson");
+		}
+		else
+		{
+			SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 1);
+			SetEntProp(client, Prop_Send, "m_iObserverMode", 0);
+			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
+			SetEntProp(client, Prop_Send, "m_iFOV", 90);
+		}
 	}
 }
 
