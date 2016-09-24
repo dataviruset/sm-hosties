@@ -49,21 +49,21 @@
 
 #define TASK_COUNT			3
 
-new bool:g_bController[MAXPLAYERS + 1] = false;
-new bool:g_bInControl[MAXPLAYERS + 1] = false;
-new bool:g_bActComplete[MAXPLAYERS + 1] = false;
-new bool:g_bHasController = false;
-new bool:g_bCanControl = false;
-new bool:g_bInSimonSays = false;
-new bool:g_bInAction = false;
-new bool:g_bCanStop = false;
-new Float:g_fDelay = 0.0;
-new g_iState = 0;
-new Handle:gH_ControllerMenu = INVALID_HANDLE;
-new String:g_sActionSound[ACTION_COUNT][PLATFORM_MAX_PATH] = {"sm_hosties/control/jump.mp3", "sm_hosties/control/crouch.mp3", "sm_hosties/control/follow.mp3", "sm_hosties/control/go.mp3", "sm_hosties/control/freeday.mp3"};
-new String:g_sTaskSound[TASK_COUNT][PLATFORM_MAX_PATH] = {"sm_hosties/control/simon.mp3", "sm_hosties/control/first.mp3", "sm_hosties/control/last.mp3"};
+bool g_bController[MAXPLAYERS + 1] = false;
+bool g_bInControl[MAXPLAYERS + 1] = false;
+bool g_bActComplete[MAXPLAYERS + 1] = false;
+bool g_bHasController = false;
+bool g_bCanControl = false;
+bool g_bInSimonSays = false;
+bool g_bInAction = false;
+bool g_bCanStop = false;
+float g_fDelay = 0.0;
+int g_iState = 0;
+Handle gH_ControllerMenu = null;
+char g_sActionSound[ACTION_COUNT][PLATFORM_MAX_PATH] = {"sm_hosties/control/jump.mp3", "sm_hosties/control/crouch.mp3", "sm_hosties/control/follow.mp3", "sm_hosties/control/go.mp3", "sm_hosties/control/freeday.mp3"};
+char g_sTaskSound[TASK_COUNT][PLATFORM_MAX_PATH] = {"sm_hosties/control/simon.mp3", "sm_hosties/control/first.mp3", "sm_hosties/control/last.mp3"};
 
-Control_OnPluginStart()
+void Control_OnPluginStart()
 {
 	RegConsoleCmd("sm_control", Command_Control);
 	RegConsoleCmd("sm_hostiescontrol", Command_Control);
@@ -72,13 +72,13 @@ Control_OnPluginStart()
 	HookEvent("player_disconnect", Control_PlayerDisconnect);
 }
 
-public Control_Menu(client)
+public void Control_Menu(int client)
 {
 	if(g_bHasController && Control_GetController() == client)
 	{
-		if(gH_ControllerMenu == INVALID_HANDLE)
+		if(gH_ControllerMenu == null)
 		{
-			gH_ControllerMenu = CreateMenu(ControllerMenuHandle, MenuAction:MENU_ACTIONS_ALL);
+			gH_ControllerMenu = CreateMenu(ControllerMenuHandle, view_as<MenuAction>(MENU_ACTIONS_ALL));
 			if(g_iState == 0)
 			{
 				SetMenuTitle(gH_ControllerMenu, "%t", "Control", "Main");
@@ -156,7 +156,7 @@ public Control_Menu(client)
 	}
 }
 
-public ControllerMenuHandle(Handle:menu, MenuAction:action, param1, param2)
+public int ControllerMenuHandle(Handle menu, MenuAction action, int param1, int param2)
 {
 	/*if(action == MenuAction_DisplayItem)
 	{
@@ -215,9 +215,9 @@ public ControllerMenuHandle(Handle:menu, MenuAction:action, param1, param2)
 	{
 		if(GetMenuItemCount(menu) - 1 == param2)
 		{
-			decl String:selection[64];
+			char selection[64];
 			GetMenuItem(menu, param2, selection, sizeof(selection));
-			new bool:ReturnMenu = true;
+			bool ReturnMenu = true;
 			if(strcmp(selection, MENU_SIMON, false) == 0)
 			{
 				g_iState = 1;
@@ -347,7 +347,7 @@ public ControllerMenuHandle(Handle:menu, MenuAction:action, param1, param2)
 			}
 			if(ReturnMenu)
 			{
-				gH_ControllerMenu = INVALID_HANDLE;
+				gH_ControllerMenu = null;
 				Control_Menu(param1);
 			}
 			CloseHandle(menu);
@@ -359,7 +359,7 @@ public ControllerMenuHandle(Handle:menu, MenuAction:action, param1, param2)
 	}
 }
 
-public Control_PlayAction(String:Act[])
+public void Control_PlayAction(char[] Act)
 {
 	if(StrEqual(Act, "Jump"))
 	{
@@ -367,7 +367,7 @@ public Control_PlayAction(String:Act[])
 	}
 }
 
-Control_OnMapStart()
+void Control_OnMapStart()
 {
 	if (g_Game == Game_CSS)
 	{
@@ -384,7 +384,7 @@ Control_OnMapStart()
 		LaserHalo = PrecacheModel("materials/sprites/light_glow02.vmt");
 	}
 	
-	for(new i = 0; i < ACTION_COUNT; i++)
+	for(int i = 0; i < ACTION_COUNT; i++)
 	{
 		if(!StrEqual(g_sActionSound[i], "", false))
 		{
@@ -392,7 +392,7 @@ Control_OnMapStart()
 		}
 	}
 	
-	for(new i = 0; i < TASK_COUNT; i++)
+	for(int i = 0; i < TASK_COUNT; i++)
 	{
 		if(!StrEqual(g_sTaskSound[i], "", false))
 		{
@@ -401,16 +401,16 @@ Control_OnMapStart()
 	}
 }
 
-public Control_PlayerDisconnect(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Control_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if(g_bHasController && g_bController[client] == true)
 	{
 		Control_Controller(client, false, 0, true);
 	}
 }
 
-public Action:Command_Control(client, args)
+public Action Command_Control(int client, int args)
 {
 	if (GetClientTeam(client) != 3)
 	{
@@ -431,14 +431,14 @@ public Action:Command_Control(client, args)
 	return Plugin_Handled;
 }
 
-public Control_GetController()
+public int Control_GetController()
 {
 	if(!g_bHasController)
 	{
 		return 0;
 	}
 	
-	for(new i = 1; i <= MaxClients ; i++)
+	for(int i = 1; i <= MaxClients ; i++)
 	{
 		if(g_bController[i] == true)
 		{
@@ -456,7 +456,7 @@ public Control_GetController()
 	return 0;
 }
 
-public Control_Controller(client, bool:controller, reason, bool:ann)
+public void Control_Controller(int client, bool controller, int reason, bool ann)
 {
 	if(controller)
 	{
@@ -502,9 +502,9 @@ public Control_Controller(client, bool:controller, reason, bool:ann)
 	}
 }
 
-public Control_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Control_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if(g_bHasController && g_bController[client] == true)
 	{
 		Control_Controller(client, false, 1, true);
