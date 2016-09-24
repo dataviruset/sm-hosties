@@ -22,6 +22,7 @@
 #include <sdktools>
 #include <hosties>
 
+<<<<<<< HEAD
 Handle gH_Cvar_RulesOn = null;
 bool gShadow_RulesOn;
 Handle gH_Cvar_Announce_Rules = null;
@@ -33,6 +34,19 @@ char gShadow_Rules_Website[192];
 Handle gH_DArray_Rules = null;
 
 void Rules_OnPluginStart()
+=======
+new Handle:gH_Cvar_RulesOn = INVALID_HANDLE;
+new bool:gShadow_RulesOn;
+new Handle:gH_Cvar_Announce_Rules = INVALID_HANDLE;
+new bool:gShadow_Announce_Rules;
+new Handle:gH_Cvar_Rules_Mode = INVALID_HANDLE;
+new gShadow_Rules_Mode = 1;
+new Handle:gH_Cvar_Rules_Website = INVALID_HANDLE;
+new String:gShadow_Rules_Website[192];
+new Handle:gH_DArray_Rules = INVALID_HANDLE;
+
+Rules_OnPluginStart()
+>>>>>>> refs/remotes/dataviruset/master
 {
 	gH_Cvar_RulesOn = CreateConVar("sm_hosties_rules_enable", "1", "Enable or disable rules showing up at !rules command (if you need to disable the command registration on plugin startup, add a file in your sourcemod/configs/ named hosties_rulesdisable.ini with any content): 0 - disable, 1 - enable", FCVAR_NONE, true, 0.0, true, 1.0);
 	gShadow_RulesOn = true;
@@ -54,10 +68,17 @@ void Rules_OnPluginStart()
 	HookEvent("round_start", Rules_RoundStart);
 	
 	// Provided for backwards comparibility
+<<<<<<< HEAD
 	char file[256];
 	BuildPath(Path_SM, file, 255, "configs/hosties_rulesdisable.ini");
 	Handle fileh = OpenFile(file, "r");
 	if (fileh == null)
+=======
+	decl String:file[256];
+	BuildPath(Path_SM, file, 255, "configs/hosties_rulesdisable.ini");
+	new Handle:fileh = OpenFile(file, "r");
+	if (fileh == INVALID_HANDLE)
+>>>>>>> refs/remotes/dataviruset/master
 	{
 		RegConsoleCmd("sm_rules", Command_Rules);
 	}
@@ -65,7 +86,11 @@ void Rules_OnPluginStart()
 	gH_DArray_Rules = CreateArray(255);
 }
 
+<<<<<<< HEAD
 public Action Rules_RoundStart(Event event, const char[] name, bool dontBroadcast)
+=======
+public Rules_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+>>>>>>> refs/remotes/dataviruset/master
 {
 	if (gShadow_Announce_Rules)
 	{
@@ -73,7 +98,11 @@ public Action Rules_RoundStart(Event event, const char[] name, bool dontBroadcas
 	}
 }
 
+<<<<<<< HEAD
 void Rules_OnConfigsExecuted()
+=======
+Rules_OnConfigsExecuted()
+>>>>>>> refs/remotes/dataviruset/master
 {
 	gShadow_RulesOn = GetConVarBool(gH_Cvar_RulesOn);
 	gShadow_Announce_Rules = GetConVarBool(gH_Cvar_Announce_Rules);
@@ -87,6 +116,7 @@ void ParseTheRulesFile()
 {
 	ClearArray(gH_DArray_Rules);
 	
+<<<<<<< HEAD
 	char pathRules[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, pathRules, sizeof(pathRules), "configs/hosties_rules.ini");
 	Handle rulesFile = OpenFile(pathRules, "r");
@@ -94,6 +124,15 @@ void ParseTheRulesFile()
 	if (rulesFile != null)
 	{
 		char sRulesLine[256];
+=======
+	decl String:pathRules[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, pathRules, sizeof(pathRules), "configs/hosties_rules.ini");
+	new Handle:rulesFile = OpenFile(pathRules, "r");
+	
+	if (rulesFile != INVALID_HANDLE)
+	{
+		decl String:sRulesLine[256];
+>>>>>>> refs/remotes/dataviruset/master
 		
 		while(ReadFileLine(rulesFile, sRulesLine, sizeof(sRulesLine)))
 		{
@@ -102,6 +141,7 @@ void ParseTheRulesFile()
 	}
 }
 
+<<<<<<< HEAD
 public void Rules_CvarChanged(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == gH_Cvar_RulesOn)
@@ -111,6 +151,17 @@ public void Rules_CvarChanged(Handle cvar, const char[] oldValue, const char[] n
 	else if (cvar == gH_Cvar_Announce_Rules)
 	{
 		gShadow_Announce_Rules = view_as<bool>(StringToInt(newValue));
+=======
+public Rules_CvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
+{
+	if (cvar == gH_Cvar_RulesOn)
+	{
+		gShadow_RulesOn = bool:StringToInt(newValue);
+	}
+	else if (cvar == gH_Cvar_Announce_Rules)
+	{
+		gShadow_Announce_Rules = bool:StringToInt(newValue);
+>>>>>>> refs/remotes/dataviruset/master
 	}
 	else if (cvar == gH_Cvar_Rules_Mode)
 	{
@@ -122,7 +173,11 @@ public void Rules_CvarChanged(Handle cvar, const char[] oldValue, const char[] n
 	}
 }
 
+<<<<<<< HEAD
 public Action Command_Rules(int client, int args)
+=======
+public Action:Command_Rules(client, args)
+>>>>>>> refs/remotes/dataviruset/master
 {
 	if (gShadow_RulesOn)
 	{
@@ -130,17 +185,30 @@ public Action Command_Rules(int client, int args)
 		{
 			case 1:
 			{
+<<<<<<< HEAD
 				int iNumOfRules = GetArraySize(gH_DArray_Rules);
 				
 				if (iNumOfRules > 0)
 				{
 					Handle Hosties_Rules_Panel = CreatePanel();
 					char sPanelText[256];	
+=======
+				new iNumOfRules = GetArraySize(gH_DArray_Rules);
+				
+				if (iNumOfRules > 0)
+				{
+					new Handle:Hosties_Rules_Panel = CreatePanel();
+					decl String:sPanelText[256];	
+>>>>>>> refs/remotes/dataviruset/master
 					Format(sPanelText, sizeof(sPanelText), "%t", "Server Rules");
 					SetPanelTitle(Hosties_Rules_Panel, sPanelText);
 					DrawPanelText(Hosties_Rules_Panel, " ");		
 					
+<<<<<<< HEAD
 					for (int line = 0; line < iNumOfRules; line++)
+=======
+					for (new line = 0; line < iNumOfRules; line++)
+>>>>>>> refs/remotes/dataviruset/master
 					{
 						GetArrayString(gH_DArray_Rules, line, sPanelText, sizeof(sPanelText));
 						DrawPanelText(Hosties_Rules_Panel, sPanelText);
@@ -162,7 +230,11 @@ public Action Command_Rules(int client, int args)
 	return Plugin_Handled;
 }
 
+<<<<<<< HEAD
 public int Panel_Handler(Handle panel, MenuAction action, int param1, int param2)
+=======
+public Panel_Handler(Handle:panel, MenuAction:action, param1, param2)
+>>>>>>> refs/remotes/dataviruset/master
 {
 	// regardless of what the MenuAction is, do nothing
 }

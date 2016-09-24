@@ -118,6 +118,13 @@ forward void OnAvailableLR(int Announced);
 native bool IsLastRequestAvailable(bool IsLR);
 
 /**
+ * Find if last request is available.
+ * 
+ * @return						True if last request is available, false otherwise.
+ */
+native bool:IsLastRequestAvailable(IsLR);
+
+/**
  * Find if a client is listed as a rebel.
  * 
  * @param client				Client index.
@@ -196,25 +203,47 @@ native void InitializeLR(int prisoner);
  */
 native void CleanupLR(int prisoner);
 
+<<<<<<< HEAD
 stock void SetThirdPerson(int client)
+=======
+stock SetThirdPerson(client, GameType:game = Game_Unknown)
+>>>>>>> refs/remotes/dataviruset/master
 {
 	if (IsValidEntity(client) && IsClientInGame(client))
 	{
-		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 0);
-		SetEntProp(client, Prop_Send, "m_iObserverMode", 1);
-		SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
-		SetEntProp(client, Prop_Send, "m_iFOV", 120);
+		if (game == Game_CSGO)
+		{
+			ClientCommand(client, "thirdperson");
+		}
+		else
+		{
+			SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 0);
+			SetEntProp(client, Prop_Send, "m_iObserverMode", 1);
+			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
+			SetEntProp(client, Prop_Send, "m_iFOV", 120);
+		}
 	}
 }
 
+<<<<<<< HEAD
 stock void SetFirstPerson(int client)
+=======
+stock SetFirstPerson(client, GameType:game = Game_Unknown)
+>>>>>>> refs/remotes/dataviruset/master
 {
 	if (IsValidEntity(client) && IsClientInGame(client))
 	{
-		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 1);
-		SetEntProp(client, Prop_Send, "m_iObserverMode", 0);
-		SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
-		SetEntProp(client, Prop_Send, "m_iFOV", 90);
+		if (game == Game_CSGO)
+		{
+			ClientCommand(client, "firstperson");
+		}
+		else
+		{
+			SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 1);
+			SetEntProp(client, Prop_Send, "m_iObserverMode", 0);
+			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
+			SetEntProp(client, Prop_Send, "m_iFOV", 90);
+		}
 	}
 }
 
