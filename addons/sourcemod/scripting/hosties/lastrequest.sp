@@ -877,6 +877,25 @@ public int Native_ChangeRebelStatus(Handle h_Plugin, int iNumParameters)
 		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid rebel status (%d)", status);
 	}
 	g_bIsARebel[client] = view_as<bool>(status);
+	if(g_bIsARebel[client])
+	{
+		if (gShadow_Announce_Rebel)
+		{
+			if (gShadow_SendGlobalMsgs)
+			{
+				PrintToChatAll(CHAT_BANNER, "New Rebel", client);
+			}
+			else
+			{
+				PrintToChat(client, CHAT_BANNER, "New Rebel", client);
+			}
+		}
+		if (gShadow_ColorRebels)
+		{
+			SetEntityRenderColor(client, gShadow_ColorRebels_Red, gShadow_ColorRebels_Green, 
+			gShadow_ColorRebels_Blue, 255);
+		}
+	}
 	return 1;
 }
 
