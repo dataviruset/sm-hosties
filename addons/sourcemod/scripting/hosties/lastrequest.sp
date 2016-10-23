@@ -879,22 +879,7 @@ public int Native_ChangeRebelStatus(Handle h_Plugin, int iNumParameters)
 	g_bIsARebel[client] = view_as<bool>(status);
 	if(g_bIsARebel[client])
 	{
-		if (gShadow_Announce_Rebel)
-		{
-			if (gShadow_SendGlobalMsgs)
-			{
-				PrintToChatAll(CHAT_BANNER, "New Rebel", client);
-			}
-			else
-			{
-				PrintToChat(client, CHAT_BANNER, "New Rebel", client);
-			}
-		}
-		if (gShadow_ColorRebels)
-		{
-			SetEntityRenderColor(client, gShadow_ColorRebels_Red, gShadow_ColorRebels_Green, 
-			gShadow_ColorRebels_Blue, 255);
-		}
+		MarkRebel(client, 0);
 	}
 	return 1;
 }
@@ -907,6 +892,30 @@ public int Native_IsClientInLR(Handle h_Plugin, int iNumParameters)
 		return ThrowNativeError(SP_ERROR_NATIVE, "Given client index (%d) not in game", client);
 	}
 	return Local_IsClientInLR(client);
+}
+
+void MarkRebel(int client, int victim)
+{
+	if (gShadow_Announce_Rebel)
+	{
+		if (gShadow_SendGlobalMsgs)
+		{
+			PrintToChatAll(CHAT_BANNER, "New Rebel", client);
+		}
+		else
+		{
+			PrintToChat(client, CHAT_BANNER, "New Rebel", client);
+			if (IsClientInGame(victim))
+			{
+				PrintToChat(victim, CHAT_BANNER, "New Rebel", client);
+			}
+		}
+	}
+	if (gShadow_ColorRebels)
+	{
+		SetEntityRenderColor(client, gShadow_ColorRebels_Red, gShadow_ColorRebels_Green, 
+		gShadow_ColorRebels_Blue, 255);
+	}
 }
 
 int Local_IsClientInLR(int client)
@@ -1166,18 +1175,7 @@ public Action LastRequest_PlayerHurt(Event event, const char[] name, bool dontBr
 				if (!g_bIsARebel[attacker] && (GetClientTeam(attacker) == CS_TEAM_T))
 				{
 					g_bIsARebel[attacker] = true;
-					if (gShadow_Announce_Rebel && IsClientInGame(attacker))
-					{
-						if (gShadow_SendGlobalMsgs)
-						{
-							PrintToChatAll(CHAT_BANNER, "New Rebel", attacker);
-						}
-						else
-						{
-							PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
-							PrintToChat(target, CHAT_BANNER, "New Rebel", attacker);
-						}
-					}
+					MarkRebel(attacker, target);
 				}
 			}
 			// someone inside this LR interfered with someone else
@@ -1226,23 +1224,7 @@ public Action LastRequest_PlayerHurt(Event event, const char[] name, bool dontBr
 		g_bIsARebel[attacker] = true;
 		if (IsClientInGame(attacker))
 		{
-			if (gShadow_Announce_Rebel)
-			{
-				if (gShadow_SendGlobalMsgs)
-				{
-					PrintToChatAll(CHAT_BANNER, "New Rebel", attacker);
-				}
-				else
-				{
-					PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
-					PrintToChat(target, CHAT_BANNER, "New Rebel", attacker);
-				}
-			}
-			if (gShadow_ColorRebels)
-			{
-				SetEntityRenderColor(attacker, gShadow_ColorRebels_Red, gShadow_ColorRebels_Green, 
-				gShadow_ColorRebels_Blue, 255);
-			}
+			MarkRebel(attacker, target);
 		}
 	}
 	else if (attacker && target && (GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(target) == CS_TEAM_T) \
@@ -1537,23 +1519,7 @@ public Action LastRequest_BulletImpact(Event event, const char[] name, bool dont
 	if (!g_bIsARebel[attacker] && gShadow_RebelOnImpact && (GetClientTeam(attacker) == CS_TEAM_T) && !Local_IsClientInLR(attacker))
 	{
 		g_bIsARebel[attacker] = true;
-		
-		if (gShadow_ColorRebels)
-		{
-			SetEntityRenderColor(attacker, gShadow_ColorRebels_Red, gShadow_ColorRebels_Green, gShadow_ColorRebels_Blue, 255);
-		}
-		
-		if (gShadow_Announce_Rebel && IsClientInGame(attacker))
-		{
-			if (gShadow_SendGlobalMsgs)
-			{
-				PrintToChatAll(CHAT_BANNER, "New Rebel", attacker);
-			}
-			else
-			{
-				PrintToChat(attacker, CHAT_BANNER, "New Rebel", attacker);
-			}
-		}
+		MarkRebel(attacker, 0);
 	}
 }
 
