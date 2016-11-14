@@ -966,7 +966,9 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 		g_bInLastRequest[idx] = false;
 		g_LR_Player_Guard[idx] = 0;
 		SetCorrectPlayerColor(idx);
+		StopActiveLRs(idx);
 	}
+	ClosePotentialLRMenus();
 }
 
 public Action:Timer_EnableLR(Handle:timer)
@@ -998,6 +1000,7 @@ public Action:Timer_EnableLR(Handle:timer)
 public Action:Command_CancelLR(client, args)
 {
 	StopActiveLRs(client);
+	ShowActivity(client, "%t", "LR Aborted");
 	return Plugin_Handled;
 }
 
@@ -1010,7 +1013,6 @@ StopActiveLRs(client)
 		RemoveFromArray(gH_DArray_LR_Partners, iArraySize-1);
 		iArraySize--;
 	}
-	ShowActivity(client, "%t", "LR Aborted");
 }
 
 public LastRequest_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
@@ -2907,62 +2909,54 @@ public Action:Command_LastRequest(client, args)
 {
 	if (gShadow_LR_Enable)
 	{
-		new bWarmup = GameRules_GetProp("m_bWarmupPeriod"); 
-		if (!bWarmup)
+		if (g_bIsLRAvailable)
 		{
-			if (g_bIsLRAvailable)
+			if (!g_bInLastRequest[client])
 			{
-				if (!g_bInLastRequest[client])
+				if (IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
 				{
-					if (IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
+					if (g_bIsARebel[client] && !gShadow_RebelHandling)
 					{
-						if (g_bIsARebel[client] && !gShadow_RebelHandling)
-						{
-							PrintToChat(client, CHAT_BANNER, "LR Rebel Not Allowed");
-						}
-						else
-						{
-							// check the number of terrorists still alive
-							new Ts, CTs, NumCTsAvailable;
-							UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);
+						PrintToChat(client, CHAT_BANNER, "LR Rebel Not Allowed");
+					}
+					else
+					{
+						// check the number of terrorists still alive
+						new Ts, CTs, NumCTsAvailable;
+						UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);
 
-							if (Ts <= gShadow_MaxPrisonersToLR || gShadow_MaxPrisonersToLR == 0)
+						if (Ts <= gShadow_MaxPrisonersToLR || gShadow_MaxPrisonersToLR == 0)
+						{
+							if (CTs > 0)
 							{
-								if (CTs > 0)
+								if (NumCTsAvailable > 0)
 								{
-									if (NumCTsAvailable > 0)
-									{
-										DisplayLastRequestMenu(client, Ts, CTs);
-									}
-									else
-									{
-										PrintToChat(client, CHAT_BANNER, "LR No CTs Available");
-									}
+									DisplayLastRequestMenu(client, Ts, CTs);
 								}
 								else
 								{
-									PrintToChat(client, CHAT_BANNER, "No CTs Alive");
+									PrintToChat(client, CHAT_BANNER, "LR No CTs Available");
 								}
 							}
 							else
 							{
-								PrintToChat(client, CHAT_BANNER, "Too Many Ts");
+								PrintToChat(client, CHAT_BANNER, "No CTs Alive");
 							}
 						}
-					}
-					else
-					{
-						PrintToChat(client, CHAT_BANNER, "Not Alive Or In Wrong Team");
+						else
+						{
+							PrintToChat(client, CHAT_BANNER, "Too Many Ts");
+						}
 					}
 				}
 				else
 				{
-					PrintToChat(client, CHAT_BANNER, "Another LR In Progress");
+					PrintToChat(client, CHAT_BANNER, "Not Alive Or In Wrong Team");
 				}
 			}
 			else
 			{
-				PrintToChat(client, CHAT_BANNER, "LR Not Available");
+				PrintToChat(client, CHAT_BANNER, "Another LR In Progress");
 			}
 		}
 		else
@@ -2974,7 +2968,7 @@ public Action:Command_LastRequest(client, args)
 	{
 		PrintToChat(client, CHAT_BANNER, "LR Not Available");
 	}
-	
+
 	return Plugin_Handled;
 }
 
