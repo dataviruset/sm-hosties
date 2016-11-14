@@ -968,7 +968,6 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 		SetCorrectPlayerColor(idx);
 		StopActiveLRs(idx);
 	}
-	ClosePotentialLRMenus();
 }
 
 public Action:Timer_EnableLR(Handle:timer)
