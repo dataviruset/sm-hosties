@@ -2905,10 +2905,10 @@ LastRequest_ClientPutInServer(client)
 
 public Action:Command_LastRequest(client, args)
 {
-	new bWarmup = GameRules_GetProp("m_bWarmupPeriod"); 
-	if (!bWarmup)
+	if (gShadow_LR_Enable)
 	{
-		if (gShadow_LR_Enable)
+		new bWarmup = GameRules_GetProp("m_bWarmupPeriod"); 
+		if (!bWarmup)
 		{
 			if (g_bIsLRAvailable)
 			{
