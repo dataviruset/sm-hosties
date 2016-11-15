@@ -27,13 +27,6 @@
 #define 	CHAT_BANNER			"\x03[SM] \x04%t"
 #define 	NORMAL_VISION		90
 
-enum GameType
-{
-	Game_Unknown = -1,
-	Game_CSS,
-	Game_CSGO
-};
-
 enum FreekillPunishment
 {
 	FP_Slay = 0,

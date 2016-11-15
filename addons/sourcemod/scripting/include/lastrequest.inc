@@ -24,6 +24,13 @@
 #define _LastRequest_Included_
 
 // Custom types
+enum GameType
+{
+	Game_Unknown = -1,
+	Game_CSS,
+	Game_CSGO
+};
+
 enum LastRequest
 {
 	LR_KnifeFight = 0,
