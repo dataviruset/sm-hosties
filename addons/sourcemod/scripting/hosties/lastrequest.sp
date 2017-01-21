@@ -3769,6 +3769,9 @@ InitializeGame(iPartnersIndex)
 	{
 		SetEntData(LR_Player_Prisoner, g_Offset_Armor, 0);
 		SetEntData(LR_Player_Guard, g_Offset_Armor, 0);
+		
+		SetEntProp(LR_Player_Prisoner, Prop_Send, "m_bHasHelmet", 0);
+		SetEntProp(LR_Player_Guard, Prop_Send, "m_bHasHelmet", 0);
 	}
 	
 	switch (selection)
