@@ -966,6 +966,7 @@ public LastRequest_RoundStart(Handle:event, const String:name[], bool:dontBroadc
 		g_bInLastRequest[idx] = false;
 		g_LR_Player_Guard[idx] = 0;
 		SetCorrectPlayerColor(idx);
+		StopActiveLRs(idx);
 	}
 }
 
@@ -998,6 +999,7 @@ public Action:Timer_EnableLR(Handle:timer)
 public Action:Command_CancelLR(client, args)
 {
 	StopActiveLRs(client);
+	ShowActivity(client, "%t", "LR Aborted");
 	return Plugin_Handled;
 }
 
@@ -1010,7 +1012,6 @@ StopActiveLRs(client)
 		RemoveFromArray(gH_DArray_LR_Partners, iArraySize-1);
 		iArraySize--;
 	}
-	ShowActivity(client, "%t", "LR Aborted");
 }
 
 public LastRequest_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
