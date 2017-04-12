@@ -896,7 +896,7 @@ public int Native_IsClientInLR(Handle h_Plugin, int iNumParameters)
 
 void MarkRebel(int client, int victim)
 {
-	if (gShadow_Announce_Rebel)
+	if (gShadow_Announce_Rebel && IsClientInGame(client))
 	{
 		if (gShadow_SendGlobalMsgs)
 		{
@@ -905,7 +905,7 @@ void MarkRebel(int client, int victim)
 		else
 		{
 			PrintToChat(client, CHAT_BANNER, "New Rebel", client);
-			if (IsClientInGame(victim))
+			if (victim && IsClientInGame(victim))
 			{
 				PrintToChat(victim, CHAT_BANNER, "New Rebel", client);
 			}
