@@ -23,6 +23,8 @@
 #endif
 #define _LastRequest_Included_
 
+#include <hosties>
+
 // Custom types
 enum LastRequest
 {
