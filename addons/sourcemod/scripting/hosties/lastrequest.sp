@@ -3018,226 +3018,237 @@ public LR_Selection_Handler(Handle:menu, MenuAction:action, client, iButtonChoic
 		{
 			if (g_bIsLRAvailable)
 			{
-				if (!g_bInLastRequest[client])
+				// check the number of terrorists still alive
+				new Ts, CTs, NumCTsAvailable;
+				UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);
+
+				if (Ts <= gShadow_MaxPrisonersToLR || gShadow_MaxPrisonersToLR == 0)
 				{
-					if (IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
+					if (!g_bInLastRequest[client])
 					{
-						decl String:sData[MAX_DATAENTRY_SIZE];
-						GetMenuItem(menu, iButtonChoice, sData, sizeof(sData));
-						new LastRequest:choice = LastRequest:StringToInt(sData);
-						g_LRLookup[client] = choice;
-						
-						switch (choice)
+						if (IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
 						{
-							case LR_KnifeFight:
+							decl String:sData[MAX_DATAENTRY_SIZE];
+							GetMenuItem(menu, iButtonChoice, sData, sizeof(sData));
+							new LastRequest:choice = LastRequest:StringToInt(sData);
+							g_LRLookup[client] = choice;
+
+							switch (choice)
 							{
-								new Handle:KnifeFightMenu = CreateMenu(SubLRType_MenuHandler);								
-								SetMenuTitle(KnifeFightMenu, "%T", "Knife Fight Selection Menu", client);
-								
-								decl String:sSubTypeName[MAX_DISPLAYNAME_SIZE];
-								decl String:sDataField[MAX_DATAENTRY_SIZE];
-								Format(sDataField, sizeof(sDataField), "%d", Knife_Vintage);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Vintage", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								if (g_Game == Game_CSS)
+								case LR_KnifeFight:
 								{
-									Format(sDataField, sizeof(sDataField), "%d", Knife_Drunk);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drunk", client);
-									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-									Format(sDataField, sizeof(sDataField), "%d", Knife_Drugs);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drugs", client);
-									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								}
-								Format(sDataField, sizeof(sDataField), "%d", Knife_LowGrav);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_LowGrav", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								Format(sDataField, sizeof(sDataField), "%d", Knife_HiSpeed);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_HiSpeed", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								Format(sDataField, sizeof(sDataField), "%d", Knife_ThirdPerson);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_ThirdPerson", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								
-								SetMenuExitBackButton(KnifeFightMenu, true);
-								DisplayMenu(KnifeFightMenu, client, 10);
-							}
-							case LR_Shot4Shot, LR_Mag4Mag:
-							{
-								new Handle:SubWeaponMenu = CreateMenu(SubLRType_MenuHandler);
-								SetMenuTitle(SubWeaponMenu, "%T", "Pistol Selection Menu", client);
-								
-								decl String:sSubTypeName[MAX_DISPLAYNAME_SIZE];
-								decl String:sDataField[MAX_DATAENTRY_SIZE];
-								Format(sDataField, sizeof(sDataField), "%d", Pistol_Deagle);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Deagle", client);
-								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
-								Format(sDataField, sizeof(sDataField), "%d", Pistol_P228);
-								if (g_Game == Game_CSS)
-								{
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P228", client);
-								}
-								else if (g_Game == Game_CSGO)
-								{
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P250", client);
-								}
-								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);								
-								Format(sDataField, sizeof(sDataField), "%d", Pistol_Glock);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Glock", client);
-								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);		
-								Format(sDataField, sizeof(sDataField), "%d", Pistol_FiveSeven);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_FiveSeven", client);
-								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);		
-								Format(sDataField, sizeof(sDataField), "%d", Pistol_Dualies);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Dualies", client);
-								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);		
-								Format(sDataField, sizeof(sDataField), "%d", Pistol_USP);
-								if (g_Game == Game_CSS)
-								{
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_USP", client);
-								}
-								else if (g_Game == Game_CSGO)
-								{
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P2000", client);
-								}
-								AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
-								if (g_Game == Game_CSGO)
-								{
-									Format(sDataField, sizeof(sDataField), "%d", Pistol_Tec9);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Tec9", client);
-									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
-									
-									Format(sDataField, sizeof(sDataField), "%d", Pistol_CZ75);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_CZ75", client);
-									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
-									
-									Format(sDataField, sizeof(sDataField), "%d", Pistol_USPS);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_USPS", client);
-									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
-									
-									Format(sDataField, sizeof(sDataField), "%d", Pistol_Revolver);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Revolver", client);
-									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
-								}
-								
-								SetMenuExitBackButton(SubWeaponMenu, true);
-								DisplayMenu(SubWeaponMenu, client, 10);
-							}					
-							case LR_NoScope:
-							{
-								if (gShadow_LR_NoScope_Weapon == 2)
-								{
-									new Handle:NSweaponMenu = CreateMenu(SubLRType_MenuHandler);
-									SetMenuTitle(NSweaponMenu, "%T", "NS Weapon Chooser Menu", client);
+									new Handle:KnifeFightMenu = CreateMenu(SubLRType_MenuHandler);								
+									SetMenuTitle(KnifeFightMenu, "%T", "Knife Fight Selection Menu", client);
 
 									decl String:sSubTypeName[MAX_DISPLAYNAME_SIZE];
 									decl String:sDataField[MAX_DATAENTRY_SIZE];
-									Format(sDataField, sizeof(sDataField), "%d", NSW_AWP);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_AWP", client);	
-									AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
-									Format(sDataField, sizeof(sDataField), "%d", NSW_Scout);
+									Format(sDataField, sizeof(sDataField), "%d", Knife_Vintage);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Vintage", client);
+									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
 									if (g_Game == Game_CSS)
 									{
-										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_Scout", client);
+										Format(sDataField, sizeof(sDataField), "%d", Knife_Drunk);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drunk", client);
+										AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+										Format(sDataField, sizeof(sDataField), "%d", Knife_Drugs);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drugs", client);
+										AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
 									}
-									else if (g_Game == Game_CSGO)
-									{
-										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SSG08", client);
-									}
-									AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
-									Format(sDataField, sizeof(sDataField), "%d", NSW_SG550);
-									if (g_Game == Game_CSS)
-									{
-										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SG550", client);
-									}
-									else if (g_Game == Game_CSGO)
-									{
-										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SCAR20", client);
-									}
-									AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
-									Format(sDataField, sizeof(sDataField), "%d", NSW_G3SG1);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_G3SG1", client);	
-									AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
-			
-									SetMenuExitButton(NSweaponMenu, true);
-									DisplayMenu(NSweaponMenu, client, 10);						
+									Format(sDataField, sizeof(sDataField), "%d", Knife_LowGrav);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_LowGrav", client);
+									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+									Format(sDataField, sizeof(sDataField), "%d", Knife_HiSpeed);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_HiSpeed", client);
+									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+									Format(sDataField, sizeof(sDataField), "%d", Knife_ThirdPerson);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_ThirdPerson", client);
+									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+
+									SetMenuExitBackButton(KnifeFightMenu, true);
+									DisplayMenu(KnifeFightMenu, client, 10);
 								}
-								else
+								case LR_Shot4Shot, LR_Mag4Mag:
+								{
+									new Handle:SubWeaponMenu = CreateMenu(SubLRType_MenuHandler);
+									SetMenuTitle(SubWeaponMenu, "%T", "Pistol Selection Menu", client);
+
+									decl String:sSubTypeName[MAX_DISPLAYNAME_SIZE];
+									decl String:sDataField[MAX_DATAENTRY_SIZE];
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_Deagle);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Deagle", client);
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_P228);
+									if (g_Game == Game_CSS)
+									{
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P228", client);
+									}
+									else if (g_Game == Game_CSGO)
+									{
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P250", client);
+									}
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);								
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_Glock);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Glock", client);
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);		
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_FiveSeven);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_FiveSeven", client);
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);		
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_Dualies);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Dualies", client);
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);		
+									Format(sDataField, sizeof(sDataField), "%d", Pistol_USP);
+									if (g_Game == Game_CSS)
+									{
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_USP", client);
+									}
+									else if (g_Game == Game_CSGO)
+									{
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_P2000", client);
+									}
+									AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+									if (g_Game == Game_CSGO)
+									{
+										Format(sDataField, sizeof(sDataField), "%d", Pistol_Tec9);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Tec9", client);
+										AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+
+										Format(sDataField, sizeof(sDataField), "%d", Pistol_CZ75);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_CZ75", client);
+										AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+
+										Format(sDataField, sizeof(sDataField), "%d", Pistol_USPS);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_USPS", client);
+										AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+
+										Format(sDataField, sizeof(sDataField), "%d", Pistol_Revolver);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Pistol_Revolver", client);
+										AddMenuItem(SubWeaponMenu, sDataField, sSubTypeName);
+									}
+
+									SetMenuExitBackButton(SubWeaponMenu, true);
+									DisplayMenu(SubWeaponMenu, client, 10);
+								}					
+								case LR_NoScope:
+								{
+									if (gShadow_LR_NoScope_Weapon == 2)
+									{
+										new Handle:NSweaponMenu = CreateMenu(SubLRType_MenuHandler);
+										SetMenuTitle(NSweaponMenu, "%T", "NS Weapon Chooser Menu", client);
+
+										decl String:sSubTypeName[MAX_DISPLAYNAME_SIZE];
+										decl String:sDataField[MAX_DATAENTRY_SIZE];
+										Format(sDataField, sizeof(sDataField), "%d", NSW_AWP);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_AWP", client);	
+										AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
+										Format(sDataField, sizeof(sDataField), "%d", NSW_Scout);
+										if (g_Game == Game_CSS)
+										{
+											Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_Scout", client);
+										}
+										else if (g_Game == Game_CSGO)
+										{
+											Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SSG08", client);
+										}
+										AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
+										Format(sDataField, sizeof(sDataField), "%d", NSW_SG550);
+										if (g_Game == Game_CSS)
+										{
+											Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SG550", client);
+										}
+										else if (g_Game == Game_CSGO)
+										{
+											Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_SCAR20", client);
+										}
+										AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
+										Format(sDataField, sizeof(sDataField), "%d", NSW_G3SG1);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "NSW_G3SG1", client);	
+										AddMenuItem(NSweaponMenu, sDataField, sSubTypeName);
+
+										SetMenuExitButton(NSweaponMenu, true);
+										DisplayMenu(NSweaponMenu, client, 10);						
+									}
+									else
+									{
+										CreateMainPlayerHandler(client);
+									}
+								}
+								case LR_Race:
+								{								
+									// create menu for T to choose start point
+									new Handle:racemenu1 = CreateMenu(RaceStartPointHandler);
+									SetMenuTitle(racemenu1, "%T", "Find a Starting Location", client);
+									decl String:sMenuText[MAX_DISPLAYNAME_SIZE];
+									Format(sMenuText, sizeof(sMenuText), "%T", "Use Current Position", client);
+									AddMenuItem(racemenu1, "startloc", sMenuText);
+									SetMenuExitButton(racemenu1, true);
+									DisplayMenu(racemenu1, client, MENU_TIME_FOREVER);						
+
+									if (gShadow_LR_Race_NotifyCTs)
+									{
+										for (new idx = 1; idx <= MaxClients; idx++)
+										{
+											if (IsClientInGame(idx) && IsPlayerAlive(idx) && (GetClientTeam(idx) == CS_TEAM_CT))
+											{
+												PrintToChat(idx, CHAT_BANNER, "Race Could Start Soon", client);
+											}
+										}
+									}
+
+									#if 0
+									// Add trail
+									#endif
+
+								}
+								case LR_Rebel:
+								{
+									new LastRequest:gametype = g_LRLookup[client];
+									new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, gametype);
+									SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
+									SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Guard);
+									g_bInLastRequest[client] = true;
+									g_bIsARebel[client] = true;
+									InitializeGame(iArrayIndex);			
+								}
+								case LR_JumpContest:
+								{
+									new Handle:SubJumpMenu = CreateMenu(SubLRType_MenuHandler);
+									SetMenuTitle(SubJumpMenu, "%T", "Jump Contest Menu", client);
+
+									decl String:sSubTypeName[MAX_DISPLAYNAME_SIZE];
+									decl String:sDataField[MAX_DATAENTRY_SIZE];
+
+									Format(sDataField, sizeof(sDataField), "%d", Jump_TheMost);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Jump_TheMost", client);
+									AddMenuItem(SubJumpMenu, sDataField, sSubTypeName);
+									Format(sDataField, sizeof(sDataField), "%d", Jump_Farthest);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Jump_Farthest", client);
+									AddMenuItem(SubJumpMenu, sDataField, sSubTypeName);								
+									Format(sDataField, sizeof(sDataField), "%d", Jump_BrinkOfDeath);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Jump_BrinkOfDeath", client);
+									AddMenuItem(SubJumpMenu, sDataField, sSubTypeName);		
+
+									SetMenuExitBackButton(SubJumpMenu, true);
+									DisplayMenu(SubJumpMenu, client, 10);							
+								}
+								default:
 								{
 									CreateMainPlayerHandler(client);
 								}
 							}
-							case LR_Race:
-							{								
-								// create menu for T to choose start point
-								new Handle:racemenu1 = CreateMenu(RaceStartPointHandler);
-								SetMenuTitle(racemenu1, "%T", "Find a Starting Location", client);
-								decl String:sMenuText[MAX_DISPLAYNAME_SIZE];
-								Format(sMenuText, sizeof(sMenuText), "%T", "Use Current Position", client);
-								AddMenuItem(racemenu1, "startloc", sMenuText);
-								SetMenuExitButton(racemenu1, true);
-								DisplayMenu(racemenu1, client, MENU_TIME_FOREVER);						
-								
-								if (gShadow_LR_Race_NotifyCTs)
-								{
-									for (new idx = 1; idx <= MaxClients; idx++)
-									{
-										if (IsClientInGame(idx) && IsPlayerAlive(idx) && (GetClientTeam(idx) == CS_TEAM_CT))
-										{
-											PrintToChat(idx, CHAT_BANNER, "Race Could Start Soon", client);
-										}
-									}
-								}
-								
-								#if 0
-								// Add trail
-								#endif
-								
-							}
-							case LR_Rebel:
-							{
-								new LastRequest:gametype = g_LRLookup[client];
-								new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, gametype);
-								SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
-								SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Guard);
-								g_bInLastRequest[client] = true;
-								g_bIsARebel[client] = true;
-								InitializeGame(iArrayIndex);			
-							}
-							case LR_JumpContest:
-							{
-								new Handle:SubJumpMenu = CreateMenu(SubLRType_MenuHandler);
-								SetMenuTitle(SubJumpMenu, "%T", "Jump Contest Menu", client);
-								
-								decl String:sSubTypeName[MAX_DISPLAYNAME_SIZE];
-								decl String:sDataField[MAX_DATAENTRY_SIZE];
-								
-								Format(sDataField, sizeof(sDataField), "%d", Jump_TheMost);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Jump_TheMost", client);
-								AddMenuItem(SubJumpMenu, sDataField, sSubTypeName);
-								Format(sDataField, sizeof(sDataField), "%d", Jump_Farthest);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Jump_Farthest", client);
-								AddMenuItem(SubJumpMenu, sDataField, sSubTypeName);								
-								Format(sDataField, sizeof(sDataField), "%d", Jump_BrinkOfDeath);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Jump_BrinkOfDeath", client);
-								AddMenuItem(SubJumpMenu, sDataField, sSubTypeName);		
-								
-								SetMenuExitBackButton(SubJumpMenu, true);
-								DisplayMenu(SubJumpMenu, client, 10);							
-							}
-							default:
-							{
-								CreateMainPlayerHandler(client);
-							}
+						}
+						else
+						{
+							PrintToChat(client, CHAT_BANNER, "Not Alive Or In Wrong Team");
 						}
 					}
 					else
 					{
-						PrintToChat(client, CHAT_BANNER, "Not Alive Or In Wrong Team");
+						PrintToChat(client, CHAT_BANNER, "Another LR In Progress");
 					}
 				}
 				else
 				{
-					PrintToChat(client, CHAT_BANNER, "Another LR In Progress");
+					PrintToChat(client, CHAT_BANNER, "Too Many Ts");
 				}
 			}
 			else
