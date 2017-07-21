@@ -5099,54 +5099,6 @@ void RemoveBeacon(int entityIndex)
 	}
 }
 
-stock void Trail_Attach(int client, int LRIndex)
-{	
-	char sTempName[64];
-	Format(sTempName, sizeof(sTempName), "PlayerTrail_%d", GetClientUserId(client));
-	DispatchKeyValue(client, "targetname", sTempName);
-	
-	int entIndex = CreateEntityByName("env_spritetrail");
-	if (entIndex > 0 && IsValidEntity(entIndex))
-	{		
-		DispatchKeyValue(entIndex, "parentname", sTempName);
-		DispatchKeyValue(entIndex, "spritename", "materials/sprites/orangelight1.vmt");
-		SetEntPropFloat(entIndex, Prop_Send, "m_flTextureRes", 0.05);
-		
-		DispatchKeyValue(entIndex, "renderamt", "255");
-		DispatchKeyValue(entIndex, "rendercolor", "255 128 0");
-		
-		DispatchKeyValueFloat(entIndex, "lifetime", 15.0);
-		DispatchKeyValueFloat(entIndex, "startwidth", 10.0);
-		DispatchKeyValueFloat(entIndex, "endwidth", 10.0);
-		DispatchKeyValue(entIndex, "rendermode", "5");
-		
-		DispatchSpawn(entIndex);
-		float f_origin[3];
-		GetClientAbsOrigin(client, f_origin);
-		f_origin[2] += 34.0;
-		TeleportEntity(entIndex, f_origin, NULL_VECTOR, NULL_VECTOR);
-		SetVariantString(sTempName);
-		AcceptEntityInput(entIndex, "SetParent", entIndex, entIndex);
-		
-		return entIndex;
-	}
-	return 0;
-}
-
-stock void Trail_Remove(int client, int LRIndex)
-{
-	int ent = g_iClientSpriteEntIndex[client];
-	if (ent != 0)
-	{
-		if (IsValidEntity(ent))
-		{
-			SDKUnhook(ent, SDKHook_SetTransmit, Hook_SetTransmit);
-			AcceptEntityInput(ent, "Kill");
-		}
-		g_iClientSpriteEntIndex[client] = 0;
-	}
-}
-
 public void OnEntityCreated(int entity, const char[] classname)
 {
 	int iArraySize = GetArraySize(gH_DArray_LR_Partners);
