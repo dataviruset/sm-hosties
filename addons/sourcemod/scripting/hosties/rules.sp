@@ -146,7 +146,14 @@ public Action Command_Rules(int client, int args)
 						DrawPanelText(Hosties_Rules_Panel, sPanelText);
 					}
 					
-					DrawPanelText(Hosties_Rules_Panel, "0. to Exit");
+					if (g_Game == Game_CSGO)
+					{
+						DrawPanelItem(Hosties_Rules_Panel, "Exit");
+					}
+					else
+					{
+						DrawPanelText(Hosties_Rules_Panel, "0. to Exit");
+					}
 					
 					SendPanelToClient(Hosties_Rules_Panel, client, Panel_Handler, MENU_TIME_FOREVER);
 					CloseHandle(Hosties_Rules_Panel);
