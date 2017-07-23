@@ -4363,12 +4363,11 @@ void InitializeGame(int iPartnersIndex)
 			// strip weapons from T rebelling
 			StripAllWeapons(LR_Player_Prisoner);
 
-			// give knife, deagle, and m249
+			// give knife
 			GivePlayerItem(LR_Player_Prisoner, "weapon_knife");
+			
+			// give deagle with ammo
 			int RebelDeagle = GivePlayerItem(LR_Player_Prisoner, "weapon_deagle");
-			GivePlayerItem(LR_Player_Prisoner, "weapon_m249");
-
-			// set primary and secondary ammo
 			SetEntData(RebelDeagle, g_Offset_Clip1, 7);
 			if(g_Game == Game_CSGO)
 			{
@@ -4377,6 +4376,17 @@ void InitializeGame(int iPartnersIndex)
 			else
 			{
 				SetEntData(LR_Player_Prisoner, g_Offset_Ammo+(1*4), 42);
+			}
+			
+			// give m249 and negev in csgo
+			
+			if (g_Game == Game_CSGO)
+			{
+				GivePlayerItem(LR_Player_Prisoner, "weapon_negev");
+			}
+			else
+			{
+				GivePlayerItem(LR_Player_Prisoner, "weapon_m249");
 			}
 
 			// find number of alive CTs
