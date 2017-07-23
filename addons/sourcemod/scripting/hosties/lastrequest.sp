@@ -3191,12 +3191,7 @@ public int LR_Selection_Handler(Handle menu, MenuAction action, int client, int 
 											PrintToChat(idx, CHAT_BANNER, "Race Could Start Soon", client);
 										}
 									}
-								}
-								
-								#if 0
-								// Add trail
-								#endif
-								
+								}	
 							}
 							case LR_Rebel:
 							{
