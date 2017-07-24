@@ -79,6 +79,11 @@ stock void StripAllWeapons(int client)
 			AcceptEntityInput(wepIdx, "Kill");
 		}
 	}
+	if ((wepIdx = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1)
+	{
+		RemovePlayerItem(client, wepIdx);
+		AcceptEntityInput(wepIdx, "Kill");
+	}
 }
 
 stock void BlockEntity(int client, int cachedOffset)
