@@ -4997,12 +4997,6 @@ public Action Timer_Beacon(Handle timer)
 		g_BeaconTimer = null; // TODO: Remove this because it doesn't make sense?
 		return Plugin_Stop;
 	}
-	int iTimerCount = 1;
-	if (iTimerCount > 99999)
-	{
-		iTimerCount = 1;
-	}
-	iTimerCount++;
 	
 	if (gShadow_LR_HelpBeams)
 	{
@@ -5037,46 +5031,42 @@ public Action Timer_Beacon(Handle timer)
 			}
 		}
 	}
-	int modTime = RoundToCeil(10.0 * gShadow_LR_Beacon_Interval);
-	if ((iTimerCount % modTime) == 0)
+	int iEntityIndex;
+	for (int idx = 0; idx < iNumOfBeacons; idx++)
 	{
-		int iEntityIndex;
-		for (int idx = 0; idx < iNumOfBeacons; idx++)
+		iEntityIndex = GetArrayCell(gH_DArray_Beacons, idx);
+		if (IsValidEntity(iEntityIndex))
 		{
-			iEntityIndex = GetArrayCell(gH_DArray_Beacons, idx);
-			if (IsValidEntity(iEntityIndex))
+			float f_Origin[3];
+			GetEntPropVector(iEntityIndex, Prop_Data, "m_vecOrigin", f_Origin);
+			f_Origin[2] += 10.0;
+			TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 15, 0.5, 5.0, 0.0, greyColor, 10, 0);
+			TE_SendToAll();
+			// check if it's a weapon or player
+			if (iEntityIndex < MaxClients+1)
 			{
-				float f_Origin[3];
-				GetEntPropVector(iEntityIndex, Prop_Data, "m_vecOrigin", f_Origin);
-				f_Origin[2] += 10.0;
-				TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 15, 0.5, 5.0, 0.0, greyColor, 10, 0);
-				TE_SendToAll();
-				// check if it's a weapon or player
-				if (iEntityIndex < MaxClients+1)
+				int team = GetClientTeam(iEntityIndex);
+				if (team == CS_TEAM_T)
 				{
-					int team = GetClientTeam(iEntityIndex);
-					if (team == CS_TEAM_T)
-					{
-						TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 10, 0.6, 10.0, 0.5, redColor, 10, 0);
-						TE_SendToAll();
-					}
-					else if (team == CS_TEAM_CT)
-					{
-						TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 10, 0.6, 10.0, 0.5, blueColor, 10, 0);
-						TE_SendToAll();
-					}
-				}
-				else
-				{
-					TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 10, 0.6, 10.0, 0.5, yellowColor, 10, 0);
+					TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 10, 0.6, 10.0, 0.5, redColor, 10, 0);
 					TE_SendToAll();
 				}
-				EmitAmbientSoundAny(gShadow_LR_Beacon_Sound, f_Origin, iEntityIndex, SNDLEVEL_RAIDSIREN);	
+				else if (team == CS_TEAM_CT)
+					{
+					TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 10, 0.6, 10.0, 0.5, blueColor, 10, 0);
+					TE_SendToAll();
+				}
 			}
 			else
 			{
-				RemoveFromArray(gH_DArray_Beacons, idx);
+				TE_SetupBeamRingPoint(f_Origin, 10.0, 375.0, BeamSprite, HaloSprite, 0, 10, 0.6, 10.0, 0.5, yellowColor, 10, 0);
+				TE_SendToAll();
 			}
+			EmitAmbientSoundAny(gShadow_LR_Beacon_Sound, f_Origin, iEntityIndex, SNDLEVEL_RAIDSIREN);	
+		}
+		else
+		{
+			RemoveFromArray(gH_DArray_Beacons, idx);
 		}
 	}
 	
@@ -5091,7 +5081,7 @@ void AddBeacon(int entityIndex)
 	}
 	if (g_BeaconTimer == null)
 	{
-		g_BeaconTimer = CreateTimer(0.1, Timer_Beacon, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+		g_BeaconTimer = CreateTimer(gShadow_LR_Beacon_Interval, Timer_Beacon, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
