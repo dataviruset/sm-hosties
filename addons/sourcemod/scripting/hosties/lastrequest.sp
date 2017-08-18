@@ -42,6 +42,7 @@ Handle g_GunTossTimer = null;
 Handle g_ChickenFightTimer = null;
 Handle g_DodgeballTimer = null;
 Handle g_BeaconTimer = null;
+Handle g_HelpBeamsTimer = null;
 Handle g_RaceTimer = null;
 Handle g_DelayLREnableTimer = null;
 Handle g_BeerGogglesTimer = null;
@@ -2320,6 +2321,10 @@ void LastRequest_OnMapStart()
 	if (g_BeaconTimer != null)
 	{
 		g_BeaconTimer = null;
+	}
+	if (g_BeaconTimer != null)
+	{
+		g_HelpBeamsTimer = null;
 	}
 	// Fix for the same problem with g_CountdownTimer
 	if (g_CountdownTimer != null)
@@ -4997,40 +5002,6 @@ public Action Timer_Beacon(Handle timer)
 		g_BeaconTimer = null; // TODO: Remove this because it doesn't make sense?
 		return Plugin_Stop;
 	}
-	
-	if (gShadow_LR_HelpBeams)
-	{
-		for (int LRindex = 0; LRindex < GetArraySize(gH_DArray_LR_Partners); LRindex++)
-		{
-			LastRequest type = GetArrayCell(gH_DArray_LR_Partners, LRindex, view_as<int>(Block_LRType));
-			
-			if (type != LR_Rebel)
-			{
-				int LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, LRindex, view_as<int>(Block_Prisoner));
-				int LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, LRindex, view_as<int>(Block_Guard));
-				
-				int clients[2];
-				clients[0] = LR_Player_Prisoner;
-				clients[1] = LR_Player_Guard;
-				
-				// setup beam
-				float Prisoner_Pos[3], Guard_Pos[3], distance;
-				GetClientEyePosition(LR_Player_Prisoner, Prisoner_Pos);
-				Prisoner_Pos[2] -= 40.0;
-				GetClientEyePosition(LR_Player_Guard, Guard_Pos);
-				Guard_Pos[2] -= 40.0;
-				distance = GetVectorDistance(Prisoner_Pos, Guard_Pos);
-				
-				if (distance > gShadow_LR_HelpBeams_Distance)
-				{
-					TE_SetupBeamPoints(Prisoner_Pos, Guard_Pos, LaserSprite, LaserHalo, 1, 1, 0.1, 5.0, 5.0, 0, 10.0, greyColor, 255);			
-					TE_Send(clients, 2);
-					TE_SetupBeamPoints(Guard_Pos, Prisoner_Pos, LaserSprite, LaserHalo, 1, 1, 0.1, 5.0, 5.0, 0, 10.0, greyColor, 255);			
-					TE_Send(clients, 2);
-				}
-			}
-		}
-	}
 	int iEntityIndex;
 	for (int idx = 0; idx < iNumOfBeacons; idx++)
 	{
@@ -5073,6 +5044,40 @@ public Action Timer_Beacon(Handle timer)
 	return Plugin_Continue;
 }
 
+public Action HelpBeams(Handle timer)
+{
+	for (int LRindex = 0; LRindex < GetArraySize(gH_DArray_LR_Partners); LRindex++)
+	{
+		LastRequest type = GetArrayCell(gH_DArray_LR_Partners, LRindex, view_as<int>(Block_LRType));
+		
+		if (type != LR_Rebel)
+		{
+			int LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, LRindex, view_as<int>(Block_Prisoner));
+			int LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, LRindex, view_as<int>(Block_Guard));
+			
+			int clients[2];
+			clients[0] = LR_Player_Prisoner;
+			clients[1] = LR_Player_Guard;
+			
+			// setup beam
+			float Prisoner_Pos[3], Guard_Pos[3], distance;
+			GetClientEyePosition(LR_Player_Prisoner, Prisoner_Pos);
+			Prisoner_Pos[2] -= 40.0;
+			GetClientEyePosition(LR_Player_Guard, Guard_Pos);
+			Guard_Pos[2] -= 40.0;
+			distance = GetVectorDistance(Prisoner_Pos, Guard_Pos);
+			
+			if (distance > gShadow_LR_HelpBeams_Distance)
+			{
+				TE_SetupBeamPoints(Prisoner_Pos, Guard_Pos, LaserSprite, LaserHalo, 1, 1, 0.1, 5.0, 5.0, 0, 10.0, greyColor, 255);			
+				TE_Send(clients, 2);
+				TE_SetupBeamPoints(Guard_Pos, Prisoner_Pos, LaserSprite, LaserHalo, 1, 1, 0.1, 5.0, 5.0, 0, 10.0, greyColor, 255);			
+				TE_Send(clients, 2);
+			}
+		}
+	}
+}
+
 void AddBeacon(int entityIndex)
 {
 	if (IsValidEntity(entityIndex))
@@ -5082,6 +5087,13 @@ void AddBeacon(int entityIndex)
 	if (g_BeaconTimer == null)
 	{
 		g_BeaconTimer = CreateTimer(gShadow_LR_Beacon_Interval, Timer_Beacon, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	}
+	if (g_HelpBeamsTimer == null)
+	{
+		if (gShadow_LR_HelpBeams)
+		{
+			g_HelpBeamsTimer = CreateTimer(0.1, Timer_Beacon, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+		}
 	}
 }
 
