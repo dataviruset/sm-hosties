@@ -25,7 +25,8 @@
 
 // Change to include your own clan tag but leave the '%t' intact
 #define 	CHAT_BANNER			"\x03[SM] \x04%t"
-#define 	NORMAL_VISION		90
+#define 	NORMAL_VISION			90
+#define		INVALID_WEAPON			-1
 
 enum GameType
 {
@@ -70,13 +71,14 @@ stock void ShowOverlayToAll(const char[] overlaypath)
 
 stock void StripAllWeapons(int client)
 {
-	int wepIdx;
-	for (int i; i < 4; i++)
+	int iWeaponIndex = INVALID_WEAPON;
+	for (int i = CS_SLOT_PRIMARY; i < CS_SLOT_GRENADE+1; i++)
 	{
-		if ((wepIdx = GetPlayerWeaponSlot(client, i)) != -1)
+		iWeaponIndex = INVALID_WEAPON;
+		while ((iWeaponIndex = GetPlayerWeaponSlot(client, i)) != INVALID_WEAPON)
 		{
-			RemovePlayerItem(client, wepIdx);
-			AcceptEntityInput(wepIdx, "Kill");
+			RemovePlayerItem(client, iWeaponIndex);
+			AcceptEntityInput(iWeaponIndex, "Kill");
 		}
 	}
 }
