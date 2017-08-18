@@ -5092,7 +5092,7 @@ void AddBeacon(int entityIndex)
 	{
 		if (gShadow_LR_HelpBeams)
 		{
-			g_HelpBeamsTimer = CreateTimer(0.1, Timer_Beacon, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+			g_HelpBeamsTimer = CreateTimer(0.1, HelpBeams, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 }
