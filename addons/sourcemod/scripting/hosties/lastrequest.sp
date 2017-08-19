@@ -4997,7 +4997,7 @@ public Action Timer_Beacon(Handle timer)
 		g_BeaconTimer = null; // TODO: Remove this because it doesn't make sense?
 		return Plugin_Stop;
 	}
-	static iTimerCount = 1;
+	static int iTimerCount = 1;
 	if (iTimerCount > 99999)
 	{
 		iTimerCount = 1;

@@ -37,6 +37,9 @@
 // Compiler directives
 #pragma 	semicolon 					1
 
+// Set new syntax as required
+#pragma newdecls required
+
 // Constants
 #define 	PLUGIN_VERSION				"2.3.0"
 #define 	MAX_DISPLAYNAME_SIZE		64
@@ -135,8 +138,6 @@ TopMenuObject gM_Hosties = INVALID_TOPMENUOBJECT;
 #if (MODULE_CONTROL == 1)
 #include "hosties/control.sp"
 #endif
-
-#pragma newdecls required
 
 // ConVars
 Handle gH_Cvar_Add_ServerTag = null;
