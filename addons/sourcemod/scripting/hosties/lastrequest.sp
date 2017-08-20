@@ -1528,7 +1528,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	for (int idx = 0; idx < GetArraySize(gH_DArray_LR_Partners); idx++)
 	{	
 		LastRequest type = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_LRType));
-		if (type == LR_NoScope)
+		if (type == LR_NoScope || type == LR_Mag4Mag)
 		{
 			int LR_Player_Prisoner = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_Prisoner));
 			int LR_Player_Guard = GetArrayCell(gH_DArray_LR_Partners, idx, view_as<int>(Block_Guard));
