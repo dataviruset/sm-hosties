@@ -4040,6 +4040,10 @@ void InitializeGame(int iPartnersIndex)
 				SetEntityRenderMode(GTdeagle2, RENDER_TRANSCOLOR);
 				SetEntityRenderColor(GTdeagle2, 0, 0, 255);
 			}
+			
+			// set HP
+			SetEntData(LR_Player_Prisoner, g_Offset_Health, 100);
+			SetEntData(LR_Player_Guard, g_Offset_Health, 100);
 
 			// announce LR
 			PrintToChatAll(CHAT_BANNER, "LR GT Start", LR_Player_Prisoner, LR_Player_Guard);
