@@ -4077,9 +4077,8 @@ void InitializeGame(int iPartnersIndex)
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, potatoClient, view_as<int>(Block_Global1)); // HPloser
 
 			// create the potato deagle
-			int HPdeagle = CreateEntityByName("weapon_deagle");
+			int HPdeagle = GivePlayerItem(potatoClient, "weapon_deagle");
 			SetArrayCell(gH_DArray_LR_Partners, iPartnersIndex, HPdeagle, view_as<int>(Block_Global4));
-			DispatchSpawn(HPdeagle);
 			EquipPlayerWeapon(potatoClient, HPdeagle);
 			SetEntPropEnt(potatoClient, Prop_Send, "m_hActiveWeapon", HPdeagle);
 
