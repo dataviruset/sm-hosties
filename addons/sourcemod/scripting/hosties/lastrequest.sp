@@ -5982,7 +5982,14 @@ void DecideRebelsFate(int rebeller, int LRIndex, int victim = 0)
 		{
 			if (IsPlayerAlive(rebeller))
 			{
-				ForcePlayerSuicide(rebeller);
+				if (g_Game == Game_CSGO)
+				{
+					CreateTimer(0.0, Timer_SafeSlay, rebeller, TIMER_FLAG_NO_MAPCHANGE);
+				}
+				else
+				{
+					ForcePlayerSuicide(rebeller);
+				}
 			}
 			if (victim == 0)
 			{
@@ -5998,6 +6005,11 @@ void DecideRebelsFate(int rebeller, int LRIndex, int victim = 0)
 			}		
 		}
 	}
+}
+
+public Action Timer_SafeSlay(Handle timer, any client)
+{
+	ForcePlayerSuicide(client);
 }
 
 public Action Timer_BeerGoggles(Handle timer)
@@ -6066,7 +6078,15 @@ public Action Timer_BeerGoggles(Handle timer)
 
 void KillAndReward(int loser, int victor)
 {
-	ForcePlayerSuicide(loser);
+	if (g_Game == Game_CSGO)
+	{
+		CreateTimer(0.0, Timer_SafeSlay, loser, TIMER_FLAG_NO_MAPCHANGE);
+	}
+	else
+	{
+		ForcePlayerSuicide(loser);
+	}
+	
 	if (IsClientInGame(victor))
 	{
 		if (g_Game == Game_CSS)
