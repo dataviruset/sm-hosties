@@ -5550,7 +5550,14 @@ public int RPSmenuHandler(Handle menu, MenuAction action, int client, int param2
 				{
 					if (IsClientInGame(client) && IsPlayerAlive(client))
 					{
-						ForcePlayerSuicide(client);
+						if (g_Game == Game_CSGO)
+						{
+							CreateTimer(0.1, Timer_SafeSlay, client, TIMER_FLAG_NO_MAPCHANGE);
+						}
+						else
+						{
+							ForcePlayerSuicide(client);
+						}
 						PrintToChatAll(CHAT_BANNER, "LR RPS No Answer", client);
 					}
 				}	
