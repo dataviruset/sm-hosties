@@ -3261,7 +3261,14 @@ public int LR_Selection_Handler(Handle menu, MenuAction action, int client, int 
 		{
 			if (gShadow_LR_KillTimeouts)
 			{
-				ForcePlayerSuicide(client);
+				if (g_Game == Game_CSGO)
+				{
+					CreateTimer(0.1, Timer_SafeSlay, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+				}
+				else
+				{
+					ForcePlayerSuicide(client);
+				}
 			}
 		}
 	}
@@ -5552,7 +5559,7 @@ public int RPSmenuHandler(Handle menu, MenuAction action, int client, int param2
 					{
 						if (g_Game == Game_CSGO)
 						{
-							CreateTimer(0.1, Timer_SafeSlay, client, TIMER_FLAG_NO_MAPCHANGE);
+							CreateTimer(0.1, Timer_SafeSlay, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 						}
 						else
 						{
@@ -5991,7 +5998,7 @@ void DecideRebelsFate(int rebeller, int LRIndex, int victim = 0)
 			{
 				if (g_Game == Game_CSGO)
 				{
-					CreateTimer(0.0, Timer_SafeSlay, rebeller, TIMER_FLAG_NO_MAPCHANGE);
+					CreateTimer(0.1, Timer_SafeSlay, GetClientUserId(rebeller), TIMER_FLAG_NO_MAPCHANGE);
 				}
 				else
 				{
@@ -6014,9 +6021,13 @@ void DecideRebelsFate(int rebeller, int LRIndex, int victim = 0)
 	}
 }
 
-public Action Timer_SafeSlay(Handle timer, any client)
+public Action Timer_SafeSlay(Handle timer, any userid)
 {
-	ForcePlayerSuicide(client);
+	int client = GetClientOfUserId(userid);
+	if (client)
+	{
+		ForcePlayerSuicide(client);
+	}
 }
 
 public Action Timer_BeerGoggles(Handle timer)
@@ -6087,7 +6098,7 @@ void KillAndReward(int loser, int victor)
 {
 	if (g_Game == Game_CSGO)
 	{
-		CreateTimer(0.0, Timer_SafeSlay, loser, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(0.1, Timer_SafeSlay, GetClientUserId(loser), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
