@@ -61,6 +61,7 @@ Rules_OnPluginStart()
 	{
 		RegConsoleCmd("sm_rules", Command_Rules);
 	}
+	CloseHandle(fileh)
 	
 	gH_DArray_Rules = CreateArray(255);
 }
