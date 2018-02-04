@@ -53,7 +53,7 @@ Rules_OnPluginStart()
 	
 	HookEvent("round_start", Rules_RoundStart);
 	
-	// Provided for backwards comparibility
+	// Provided for backwards compatibility
 	decl String:file[256];
 	BuildPath(Path_SM, file, 255, "configs/hosties_rulesdisable.ini");
 	new Handle:fileh = OpenFile(file, "r");
