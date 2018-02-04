@@ -67,7 +67,6 @@ chmod +x addons/sourcemod/scripting/spcomp
 
 # Download missing includes
 wget https://raw.githubusercontent.com/powerlord/sourcemod-snippets/master/scripting/include/emitsoundany.inc -O addons/sourcemod/scripting/include/emitsoundany.inc
-wget https://github.com/KyleSanderson/SteamWorks/raw/master/Pawn/includes/SteamWorks.inc -O addons/sourcemod/scripting/include/SteamWorks.inc
 wget https://github.com/GameConnect/sourcebansv1/raw/master/game_upload/addons/sourcemod/scripting/include/sourcebans.inc -O addons/sourcemod/scripting/include/sourcebans.inc
 
 # Compile plugin
