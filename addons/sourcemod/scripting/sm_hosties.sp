@@ -345,6 +345,9 @@ public OnClientPutInServer(client)
 	#if (MODULE_FREEKILL == 1)
 	Freekillers_ClientPutInServer(client);
 	#endif
+	#if (MODULE_MUTE == 1)
+	MutePrisoners_ClientPutInServer(client);
+	#endif
 }
 
 public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)

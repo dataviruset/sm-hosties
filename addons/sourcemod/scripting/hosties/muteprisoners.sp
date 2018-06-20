@@ -88,6 +88,12 @@ MutePrisoners_OnConfigsExecuted()
 	MutePrisoners_CalcImmunity();
 }
 
+MutePrisoners_ClientPutInServer(client)
+{
+	// Fix - players reconnecting and speaking while dead
+	MutePlayer(client);
+}
+
 bool:MutePlayer(client)
 {
 	// Ignore punished players
@@ -200,12 +206,17 @@ public MutePrisoners_PlayerSpawn(Handle:event, const String:name[], bool:dontBro
 	
 	if (gShadow_MuteStatus == 1 || gShadow_MuteStatus == 3)
 	{
-		// if the timer is anything but invalid, we should mute these new spawners
-		if (gH_Timer_Unmuter != INVALID_HANDLE)
+		if (GetClientTeam(client) == CS_TEAM_T)
 		{
-			if (GetClientTeam(client) == CS_TEAM_T)
+			// if the timer is anything but invalid, we should mute these new spawners
+			if (gH_Timer_Unmuter != INVALID_HANDLE)
 			{
 				MutePlayer(client);
+			}
+			else
+			{
+				// Player joined in the middle of the game
+				UnmutePlayer(client);
 			}
 		}
 	}
