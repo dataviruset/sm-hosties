@@ -113,16 +113,6 @@ stock UnblockClientAll()
 	}
 }
 
-stock MutePlayer(client)
-{
-	SetClientListeningFlags(client, VOICE_MUTED);
-}
-
-stock UnmutePlayer(client)
-{
-	SetClientListeningFlags(client, VOICE_NORMAL);
-}
-
 stock CacheTheFile(const String:path[], MediaType:filetype)
 {
 	decl String:sDownloadPath[PLATFORM_MAX_PATH];
