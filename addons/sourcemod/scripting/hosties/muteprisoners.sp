@@ -91,7 +91,10 @@ MutePrisoners_OnConfigsExecuted()
 MutePrisoners_ClientPutInServer(client)
 {
 	// Fix - players reconnecting and speaking while dead
-	MutePlayer(client);
+	if (gShadow_MuteStatus)
+	{
+		MutePlayer(client);
+	}
 }
 
 bool:MutePlayer(client)
