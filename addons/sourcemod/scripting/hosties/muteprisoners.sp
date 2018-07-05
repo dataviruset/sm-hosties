@@ -88,7 +88,7 @@ MutePrisoners_OnConfigsExecuted()
 	MutePrisoners_CalcImmunity();
 }
 
-MutePrisoners_ClientPutInServer(client)
+MutePrisoners_ClientPostAdminCheck(client)
 {
 	// Fix - players reconnecting and speaking while dead
 	if (gShadow_MuteStatus)
