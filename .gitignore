@@ -107,3 +107,4 @@ addons/sourcemod/scripting/sounds.sp
 addons/sourcemod/scripting/spcomp.exe
 addons/sourcemod/scripting/sql-admin-manager.sp
 addons/sourcemod/scripting/testsuite/
+addons/sourcemod/scripting/version.txt

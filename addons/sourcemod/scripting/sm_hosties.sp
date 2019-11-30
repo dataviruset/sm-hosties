@@ -347,6 +347,13 @@ public OnClientPutInServer(client)
 	#endif
 }
 
+public OnClientPostAdminCheck(client)
+{
+	#if (MODULE_MUTE == 1)
+	MutePrisoners_ClientPostAdminCheck(client);
+	#endif
+}
+
 public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (GetConVarInt(gH_Cvar_Display_Advert))
