@@ -232,8 +232,33 @@
 	"LR KF Start"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} chose to have Knife Fight with {2}."
+		"en"		"{1} chose to have Vintage Knife Fight with {2}."
 	}
+	"LR KDrunk Start"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} chose to have Drunken Boxing with {2}."
+	}
+	"LR KLG Start"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} chose to have LowGrav Knife Fight with {2}."
+	}
+	"LR KHS Start"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} chose to have Knife Hi Speed with {2}."
+	}
+	"LR KTP Start"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} chose to have Knife Third Person with {2}."
+	}
+	"LR KDrugs Start"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} chose to have Knife Drugs with {2}."
+	}	
 	"LR S4S Start"
 	{
 		"#format"	"{1:N},{2:N}"

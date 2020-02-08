@@ -3812,27 +3812,48 @@ InitializeGame(iPartnersIndex)
 					{
 						g_BeerGogglesTimer = CreateTimer(1.0, Timer_BeerGoggles, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 					}
+					
+					// announce LR
+					PrintToChatAll(CHAT_BANNER, "LR KDrunk Start", LR_Player_Prisoner, LR_Player_Guard);
 				}
 				case Knife_LowGrav:
 				{
 					SetEntityGravity(LR_Player_Prisoner, gShadow_LR_KnifeFight_LowGrav);
 					SetEntityGravity(LR_Player_Guard, gShadow_LR_KnifeFight_LowGrav);
+					
+					// announce LR
+					PrintToChatAll(CHAT_BANNER, "LR KLG Start", LR_Player_Prisoner, LR_Player_Guard);
 				}
 				case Knife_HiSpeed:
 				{
 					SetEntPropFloat(LR_Player_Prisoner, Prop_Data, "m_flLaggedMovementValue", gShadow_LR_KnifeFight_HiSpeed);
 					SetEntPropFloat(LR_Player_Guard, Prop_Data, "m_flLaggedMovementValue", gShadow_LR_KnifeFight_HiSpeed);
+					
+					// announce LR
+					PrintToChatAll(CHAT_BANNER, "LR KHS Start", LR_Player_Prisoner, LR_Player_Guard);
 				}
 				case Knife_ThirdPerson:
 				{
 					SetThirdPerson(LR_Player_Prisoner, g_Game);
 					SetThirdPerson(LR_Player_Guard, g_Game);
+					
+					// announce LR
+					PrintToChatAll(CHAT_BANNER, "LR KTP Start", LR_Player_Prisoner, LR_Player_Guard);
 				}
 				case Knife_Drugs:
 				{
 					ShowOverlayToClient(LR_Player_Prisoner, "models/effects/portalfunnel_sheet");
 					ShowOverlayToClient(LR_Player_Guard, "models/effects/portalfunnel_sheet");
+					
+					// announce LR
+					PrintToChatAll(CHAT_BANNER, "LR KDrugs Start", LR_Player_Prisoner, LR_Player_Guard);
 				}
+				case Knife_Vintage:
+				{
+					// announce LR
+					PrintToChatAll(CHAT_BANNER, "LR KF Start", LR_Player_Prisoner, LR_Player_Guard);
+				}
+				
 			}
 			
 			// set HP
@@ -3843,8 +3864,6 @@ InitializeGame(iPartnersIndex)
 			GivePlayerItem(LR_Player_Prisoner, "weapon_knife");
 			GivePlayerItem(LR_Player_Guard, "weapon_knife");
 
-			// announce LR
-			PrintToChatAll(CHAT_BANNER, "LR KF Start", LR_Player_Prisoner, LR_Player_Guard);
 		}
 		case LR_Shot4Shot:
 		{
