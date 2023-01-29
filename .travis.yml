@@ -7,14 +7,14 @@ addons:
     - lftp
 
 env:
-  - SOURCEMOD=1.7
   - SOURCEMOD=1.8
   - SOURCEMOD=1.9
+  - SOURCEMOD=1.10
 
 matrix:
   fast_finish: true
   allow_failures:
-    - env: SMVERSION=1.9
+    - env: SMVERSION=1.10
 
 script:
   - bash build.sh $SOURCEMOD $B_FTP_HOST $B_FTP_USER $B_FTP_PASS 

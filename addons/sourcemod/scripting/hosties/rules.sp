@@ -55,12 +55,14 @@ void Rules_OnPluginStart()
 	
 	// Provided for backwards comparibility
 	char file[256];
+  
 	BuildPath(Path_SM, file, 255, "configs/hosties_rulesdisable.ini");
 	Handle fileh = OpenFile(file, "r");
 	if (fileh == null)
 	{
 		RegConsoleCmd("sm_rules", Command_Rules);
 	}
+	CloseHandle(fileh);
 	
 	gH_DArray_Rules = CreateArray(255);
 }

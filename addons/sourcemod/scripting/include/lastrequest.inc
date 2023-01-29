@@ -23,6 +23,8 @@
 #endif
 #define _LastRequest_Included_
 
+#include <hosties>
+
 // Custom types
 enum LastRequest
 {
@@ -102,9 +104,8 @@ public void __pl_lastrequest_SetNTVOptional()
 	MarkNativeAsOptional("CleanupLR");
 }
 
-functag FuncLastRequest public(type, prisoner, guard);
-functag FuncProcessLR public(Handle:array, iLRNumber);
-
+typedef FuncLastRequest = function void(int type, int prisoner, int guard);
+typedef FuncProcessLR = function void(Handle array, int iLRNumber);
 
 forward void OnStartLR(int PrisonerIndex, int GuardIndex, int LR_Type);
 

@@ -3023,48 +3023,54 @@ public int LR_Selection_Handler(Handle menu, MenuAction action, int client, int 
 		{
 			if (g_bIsLRAvailable)
 			{
-				if (!g_bInLastRequest[client])
+				// check the number of terrorists still alive
+				new Ts, CTs, NumCTsAvailable;
+				UpdatePlayerCounts(Ts, CTs, NumCTsAvailable);
+
+				if (Ts <= gShadow_MaxPrisonersToLR || gShadow_MaxPrisonersToLR == 0)
 				{
-					if (IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
+					if (!g_bInLastRequest[client])
 					{
-						char sData[MAX_DATAENTRY_SIZE];
-						GetMenuItem(menu, iButtonChoice, sData, sizeof(sData));
-						LastRequest choice = view_as<LastRequest>(StringToInt(sData));
-						g_LRLookup[client] = choice;
-						
-						switch (choice)
+						if (IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
 						{
-							case LR_KnifeFight:
+              char sData[MAX_DATAENTRY_SIZE];
+              GetMenuItem(menu, iButtonChoice, sData, sizeof(sData));
+              LastRequest choice = view_as<LastRequest>(StringToInt(sData));
+              g_LRLookup[client] = choice;
+						
+							switch (choice)
 							{
-								Handle KnifeFightMenu = CreateMenu(SubLRType_MenuHandler);								
-								SetMenuTitle(KnifeFightMenu, "%T", "Knife Fight Selection Menu", client);
-								
-								char sSubTypeName[MAX_DISPLAYNAME_SIZE];
-								char sDataField[MAX_DATAENTRY_SIZE];
-								Format(sDataField, sizeof(sDataField), "%d", Knife_Vintage);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Vintage", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								if (g_Game == Game_CSS)
+								case LR_KnifeFight:
 								{
-									Format(sDataField, sizeof(sDataField), "%d", Knife_Drunk);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drunk", client);
+									Handle KnifeFightMenu = CreateMenu(SubLRType_MenuHandler);								
+                  SetMenuTitle(KnifeFightMenu, "%T", "Knife Fight Selection Menu", client);
+                  
+                  char sSubTypeName[MAX_DISPLAYNAME_SIZE];
+                  char sDataField[MAX_DATAENTRY_SIZE];
+                  Format(sDataField, sizeof(sDataField), "%d", Knife_Vintage);
+                  Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Vintage", client);
+                  AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+                  if (g_Game == Game_CSS)
+									{
+										Format(sDataField, sizeof(sDataField), "%d", Knife_Drunk);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drunk", client);
+										AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+										Format(sDataField, sizeof(sDataField), "%d", Knife_Drugs);
+										Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drugs", client);
+										AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+									}
+									Format(sDataField, sizeof(sDataField), "%d", Knife_LowGrav);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_LowGrav", client);
 									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-									Format(sDataField, sizeof(sDataField), "%d", Knife_Drugs);
-									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_Drugs", client);
+									Format(sDataField, sizeof(sDataField), "%d", Knife_HiSpeed);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_HiSpeed", client);
 									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								}
-								Format(sDataField, sizeof(sDataField), "%d", Knife_LowGrav);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_LowGrav", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								Format(sDataField, sizeof(sDataField), "%d", Knife_HiSpeed);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_HiSpeed", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								Format(sDataField, sizeof(sDataField), "%d", Knife_ThirdPerson);
-								Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_ThirdPerson", client);
-								AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
-								
-								SetMenuExitBackButton(KnifeFightMenu, true);
-								DisplayMenu(KnifeFightMenu, client, 10);
+									Format(sDataField, sizeof(sDataField), "%d", Knife_ThirdPerson);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Knife_ThirdPerson", client);
+									AddMenuItem(KnifeFightMenu, sDataField, sSubTypeName);
+
+									SetMenuExitBackButton(KnifeFightMenu, true);
+									DisplayMenu(KnifeFightMenu, client, 10);
 							}
 							case LR_Shot4Shot, LR_Mag4Mag:
 							{
@@ -3186,9 +3192,12 @@ public int LR_Selection_Handler(Handle menu, MenuAction action, int client, int 
 								{
 									for (int idx = 1; idx <= MaxClients; idx++)
 									{
-										if (IsClientInGame(idx) && IsPlayerAlive(idx) && (GetClientTeam(idx) == CS_TEAM_CT))
+										for (new idx = 1; idx <= MaxClients; idx++)
 										{
-											PrintToChat(idx, CHAT_BANNER, "Race Could Start Soon", client);
+											if (IsClientInGame(idx) && IsPlayerAlive(idx) && (GetClientTeam(idx) == CS_TEAM_CT))
+											{
+												PrintToChat(idx, CHAT_BANNER, "Race Could Start Soon", client);
+											}
 										}
 									}
 								}	
@@ -3227,17 +3236,62 @@ public int LR_Selection_Handler(Handle menu, MenuAction action, int client, int 
 							default:
 							{
 								CreateMainPlayerHandler(client);
+
+									#if 0
+									// Add trail
+									#endif
+
+								}
+								case LR_Rebel:
+								{
+									new LastRequest:gametype = g_LRLookup[client];
+									new iArrayIndex = PushArrayCell(gH_DArray_LR_Partners, gametype);
+									SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Prisoner);
+									SetArrayCell(gH_DArray_LR_Partners, iArrayIndex, client, _:Block_Guard);
+									g_bInLastRequest[client] = true;
+									g_bIsARebel[client] = true;
+									InitializeGame(iArrayIndex);			
+								}
+								case LR_JumpContest:
+								{
+									new Handle:SubJumpMenu = CreateMenu(SubLRType_MenuHandler);
+									SetMenuTitle(SubJumpMenu, "%T", "Jump Contest Menu", client);
+
+									decl String:sSubTypeName[MAX_DISPLAYNAME_SIZE];
+									decl String:sDataField[MAX_DATAENTRY_SIZE];
+
+									Format(sDataField, sizeof(sDataField), "%d", Jump_TheMost);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Jump_TheMost", client);
+									AddMenuItem(SubJumpMenu, sDataField, sSubTypeName);
+									Format(sDataField, sizeof(sDataField), "%d", Jump_Farthest);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Jump_Farthest", client);
+									AddMenuItem(SubJumpMenu, sDataField, sSubTypeName);								
+									Format(sDataField, sizeof(sDataField), "%d", Jump_BrinkOfDeath);
+									Format(sSubTypeName, sizeof(sSubTypeName), "%T", "Jump_BrinkOfDeath", client);
+									AddMenuItem(SubJumpMenu, sDataField, sSubTypeName);		
+
+									SetMenuExitBackButton(SubJumpMenu, true);
+									DisplayMenu(SubJumpMenu, client, 10);							
+								}
+								default:
+								{
+									CreateMainPlayerHandler(client);
+								}
 							}
+						}
+						else
+						{
+							PrintToChat(client, CHAT_BANNER, "Not Alive Or In Wrong Team");
 						}
 					}
 					else
 					{
-						PrintToChat(client, CHAT_BANNER, "Not Alive Or In Wrong Team");
+						PrintToChat(client, CHAT_BANNER, "Another LR In Progress");
 					}
 				}
 				else
 				{
-					PrintToChat(client, CHAT_BANNER, "Another LR In Progress");
+					PrintToChat(client, CHAT_BANNER, "Too Many Ts");
 				}
 			}
 			else
@@ -3774,6 +3828,9 @@ void InitializeGame(int iPartnersIndex)
 	//remove armor
 	if (gShadow_LR_RemoveArmor)
 	{
+		SetEntProp(LR_Player_Prisoner, Prop_Send, "m_bHasHelmet", 0);
+		SetEntProp(LR_Player_Guard, Prop_Send, "m_bHasHelmet", 0);
+		
 		SetEntData(LR_Player_Prisoner, g_Offset_Armor, 0);
 		SetEntData(LR_Player_Guard, g_Offset_Armor, 0);
 	}
